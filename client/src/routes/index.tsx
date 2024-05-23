@@ -1,5 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { RootLayout, Error, Feed, Search, Post, Liked, Profile } from '@/pages';
+import {
+  RootLayout,
+  Error,
+  Feed,
+  Search,
+  PostDetail,
+  Liked,
+  Profile,
+} from '@/pages';
 
 type Router = ReturnType<typeof createBrowserRouter>;
 
@@ -27,7 +35,7 @@ const router: Router = createBrowserRouter([
       },
       {
         path: ':username/:postId',
-        element: <Post />,
+        element: <PostDetail />,
       },
     ],
   },

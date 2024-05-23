@@ -1,19 +1,17 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import { Header, MainNav } from '@/components/common';
 
 const RootLayout: React.FC = () => {
   return (
-    <div className='*:select container selection:bg-indigo-300/90'>
-      <header>
-        <h1>
-          <Link to='/'>
-            <img src='/logo.png' alt='diskettte exclusive' />
-          </Link>
-        </h1>
-      </header>
-      <main className='h-[1000px] w-[2000px]'>
-        <Outlet />
+    <div className='container selection:bg-[#95e78e] selection:text-black'>
+      <Header />
+      <main className='flex'>
+        <MainNav />
+        <div className='w-full p-4'>
+          <span className='bg-gradient-theme absolute -left-[250px] -top-[145px] -z-10 h-[650px] w-[650px] rotate-180 rounded-full opacity-30 blur-[90px]' />
+          <Outlet />
+        </div>
       </main>
-      <footer>footer</footer>
     </div>
   );
 };
