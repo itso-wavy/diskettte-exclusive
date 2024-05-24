@@ -7,8 +7,8 @@ const RootLayout: React.FC = () => {
       <Header />
       <main className='flex'>
         <MainNav />
-        <div className='w-full p-4'>
-          <span className='bg-gradient-theme absolute -left-[250px] -top-[145px] -z-10 h-[650px] w-[650px] rotate-180 rounded-full opacity-30 blur-[90px]' />
+        <div className='w-full overflow-x-hidden p-4'>
+          <div className='bg-gradient-circle -left-[250px] -top-[145px] rotate-180' />
           <Outlet />
         </div>
       </main>
