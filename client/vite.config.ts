@@ -13,6 +13,10 @@ export default defineConfig({
         svgoConfig: {
           floatPrecision: 2,
         },
+        replaceAttrValues: {
+          '#000': 'currentColor',
+          '#6F8CFF': 'var(--color-fill)',
+        },
       },
     }),
   ],

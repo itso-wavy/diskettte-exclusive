@@ -88,7 +88,8 @@
     @apply border-border;
     @apply transition-colors duration-150 ease-in-out;
 
-    --primary: blue;
+    --color-main: blue;
+    --color-sub: lightblue;
   }
 
   body {
@@ -103,9 +104,28 @@
     user-select: text;
   }
 
-  .bg-gradient-theme {
-    background: linear-gradient(-13deg, var(--primary), rgba(187, 252, 3, .4));
+  .bg-gradient-circle {
+    height: 650px;
+    width: 650px;
+    z-index: -10;
+    background: linear-gradient(-13deg, var(--color-main), rgba(187, 252, 3, .4));
+    border-radius: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    opacity: 0.3;
+    filter: blur(90px);
+  }
+  *:has(.bg-gradient-circle) {
+    overflow-x: clip;
   }
 }
 
+.theme-orange * {
+  --color-main: orange;
+  --color-sub: yellow;
+}
 
+[class^="theme-"] * {
+  --color-fill: var(--color-sub);
+}

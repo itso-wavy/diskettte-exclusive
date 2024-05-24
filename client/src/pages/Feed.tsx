@@ -1,19 +1,22 @@
-import { cn } from '@/lib/utils/cn';
 import { useState } from 'react';
+import { cn } from '@/lib/utils/cn';
 import Post from './Post';
 
+type View = 'everyone' | 'following';
+
 const Feed: React.FC = () => {
-  const [view, setView] = useState('everyone');
+  const [view, setView] = useState<View>('everyone');
 
   return (
     <div>
-      <nav className='sticky top-5 mx-auto mb-4 w-fit space-x-1 rounded-[20px] bg-white p-1.5 text-sm text-gray-900/60 drop-shadow-lg hover:drop-shadow-xl'>
+      <nav className='sticky top-5 mx-auto mb-4 w-fit space-x-1 rounded-[20px] bg-white p-1.5 text-sm text-gray-900/60 outline-1 outline-gray-950/5 drop-shadow-lg hover:outline hover:drop-shadow-xl'>
         <button
           value='following'
           onClick={e => setView(e.target.value)}
           className={cn(
-            'rounded-[13px] px-3 py-1 hover:bg-gray-900/20 hover:text-white active:bg-gray-900/35 active:text-white',
-            view === 'following' && 'bg-gray-900/20 text-white'
+            'rounded-[13px] px-3 py-1 hover:bg-accent active:bg-gray-900/10',
+            view === 'following' &&
+              'bg-accent text-accent-foreground shadow-inner'
           )}
         >
           Following
@@ -22,8 +25,9 @@ const Feed: React.FC = () => {
           value='everyone'
           onClick={e => setView(e.target.value)}
           className={cn(
-            'rounded-[13px] px-3 py-1 hover:bg-gray-900/20 hover:text-white active:bg-gray-900/35 active:text-white',
-            view === 'everyone' && 'bg-gray-900/20 text-white'
+            'rounded-[13px] px-3 py-1 hover:bg-accent active:bg-gray-900/10',
+            view === 'everyone' &&
+              'bg-accent text-accent-foreground shadow-inner'
           )}
         >
           Everyone

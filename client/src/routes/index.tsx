@@ -5,7 +5,7 @@ import {
   Feed,
   Search,
   PostDetail,
-  Liked,
+  Bookmarks,
   Profile,
 } from '@/pages';
 
@@ -26,8 +26,8 @@ const router: Router = createBrowserRouter([
         element: <Search />,
       },
       {
-        path: 'liked',
-        element: <Liked />,
+        path: 'bookmark',
+        element: <Bookmarks />,
       },
       {
         path: ':username',

@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Tooltip,
@@ -11,17 +11,25 @@ import { cn } from '@/lib/utils/cn';
 import Icons from '@/lib/assets/Icons';
 
 const MainNav: React.FC = () => {
+  const { pathname } = useLocation();
   let nickname = 'wavy';
   let profileImage = 'https://github.com/shadcn.png';
-  const { pathname } = useLocation();
+  const [themeColor, setThemeColor] = useState('orange');
 
   return (
     <nav className='sticky top-0 h-[calc(100vh-16px)] w-[60px] flex-shrink-0 bg-white px-2.5 py-[78px]'>
       <ul className='relative flex h-full flex-col justify-center gap-4'>
         <NavLink to='/' tooltip='Home'>
-          {pathname === '/' ? <Icons.HomeFill /> : <Icons.Home />}
+          <Icons.Home
+            className={cn(pathname === '/' && `theme-${themeColor}`)}
+          />
         </NavLink>
         <NavLink to='/search' tooltip='Search'>
+          {/* <Icons.Search
+            style={
+              pathname === '/search' ? { strokeWidth: 3.5 } : { strokeWidth: 2 }
+            }
+          /> */}
           {pathname === '/search' ? (
             <Icons.Search style={{ strokeWidth: 3.5 }} />
           ) : (
@@ -29,10 +37,14 @@ const MainNav: React.FC = () => {
           )}
         </NavLink>
         <NavLink to='/post' tooltip='Post'>
-          {pathname === '/post' ? <Icons.PostFill /> : <Icons.Post />}
+          <Icons.Post
+            className={cn(pathname === '/post' && `theme-${themeColor}`)}
+          />
         </NavLink>
-        <NavLink to='/liked' tooltip='Liked'>
-          {pathname === '/liked' ? <Icons.HeartFill /> : <Icons.Heart />}
+        <NavLink to='/bookmark' tooltip='Bookmark'>
+          <Icons.Bookmark
+            className={cn(pathname === '/bookmark' && `theme-${themeColor}`)}
+          />
         </NavLink>
         <NavLink
           to='/profile'
