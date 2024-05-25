@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    /* Base */
+    "target": "ESNEXT",
+    "outDir": "./server/dist",
+    // "rootDir": "./server/src",
+    "baseUrl": "./server",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    /* Bundler */
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "lib": ["ESNext"],
+
+    /* Options */
+    "noEmitOnError": false,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "checkJs": true,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "composite": true,
+
+    /* Strict mode */
+    "strict": true,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["./server/src/**/*"]
+}
