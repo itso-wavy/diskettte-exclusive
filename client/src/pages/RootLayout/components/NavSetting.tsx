@@ -33,7 +33,7 @@ const NavSetting: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className='absolute bottom-0 w-[40px] rounded-full ring-2 ring-main ring-offset-1 ring-offset-background *:rounded-full focus:outline-none'>
+        <button className='absolute bottom-0 w-[40px] rounded-full ring-[3px] ring-main ring-offset-1 ring-offset-background *:rounded-full focus:outline-none'>
           <ProfileAvatar nickname={nickname} image={profileImage} />
         </button>
       </DropdownMenuTrigger>

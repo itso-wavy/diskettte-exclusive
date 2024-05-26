@@ -7,7 +7,7 @@ const Header: React.FC = () => {
   const { isDarkmode } = useSelector((state: RootState) => state.theme);
 
   return (
-    <header className='fixed z-20 w-full bg-background from-sub via-gray-500/20 to-transparent pt-4 before:absolute before:bottom-0 before:right-0 before:inline-block before:h-px before:w-[calc(100vw-200px)] before:bg-gradient-to-l'>
+    <header className='fixed z-20 w-full bg-background from-main via-gray-500/20 to-transparent pt-4 before:absolute before:bottom-0 before:right-0 before:inline-block before:h-px before:w-[calc(100vw-200px)] before:bg-gradient-to-l'>
       <h1 className='absolute h-[70px] w-fit rounded-ee-4xl bg-background px-5 pb-3 pt-0.5'>
         <Link to='/'>
           <img

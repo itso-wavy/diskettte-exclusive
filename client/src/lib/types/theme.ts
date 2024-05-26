@@ -1,11 +1,10 @@
 export const themes = [
-  'pink',
-  'orange',
-  'yellow',
-  'green',
-  'teal',
-  'blue',
-  'violet',
+  'strawberry',
+  'mango',
+  'lemon',
+  'melon',
+  'grape',
+  'dragonfruit',
 ] as const;
 
 export type Theme = (typeof themes)[number];
