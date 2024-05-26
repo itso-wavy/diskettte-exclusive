@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import router from '@/routes';
 import { store } from '@/lib/store';
+import ThemeProvider from '@/context/themeContext';
 
 const App: React.FC = () => {
   const queryClient = new QueryClient();
@@ -13,7 +14,9 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <ThemeProvider>
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </Provider>
     </QueryClientProvider>
   );
