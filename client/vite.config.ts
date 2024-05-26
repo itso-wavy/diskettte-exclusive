@@ -15,7 +15,7 @@ export default defineConfig({
         },
         replaceAttrValues: {
           '#000': 'currentColor',
-          '#6F8CFF': 'var(--color-fill)',
+          '#6F8CFF': 'var(--svg-fill)',
         },
       },
     }),

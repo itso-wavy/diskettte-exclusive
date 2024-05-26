@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { fontFamily } from 'tailwindcss/defaultTheme';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 const config: Config = {
   darkMode: ['class'],
@@ -12,6 +12,10 @@ const config: Config = {
         '2xl': '1800px',
       },
     },
+    screens: {
+      ...defaultTheme.screens,
+      sm: '438px',
+    },
     extend: {
       // backgroundSize: {
       //   '60%': '60%',
@@ -20,7 +24,7 @@ const config: Config = {
         '4xl': '30px',
       },
       fontFamily: {
-        sans: ['Inter', '"Noto Sans KR"', ...fontFamily.sans],
+        sans: ['Inter', '"Noto Sans KR"', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
         'accordion-down': {
@@ -77,12 +81,19 @@ const config: Config = {
   },
   safelist: [
     {
-      pattern: /bg-(black|orange|purple|green|blue)-(main|sub)/,
+      pattern: /bg-(main|sub)/,
       variants: ['hover', 'dark'],
     },
     {
-      pattern: /text-(black|orange|purple|green|blue)-(main|sub)/,
+      pattern: /text-(main|sub)/,
       variants: ['hover', 'dark'],
+    },
+    {
+      pattern: /ring-(main|sub)/,
+      variants: ['hover', 'dark'],
+    },
+    {
+      pattern: /from-(main|sub)/,
     },
   ],
   plugins: [require('tailwindcss-animate')],
