@@ -1,88 +1,104 @@
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
-import Post from './Post';
+import { Link, useNavigate } from 'react-router-dom';
 
-type View = 'everyone' | 'following';
+import { FeedNav, FeedNavItem, View } from './components';
+import PageWrapper from '@/components/PageWrapper';
+import FeedWrapper from '@/components/FeedWrapper';
+import Post from '@/components/Post';
+import { getRelativeTime } from '@/lib/utils';
 
 const Feed: React.FC = () => {
   const [view, setView] = useState<View>('everyone');
+  const navigate = useNavigate();
+
+  let post = {
+    _id: 123456,
+    username: 'wavy',
+    profile: {
+      nickname: '서핑하는 웨이비',
+      image: '',
+      description: '',
+    },
+    createdAt: getRelativeTime(new Date(1713057901555)),
+    contents: {
+      text: `Lorem ipsum dolor sit amet consectetur adipisicing elit.
+
+      Voluptatum dolores eveniet delectus dicta assumenda itaque possimus, hic officia corporis quas saepe quidem. Perferendis labore accusantium ea quibusdam quo maiores repellat.
+      Voluptatum eligendi quam illum aspernatur! Culpa autem earum commodi laborum? Illo commodi alias nam inventore sunt ex, rerum ea eos asperiores. Modi ad beatae culpa reprehenderit earum. Eveniet, non error.
+
+      Voluptas non ut optio quam magnam provident tenetur eligendi atque minus unde fugit aliquam aut quasi, consequuntur quia adipisci dignissimos obcaecati debitis laborum officiis. Cumque nam voluptatum sunt dolorem dignissimos?`,
+      images: [
+        'https://images.unsplash.com/photo-1715464881886-0fd63cd7997b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOXx8fGVufDB8fHx8fA%3D%3D',
+        'https://images.unsplash.com/photo-1716244044193-1cb4daa4f487?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw3fHx8ZW58MHx8fHx8',
+        'https://images.unsplash.com/photo-1716449262006-86182cac98db?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyM3x8fGVufDB8fHx8fA%3D%3D',
+      ],
+    },
+    likes: ['123', '234'],
+    comments: [],
+  };
 
   return (
     <div className='relative'>
-      <FeedNav view={view} setView={setView} />
-      <section className='select border border-white'>
-        {/* {Array(10)
-          .fill(view)
-          .map((post, index) => (
-            <Post key={index} post={post} />
-          ))} */}
-          <h2 className='text-semibold text-2xl'>Lorm ipsum dolor sit amet consecteetur</h2>
-
-        
-        molestiae tempore nobis est sunt, ex, ipsam alias dicta, dolorum
-        corrupti quasi in ducimus sapiente aperiam nostrum accusantium nisi
-        reiciendis eaque. Repellat soluta rem unde dolorem harum ea hic ipsum
-        possimus, laboriosam, modi aliquam voluptas nesciunt exercitationem
-        impedit rerum cum! Minima quasi iure possimus rerum in! Velit est
-        placeat perferendis minus. Similique ratione quod blanditiis fugiat ipsa
-        rem, ut, tempore delectus modi iusto aut temporibus incidunt quasi
-        perferendis mollitia sit repellat error iure expedita? Repellat
-        quibusdam ipsam perspiciatis ratione illum quidem. Delectus dignissimos,
-        ab praesentium nobis molestias quos asperiores dolorem quis eligendi,
-        quo ad nesciunt quas voluptas sapiente laborum quam est laudantium
-        officiis officia minus accusamus temporibus. Distinctio impedit
-        veritatis accusantium! Consequuntur impedit eaque non ullam sunt tenetur
-        provident veniam laudantium modi molestiae possimus nobis, commodi
-        quibusdam pariatur architecto? Dolor, provident. Ad magnam temporibus
-        accusamus sapiente. Commodi facere hic accusamus deleniti. reiciendis
-        eaque. Repellat soluta rem unde dolorem harum ea hic ipsum possimus,
-        laboriosam, modi aliquam voluptas nesciunt exercitationem impedit rerum
-        cum! Minima quasi iure possimus rerum in! Velit est placeat perferendis
-        minus. Similique ratione quod blanditiis fugiat ipsa rem, ut, tempore
-        delectus modi iusto aut temporibus incidunt quasi perferendis mollitia
-        sit repellat error iure expedita? Repellat quibusdam ipsam perspiciatis
-        ratione illum quidem. Delectus dignissimos, ab praesentium nobis
-        molestias quos asperiores dolorem quis eligendi, quo ad nesciunt quas
-        voluptas sapiente laborum quam est laudantium officiis officia minus
-        accusamus temporibus. Distinctio impedit veritatis accusantium!
-        Consequuntur impedit eaque non ullam sunt tenetur provident veniam
-        laudantium modi molestiae possimus nobis, commodi quibusdam pariatur
-        architecto? Dolor, provident. Ad magnam temporibus accusamus sapiente.
-        Commodi facere hic accusamus deleniti.
-      </section>
+      <FeedNav className='top-10'>
+        <FeedNavItem value='following' view={view} setView={setView} />
+        <FeedNavItem value='everyone' view={view} setView={setView} />
+      </FeedNav>
+      <PageWrapper className='mt-10'>
+        <FeedWrapper>
+          {view === 'everyone' &&
+            Array(10)
+              .fill(post)
+              .map((post, index) => (
+                <div
+                  key={index}
+                  onClick={() => navigate(`/@${post.username}/${post._id}`)}
+                  className='cursor-pointer'
+                >
+                  <Post key={index} post={post} />
+                </div>
+              ))}
+          {view === 'following' && (
+            <p>
+              간단한 한글 로렘 입숨 문장입니다. 한글 로렘 입숨은 영문 로렘
+              입숨과 유사하게 사용됩니다. 이 문장은 무의미한 내용으로 구성되어
+              있습니다. 디자인이나 레이아웃을 구현할 때 활용할 수 있습니다. 한글
+              로렘 입숨은 실제 내용이 아닌 것에 주의해야 합니다. 이 문장은
+              단순히 자리 채우기용으로 사용됩니다. 한글 로렘 입숨은 디자인
+              작업에 유용하게 활용할 수 있습니다. 간단한 한글 로렘 입숨
+              문장입니다. 한글 로렘 입숨은 영문 로렘 입숨과 유사하게 사용됩니다.
+              이 문장은 무의미한 내용으로 구성되어 있습니다. 디자인이나
+              레이아웃을 구현할 때 활용할 수 있습니다. 한글 로렘 입숨은 실제
+              내용이 아닌 것에 주의해야 합니다. 이 문장은 단순히 자리
+              채우기용으로 사용됩니다. 한글 로렘 입숨은 디자인 작업에 유용하게
+              활용할 수 있습니다. 간단한 한글 로렘 입숨 문장입니다. 한글 로렘
+              입숨은 영문 로렘 입숨과 유사하게 사용됩니다. 이 문장은 무의미한
+              내용으로 구성되어 있습니다. 디자인이나 레이아웃을 구현할 때 활용할
+              수 있습니다. 한글 로렘 입숨은 실제 내용이 아닌 것에 주의해야
+              합니다. 이 문장은 단순히 자리 채우기용으로 사용됩니다. 한글 로렘
+              입숨은 디자인 작업에 유용하게 활용할 수 있습니다. 간단한 한글 로렘
+              입숨 문장입니다. 한글 로렘 입숨은 영문 로렘 입숨과 유사하게
+              사용됩니다. 이 문장은 무의미한 내용으로 구성되어 있습니다.
+              디자인이나 레이아웃을 구현할 때 활용할 수 있습니다. 한글 로렘
+              입숨은 실제 내용이 아닌 것에 주의해야 합니다. 이 문장은 단순히
+              자리 채우기용으로 사용됩니다. 한글 로렘 입숨은 디자인 작업에
+              유용하게 활용할 수 있습니다. 간단한 한글 로렘 입숨 문장입니다.
+              한글 로렘 입숨은 영문 로렘 입숨과 유사하게 사용됩니다. 이 문장은
+              무의미한 내용으로 구성되어 있습니다. 디자인이나 레이아웃을 구현할
+              때 활용할 수 있습니다. 한글 로렘 입숨은 실제 내용이 아닌 것에
+              주의해야 합니다. 이 문장은 단순히 자리 채우기용으로 사용됩니다.
+              한글 로렘 입숨은 디자인 작업에 유용하게 활용할 수 있습니다. 간단한
+              한글 로렘 입숨 문장입니다. 한글 로렘 입숨은 영문 로렘 입숨과
+              유사하게 사용됩니다. 이 문장은 무의미한 내용으로 구성되어
+              있습니다. 디자인이나 레이아웃을 구현할 때 활용할 수 있습니다. 한글
+              로렘 입숨은 실제 내용이 아닌 것에 주의해야 합니다. 이 문장은
+              단순히 자리 채우기용으로 사용됩니다. 한글 로렘 입숨은 디자인
+              작업에 유용하게 활용할 수 있습니다.
+            </p>
+          )}
+        </FeedWrapper>
+      </PageWrapper>
     </div>
   );
 };
 
 export default Feed;
-
-const FeedNav: React.FC<{
-  view: View;
-  setView: React.Dispatch<React.SetStateAction<View>>;
-}> = ({ view, setView }) => {
-  return (
-    <nav className='sticky top-5 mb-4 ml-auto flex w-fit flex-col justify-center gap-1 rounded-[20px] bg-background p-1.5 text-sm text-gray-900/60 outline-1 outline-gray-950/5 drop-shadow-lg hover:outline hover:drop-shadow-xl sm:mx-auto sm:flex-row'>
-      <FeedNavItem value='following' view={view} setView={setView} />
-      <FeedNavItem value='everyone' view={view} setView={setView} />
-    </nav>
-  );
-};
-
-const FeedNavItem: React.FC<{
-  value: View;
-  view: View;
-  setView: React.Dispatch<React.SetStateAction<View>>;
-}> = ({ value, view, setView }) => {
-  return (
-    <button
-      value={value}
-      onClick={e => setView(e.target.value)}
-      className={cn(
-        'rounded-[13px] px-3 py-1 first-letter:uppercase hover:bg-gray-100 active:bg-gray-900/10',
-        view === value && 'bg-gray-100 text-accent-foreground shadow-inner'
-      )}
-    >
-      {value}
-    </button>
-  );
-};

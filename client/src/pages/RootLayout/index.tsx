@@ -8,7 +8,7 @@ const RootLayout: React.FC = () => {
       <main className='flex'>
         <MainNav />
         <div className='ml-auto min-h-screen w-[calc(100vw-70px)] p-4 pb-[95px]'>
-          <div className='bg-gradient-circle pointer-events-none -left-[250px] -top-[145px] rotate-180' />
+          <div className='bg-gradient-circle pointer-events-none fixed -left-[250px] -top-[145px] rotate-180' />
           <Outlet />
         </div>
       </main>

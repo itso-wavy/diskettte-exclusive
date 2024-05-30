@@ -10,7 +10,7 @@ const MainNav: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className='fixed top-0 z-10 h-screen w-[60px] flex-shrink-0 bg-background from-gray-500/20 to-transparent px-2.5 py-[78px] text-primary before:absolute before:bottom-0 before:right-0 before:inline-block before:h-5/6 before:w-px before:bg-gradient-to-t'>
+    <nav className='fixed top-0 z-10 h-screen w-[60px] flex-shrink-0 bg-background from-gray-500/20 to-transparent px-2.5 py-[78px] text-foreground before:absolute before:bottom-0 before:right-0 before:inline-block before:h-[90%] before:w-px before:bg-gradient-to-t'>
       <ul className='relative flex h-full flex-col justify-center gap-4'>
         <NavLink tooltip='Home' onClick={() => navigate('/')}>
           <Icon.Home className={cn(pathname === '/' && 'svg-fill')} />

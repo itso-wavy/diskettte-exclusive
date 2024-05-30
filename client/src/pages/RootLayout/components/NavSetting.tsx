@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -97,7 +98,7 @@ const NavSetting: React.FC = () => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {isLogin ? (
+          {!isLogin ? (
             <>
               <DropdownMenuItem onClick={() => console.log('Log in')}>
                 <Icon.LogIn viewBox='0 0 24 24' className='mr-2 h-4 w-4' />
@@ -105,7 +106,7 @@ const NavSetting: React.FC = () => {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => console.log('Join')}>
                 <Icon.Join viewBox='0 0 24 24' className='mr-2 h-4 w-4' />
-                Join
+                Join us
               </DropdownMenuItem>
             </>
           ) : (

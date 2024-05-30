@@ -13,6 +13,7 @@ const Header: React.FC = () => {
           <img
             src={!isDarkmode ? '/logo.png' : '/logo-dark.png'}
             alt='diskettte exclusive'
+            draggable='false'
             className='h-full hover:opacity-75'
           />
         </Link>

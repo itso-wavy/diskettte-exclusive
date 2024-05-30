@@ -14,7 +14,9 @@ import Profile from './smile.svg?react';
 import Join from './users.svg?react';
 import Diskette from './diskette.svg?react';
 
+import More from './more.svg?react';
 import Heart from './heart.svg?react';
+import Comment from './message-square.svg?react';
 
 // export type IconProps = React.HTMLAttributes<SVGElement>;
 // export type IconProps = React.SVGProps<SVGElement>
@@ -32,7 +34,9 @@ const Icon = {
   Join,
   Diskette,
 
+  More,
   Heart,
+  Comment,
 };
 
 export default Icon;
