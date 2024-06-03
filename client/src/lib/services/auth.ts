@@ -1,5 +1,5 @@
 import client from '.';
-import { setLogin, setLogout, store } from '../store';
+import { setLogin, setLogout, store } from '@/lib/store';
 
 export const refreshAccessToken = async () => {
   try {
