@@ -5,6 +5,7 @@ import ProfileAvatar from './ProfileAvatar';
 import CircularButton from './CircularButton';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import Icon from './icons';
+
 import { cn } from '@/lib/utils';
 
 const Post: React.FC<{ post: any; className?: string }> = ({
