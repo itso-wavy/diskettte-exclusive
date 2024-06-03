@@ -13,10 +13,10 @@ const ProfileAvatar: React.FC<{
       <AvatarImage
         src={image ? image : undefined}
         alt={'@' + nickname}
-        // className='hover:opacity-75'
+        className='object-cover'
       />
       <AvatarFallback className='bg-gradient-to-b from-gray-400/60 via-gray-200/70 to-white to-[75%] shadow-inner hover:bg-gray-500/5 '>
-        <Icon.AtSign viewBox='0 0 24 24' className='text-beta h-6 w-6' />
+        <Icon.AtSign viewBox='0 0 24 24' className='h-6 w-6 text-beta' />
         {/* {nickname ? (
           <p className='text-sm text-zinc-800'>{nickname.slice(0, 1)}</p>
         ) : (

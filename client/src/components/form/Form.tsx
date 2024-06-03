@@ -6,15 +6,17 @@ import { cn } from '@/lib/utils';
 
 export const Layout = ({
   handleSubmit,
+  className,
   children,
 }: PropsWithChildren<{
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  className?: string;
 }>) => {
   return (
     <Form
       method='POST'
       onSubmit={handleSubmit}
-      className='flex h-full flex-col justify-between'
+      className={cn('flex h-full flex-col justify-between', className)}
     >
       {children}
     </Form>
@@ -125,14 +127,7 @@ export const SubmitButton: React.FC<{
   className?: string;
 }> = ({ text, disabled, className }) => {
   return (
-    <Button
-      type='submit'
-      disabled={disabled}
-      className={cn(
-        'mt-5',
-        className
-      )}
-    >
+    <Button type='submit' disabled={disabled} className={cn('mt-5', className)}>
       {text}
     </Button>
   );

@@ -21,7 +21,7 @@ import ProfileAvatar from '@/components/ProfileAvatar';
 import {
   FormMode,
   LoginForm,
-  ProfileForm,
+  // ProfileForm,
   RegisterForm,
 } from '@/components/form';
 import Icon from '@/components/icons';
@@ -158,7 +158,7 @@ const NavMenuBlock: React.FC = () => {
       </DropdownMenu>
       {formMode === FormMode.LOGIN && <LoginForm />}
       {formMode === FormMode.REGISTER && <RegisterForm />}
-      {formMode === FormMode.PROFILE && <ProfileForm />}
+      {/* {formMode === FormMode.PROFILE && <ProfileForm />} */}
     </Dialog>
   );
 };
