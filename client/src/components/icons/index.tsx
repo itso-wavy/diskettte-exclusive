@@ -11,12 +11,15 @@ import Moon from './moon.svg?react';
 import LogIn from './log-in.svg?react';
 import LogOut from './log-out.svg?react';
 import Profile from './smile.svg?react';
+import AtSign from './at-sign.svg?react';
 import Join from './users.svg?react';
 import Diskette from './diskette.svg?react';
 
 import More from './more.svg?react';
 import Heart from './heart.svg?react';
 import Comment from './message-square.svg?react';
+import X from './x.svg?react';
+// import Star from './star.svg?react';
 
 // export type IconProps = React.HTMLAttributes<SVGElement>;
 // export type IconProps = React.SVGProps<SVGElement>
@@ -31,12 +34,14 @@ const Icon = {
   LogIn,
   LogOut,
   Profile,
+  AtSign,
   Join,
   Diskette,
 
   More,
   Heart,
   Comment,
+  X,
 };
 
 export default Icon;

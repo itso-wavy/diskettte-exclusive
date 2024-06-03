@@ -111,7 +111,7 @@
   .bg-gradient-circle {
     height: 650px;
     width: 650px;
-    background: linear-gradient(-13deg, hsl(var(--color-main)), rgba(187, 252, 3, .4));
+    background: linear-gradient(-13deg, hsl(var(--color-alpha)), rgba(187, 252, 3, .4));
     border-radius: 100%;
     position: absolute;
     top:0;
@@ -129,32 +129,34 @@
 }
 
 .theme-strawberry * {
-  --color-main: 327, 100%, 73%;
-  --color-sub: 345, 100%, 89%, 0.667;
-}
-.theme-orange * {
-  --color-main: 19, 100%, 61%;
-  --color-sub:  27, 100%, 76%, 0.667;
+  --color-alpha: 327, 100%, 73%;
+  --color-beta: 345, 100%, 89%, 0.667;
+  --color-gamma: 327, 100%, 65%;
 }
 .theme-mango * {
-  --color-main: 45, 100%, 50%;
-  --color-sub: 49, 100%, 70%, 0.667;
+  --color-alpha: 45, 100%, 50%;
+  --color-beta: 49, 100%, 70%, 0.667;
+  --color-gamma: 45, 100%, 42%;
 }
 .theme-lemon * {
-  --color-main: 58, 85%, 48%;
-  --color-sub: 58, 85%, 77%, 0.667;
+  --color-alpha: 58, 85%, 48%;
+  --color-beta: 58, 85%, 77%, 0.667;
+  --color-gamma: 56, 89%, 44%;
 }
 .theme-melon * {
-  --color-main: 107, 62%, 50%;
-  --color-sub: 91, 88%, 84%, 0.8;
+  --color-alpha: 107, 62%, 50%;
+  --color-beta: 91, 88%, 84%, 0.8;
+  --color-gamma: 109, 75%, 40%;
 }
 .theme-grape * {
-  --color-main: 233, 96%, 68%; 
-  --color-sub: 225, 100%, 89%, 0.8;
+  --color-alpha: 233, 96%, 68%; 
+  --color-beta: 225, 100%, 89%, 0.8;
+  --color-gamma: 233, 96%, 62%; 
 }
 .theme-dragonfruit * {
-  --color-main: 295, 51%, 65%;
-  --color-sub: 316, 94%, 93%, 0.8;  
+  --color-alpha: 295, 51%, 65%;
+  --color-beta: 316, 94%, 93%, 0.8;  
+  --color-gamma:310, 53%, 52%;
 }
 /* .masonry {
   display: masonry;

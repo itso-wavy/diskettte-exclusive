@@ -17,7 +17,7 @@ const Post: React.FC<{ post: any; className?: string }> = ({
   return (
     <div
       className={cn(
-        'border-b px-6 py-3 text-[15px] last:border-b-0',
+        'border-b px-0 py-3 text-[15px] last:border-b-0 sm:px-6',
         className
       )}
       {...props}
@@ -30,12 +30,14 @@ const Post: React.FC<{ post: any; className?: string }> = ({
             nickname={post.username}
           />
         </div>
-        <div className='*:select flex h-fit items-center gap-x-1.5'>
-          <PostUsernameLink
-            to={`/@${post.username}`}
-            username={post.profile.nickname}
-          />
-          <PostDate date={post.createdAt} />
+        <div className='*:select grid grid-cols-[1fr,max-content] gap-x-1.5 leading-tight'>
+          <div className='flex gap-1.5'>
+            <PostUsernameLink
+              to={`/@${post.username}`}
+              username={post.profile.nickname}
+            />
+            <PostDate date={post.createdAt} />
+          </div>
           <PostButton
             ariaLabel='more'
             onClick={() => console.log('post click')}
@@ -126,8 +128,11 @@ const PostUsernameLink: React.FC<{ to: string; username: string }> = ({
 }) => {
   return (
     <StopPropagationButton>
-      <Link to={to} className='underline-offset-[3px] hover:underline'>
-        <span className='select font-semibold '>{username}</span>
+      <Link
+        to={to}
+        className='break-all leading-[21px] underline-offset-[3px] hover:underline'
+      >
+        <span className='select font-semibold'>{username}</span>
       </Link>
     </StopPropagationButton>
   );
@@ -135,10 +140,7 @@ const PostUsernameLink: React.FC<{ to: string; username: string }> = ({
 
 const PostDate: React.FC<{ date: string }> = ({ date }) => {
   return (
-    <time
-      dateTime={date}
-      className='text-sm leading-[1.65] text-muted-foreground'
-    >
+    <time dateTime={date} className='select text-sm text-muted-foreground'>
       {date}
     </time>
   );

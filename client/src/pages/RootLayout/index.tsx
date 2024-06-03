@@ -3,7 +3,7 @@ import { Header, MainNav } from './components';
 
 const RootLayout: React.FC = () => {
   return (
-    <div className='container selection:bg-sub selection:text-foreground'>
+    <div className='selection:bg-beta container selection:text-foreground'>
       <Header />
       <main className='flex'>
         <MainNav />

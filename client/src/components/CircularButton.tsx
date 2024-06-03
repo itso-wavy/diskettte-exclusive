@@ -15,10 +15,6 @@ const CircularButton = ({
 }>) => {
   return (
     <button
-      // onClick={e => {
-      //   e.stopPropagation();
-      //   onClick?.(e);
-      // }}
       onClick={onClick}
       aria-label={ariaLabel}
       className={cn(

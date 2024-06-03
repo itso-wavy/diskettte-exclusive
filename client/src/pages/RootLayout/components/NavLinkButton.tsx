@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
-const NavLink = ({
+const NavLinkButton = ({
   tooltip,
   onClick,
   className,
@@ -41,4 +41,4 @@ const NavLink = ({
   );
 };
 
-export default NavLink;
+export default NavLinkButton;

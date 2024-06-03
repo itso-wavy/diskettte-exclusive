@@ -10,7 +10,7 @@ const FeedNav = ({
   return (
     <nav
       className={cn(
-        'sticky z-50 ml-auto flex w-fit flex-col justify-center gap-1 rounded-[20px] bg-background p-1.5 text-sm text-muted-foreground outline-1 outline-border drop-shadow-lg hover:outline hover:drop-shadow-xl dark:outline sm:mx-auto sm:flex-row',
+        'z-50 flex w-fit flex-col justify-center gap-1 rounded-[20px] bg-background p-1.5 text-sm text-muted-foreground outline-1 outline-border drop-shadow-lg hover:outline hover:drop-shadow-xl dark:outline sm:flex-row',
         className
         // outline-gray-950/5 text-gray-900/60
       )}

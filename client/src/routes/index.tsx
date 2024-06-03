@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import {
   RootLayout,
+  // AuthLayout,
   Error,
   Feed,
   Search,
@@ -37,6 +38,26 @@ const router: Router = createBrowserRouter([
         path: ':username/:postId',
         element: <PostDetail />,
       },
+      {
+        path: 'profile',
+        element: <Profile />,
+      },
+      // {
+      //   path: 'auth',
+      //   element: <AuthLayout />,
+      //   children: [
+      //     {
+      //       path: 'login',
+      //       element: <div>Login</div>,
+      //       // element: <Login />,
+      //     },
+      //     {
+      //       path: 'join',
+      //       element: <div>join</div>,
+      //       // element: <Register />,
+      //     },
+      //   ],
+      // },
     ],
   },
 ]);

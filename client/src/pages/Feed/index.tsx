@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { FeedNav, FeedNavItem, View } from './components';
-import PageWrapper from '@/components/PageWrapper';
-import FeedWrapper from '@/components/FeedWrapper';
+import PageWrapper from '@/components/layout/PageWrapper';
+import FeedWrapper from '@/components/layout/FeedWrapper';
 import Post from '@/components/Post';
 import { getRelativeTime } from '@/lib/utils';
 
@@ -38,12 +38,12 @@ const Feed: React.FC = () => {
   };
 
   return (
-    <div className='relative'>
-      <FeedNav className='top-10'>
+    <div>
+      <FeedNav className='fixed right-10 top-10 sm:left-[60px] sm:right-0 sm:mx-auto'>
         <FeedNavItem value='following' view={view} setView={setView} />
         <FeedNavItem value='everyone' view={view} setView={setView} />
       </FeedNav>
-      <PageWrapper className='mt-10'>
+      <PageWrapper className='mt-24 sm:mt-20'>
         <FeedWrapper>
           {view === 'everyone' &&
             Array(10)
