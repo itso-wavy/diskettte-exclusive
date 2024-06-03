@@ -39,6 +39,11 @@ export const registerHandler = async (req: Request, res: Response) => {
     const newUser: IUser = new User({
       username,
       password: hashedPassword,
+      profile: {
+        nickname: username,
+        image: null,
+        description: null,
+      },
     });
 
     await newUser.save();
@@ -84,8 +89,10 @@ export const loginHandler = async (req: Request, res: Response) => {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30일
       });
 
+      console.log('💛', user);
       return res.json({
         accessToken,
+        profile: user.profile,
       });
     } else {
       return res

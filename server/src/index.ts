@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { authRouter } from '@/auth/authRoutes';
 import { profileRouter } from '@/profile/profileRoutes';
+import { postRouter } from '@/post/postRoutes';
 
 const app = express();
 const PORT = 3000;
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use(authRouter);
 app.use(profileRouter);
+app.use(postRouter);
 
 app.get('/', (_req: Request, res: Response) => {
   res.send('hello world!');
