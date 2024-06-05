@@ -1,5 +1,5 @@
 export { default as RootLayout } from './RootLayout';
-// export { default as AuthLayout } from './AuthLayout';
+export { default as UserLayout } from './UserLayout';
 export { default as Error } from './Error';
 
 export { default as Feed } from './Feed';

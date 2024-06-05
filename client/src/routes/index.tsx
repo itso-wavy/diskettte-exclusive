@@ -1,10 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 import {
   RootLayout,
-  // AuthLayout,
+  UserLayout,
   Error,
   Feed,
   Search,
+  UserPage,
   PostDetail,
   Bookmarks,
   Profile,
@@ -19,7 +20,7 @@ const router: Router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        index: true,
+        index: true, // FeedPost 내에서 username이 나인지 확인 필요
         element: <Feed />,
       },
       {
@@ -27,37 +28,27 @@ const router: Router = createBrowserRouter([
         element: <Search />,
       },
       {
-        path: 'bookmark',
-        element: <Bookmarks />,
-      },
-      {
         path: ':username',
-        element: <Profile />,
+        element: <UserLayout />,
+        children: [
+          {
+            index: true,
+            element: <UserPage />,
+          },
+          {
+            path: ':postId',
+            element: <PostDetail />,
+          },
+          {
+            path: 'profile',
+            element: <Profile />,
+          },
+          {
+            path: 'bookmark',
+            element: <Bookmarks />,
+          },
+        ],
       },
-      {
-        path: ':username/:postId',
-        element: <PostDetail />,
-      },
-      {
-        path: 'profile',
-        element: <Profile />,
-      },
-      // {
-      //   path: 'auth',
-      //   element: <AuthLayout />,
-      //   children: [
-      //     {
-      //       path: 'login',
-      //       element: <div>Login</div>,
-      //       // element: <Login />,
-      //     },
-      //     {
-      //       path: 'join',
-      //       element: <div>join</div>,
-      //       // element: <Register />,
-      //     },
-      //   ],
-      // },
     ],
   },
 ]);

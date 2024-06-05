@@ -1,19 +1,23 @@
+import { useOutletContext } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+import { PageWrapper, WidthWrapper } from '@/components/layout';
 import { ProfileForm } from '@/components/form';
 
 import { RootState } from '@/lib/store';
-import { PageWrapper, FeedWrapper } from '@/components/layout';
+import { UserLayoutContext } from '../UserLayout';
 
 const Profile: React.FC = () => {
+  const { isUserMatch } = useOutletContext<UserLayoutContext>();
   const { profile } = useSelector((state: RootState) => state.user);
-  // const { username } = useParams(); // @wavy
+
+  if (!isUserMatch) throw new Error('User not match!😥');
 
   return (
     <PageWrapper>
-      <FeedWrapper>
+      <WidthWrapper>
         <ProfileForm profile={profile} />
-      </FeedWrapper>
+      </WidthWrapper>
     </PageWrapper>
   );
 };
