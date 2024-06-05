@@ -4,7 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 import { cn } from '@/lib/utils/cn';
 
-import CircularButton from '../CircularButton';
+import { CircularButton } from '../form';
 import Icon from '@/components/icons';
 
 const Dialog = DialogPrimitive.Root;

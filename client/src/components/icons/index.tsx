@@ -18,8 +18,9 @@ import Diskette from './diskette.svg?react';
 import More from './more.svg?react';
 import Heart from './heart.svg?react';
 import Comment from './message-square.svg?react';
+import Picture from './image.svg?react';
 import X from './x.svg?react';
-// import Star from './star.svg?react';
+import Message from './send.svg?react';
 
 // export type IconProps = React.HTMLAttributes<SVGElement>;
 // export type IconProps = React.SVGProps<SVGElement>
@@ -41,7 +42,9 @@ const Icon = {
   More,
   Heart,
   Comment,
+  Picture,
   X,
+  Message,
 };
 
 export default Icon;

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const ImageFileValidation = z
+export const imageFileValidation = z
   .instanceof(File)
   .refine(
     file => {
