@@ -23,6 +23,7 @@ export const getPosts = async (req: AuthenticatedRequest, res: Response) => {
             username: writer.username,
             profile: writer.profile,
           },
+          createdAt: post.createdAt,
           contents: post.contents,
           isLiked: userId
             ? likes.some(user => user.toString() === userId)
@@ -71,6 +72,7 @@ export const getFollowingPosts = async (
             profile: writer.profile,
           },
           contents: post.contents,
+          createdAt: post.createdAt,
           isLiked: userId
             ? likes.some(user => user.toString() === userId)
             : false,
@@ -95,14 +97,6 @@ export const getUserPosts = async (
 
   try {
     const writer = (await User.findOne({ username }))!;
-    // const writer = {
-    //   username: 'wavy',
-    //   profile: {
-    //     nickname: '난웨이비',
-    //     image: '',
-    //     describtion: '',
-    //   },
-    // };
     const posts = await Post.find({ 'writer.username': username }).sort({
       createdAt: -1,
     });
@@ -121,6 +115,7 @@ export const getUserPosts = async (
             profile: writer.profile,
           },
           contents: post.contents,
+          createdAt: post.createdAt,
           isLiked: userId
             ? likes.some(user => user.toString() === userId)
             : false,
@@ -163,6 +158,7 @@ export const getPost = async (req: AuthenticatedRequest, res: Response) => {
         profile: writer.profile,
       },
       contents: post.contents,
+      createdAt: post.createdAt,
       isLiked: userId ? likes.some(user => user.toString() === userId) : false,
       likesCount: likes.length,
       commentsCount: comments.length,
@@ -203,30 +199,31 @@ export const createPost = async (req: AuthenticatedRequest, res: Response) => {
 };
 
 export const editPost = async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req.user?._id;
   const { postId } = req.params;
 
   try {
-    // const userId = req.user?._id;
-
     const { text } = postContentsSchema.parse(req.body);
+    const images: string[] = [];
     // const { title, intro, content } = postSchema.parse(req.body);
     // const cover = req.body.cover;
 
     const post = await Post.findById(postId);
-
     if (!post) {
       return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
     }
 
-    // if (Post.user.toString() !== userId) {
-    //   return res.status(403).json({ error: '권한이 없습니다.' });
-    // }
+    if (post.writer.toString() !== userId) {
+      return res.status(403).json({ error: '권한이 없습니다.' });
+    }
 
-    const updatedPost = await Post.findByIdAndUpdate(
-      postId,
-      { text },
-      { new: true }
-    );
+    const contents = {
+      text,
+      images,
+    };
+    post.contents = contents;
+
+    const updatedPost = await post.save();
 
     return res.json(updatedPost);
   } catch (err) {
@@ -235,25 +232,27 @@ export const editPost = async (req: AuthenticatedRequest, res: Response) => {
 };
 
 export const deletePost = async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req.user?._id;
   const { postId } = req.params;
 
   try {
-    const userId = req.user?._id;
-
     const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
+    }
 
-    if (post?._id !== userId) {
-      res.status(403).json({ error: '권한이 없습니다.' });
+    if (post.writer.toString() !== userId) {
+      return res.status(403).json({ error: '권한이 없습니다.' });
     }
 
     const deletedPost = await Post.findByIdAndDelete(postId);
 
     if (!deletedPost) {
-      res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
+      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
     }
 
-    res.json(deletedPost);
+    return res.json(deletedPost);
   } catch (err) {
-    res.status(500).json({ error: 'Internal Server Error', err });
+    return res.status(500).json({ error: 'Internal Server Error', err });
   }
 };

@@ -31,6 +31,7 @@ const PostForm: React.FC<{
     formState: { errors, isDirty },
     setError,
     clearErrors,
+    setValue,
     reset,
   } = useForm<PostT['contents']>({
     defaultValues: post
@@ -41,32 +42,47 @@ const PostForm: React.FC<{
         },
     resolver: zodResolver(postSchema),
   });
+
   const [selectedImage, setSelectedImage] = useState<string[]>([]);
   const { profile } = useSelector((state: RootState) => state.user);
   const queryClient = useQueryClient();
 
   const { mutate, error, isPending, isError } = useMutation({
-    mutationFn: async (request: FieldValues) => {
-      const { data } = await client.post(
-        type === 'create' ? `post/${type}` : `post/${post?._id}/${type}`,
-        {
-          ...request,
-          image: selectedImage,
-        }
-      );
-      return data;
+    mutationFn: async (request: any) => {
+      switch (type) {
+        case PostFormType.CREATE:
+          await client.post(`post/${type}`, request);
+          break;
+        case PostFormType.EDIT:
+          const response = await client.patch(
+            `post/${post?._id}/${type}`,
+            request
+          );
+
+          const { contents } = response.data;
+          setValue('text', contents.text, {
+            shouldValidate: true,
+          });
+          setValue('images', contents.images);
+          break;
+        default:
+          break;
+      }
     },
     onMutate: () => {
       toast('게시 중...');
+
+      reset();
+      document.getElementById('dialog-close')?.click();
     },
     onSuccess: () => {
       toast('게시되었습니다.');
-      document.getElementById('dialog-close')?.click();
     },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: [{ username }],
-      });
+      if (type === PostFormType.EDIT)
+        queryClient.invalidateQueries({
+          queryKey: ['posts', { postId: post!._id }],
+        });
     },
     onError: err => {
       console.log(err);
@@ -91,7 +107,10 @@ const PostForm: React.FC<{
   });
 
   const onSubmit = (request: FieldValues) => {
-    mutate(request);
+    mutate({
+      ...request,
+      image: selectedImage,
+    });
   };
 
   // const ImageInput = ({
@@ -178,7 +197,7 @@ const PostForm: React.FC<{
             className='h-9 w-9 rounded-full'
           />
         }
-        topLinePart={<p>{profile.nickname}</p>}
+        topLinePart={<p className='font-semibold'>{profile.nickname}</p>}
         className='border-b-0 sm:px-0'
       >
         <Form.Layout handleSubmit={handleSubmit(onSubmit)}>
@@ -187,7 +206,8 @@ const PostForm: React.FC<{
             label='new-post'
             labelHidden={true}
             placeholder='내용을 입력하세요...'
-            rows={1}
+            // rows={1}
+            rows={3}
             className='mt-2'
             error={
               errors.text?.message ? (errors.text.message as ReactNode) : ''
@@ -238,7 +258,11 @@ const PostForm: React.FC<{
           {errors.image?.message || ''}
         </Form.Feedback>
       )} */}
-          <Form.SubmitButton text='Register' disabled={!isDirty} />
+          <Form.SubmitButton
+            text={type === 'create' ? 'Register' : type}
+            disabled={!isDirty}
+            className='first-letter:uppercase'
+          />
         </Form.Layout>
       </Post.Layout>
     </DialogLayout>

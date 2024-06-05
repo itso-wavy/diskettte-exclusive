@@ -18,7 +18,7 @@ const PostDetail: React.FC = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['post', { postId }, { isLoggedIn }],
+    queryKey: ['posts', { postId }, { isLoggedIn }],
     queryFn: () =>
       client(
         !isLoggedIn

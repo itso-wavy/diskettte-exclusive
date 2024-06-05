@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import ProfileAvatar from '../ProfileAvatar';
@@ -100,8 +100,8 @@ export const Content: React.FC<{
       </p>
       <ScrollArea onClick={e => e.stopPropagation()}>
         <div className='flex w-max space-x-1.5 overflow-x-auto pb-3'>
-          {images?.length &&
-            images.map((i, index) => (
+          {images?.length! > 0 &&
+            images!.map((i, index) => (
               <img
                 key={index}
                 src={i}
@@ -117,22 +117,21 @@ export const Content: React.FC<{
   );
 };
 
-export const Button = ({
-  ariaLabel,
-  onClick,
-  count,
-  className,
-  children,
-}: PropsWithChildren<{
+interface PostButtonProps {
   ariaLabel: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   count?: number;
   className?: string;
-}>) => {
+}
+
+export const Button = forwardRef<
+  HTMLButtonElement,
+  PropsWithChildren<PostButtonProps>
+>(({ ariaLabel, onClick, count, className, children }, ref) => {
   return (
     <StopPropagationButton className={className}>
       {!count ? (
-        <CircularButton ariaLabel={ariaLabel} onClick={onClick}>
+        <CircularButton ref={ref} ariaLabel={ariaLabel} onClick={onClick}>
           {children}
         </CircularButton>
       ) : (
@@ -147,4 +146,4 @@ export const Button = ({
       )}
     </StopPropagationButton>
   );
-};
+});

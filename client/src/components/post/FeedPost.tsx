@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { MoreButton, Post } from '.';
@@ -7,7 +8,7 @@ import { getRelativeTime } from '@/lib/utils';
 import { Post as PostT } from '@/lib/types';
 import { RootState } from '@/lib/store';
 
-const FeedPost: React.FC<{
+export const FeedPost: React.FC<{
   post: PostT;
   className?: string;
 }> = ({ post, className }) => {
@@ -34,16 +35,16 @@ const FeedPost: React.FC<{
             />
             <Post.Date date={relativeTime} />
           </div>
-          <MoreButton username={username} isWriter={isWriter} post={post} />
-          {/* <Post.Button
-            ariaLabel='more'
-            onClick={() =>
-              isLoggedIn ? console.log('login') : console.log('log out')
-            }
-            className='ml-auto text-muted-foreground'
-          >
-            <Icon.More viewBox='0 0 24 24' className='h-5 w-5' />
-          </Post.Button> */}
+          <MoreButton username={username} isWriter={isWriter} post={post}>
+            <div>
+              <Post.Button
+                ariaLabel='more'
+                className='ml-auto text-muted-foreground'
+              >
+                <Icon.More viewBox='0 0 24 24' className='h-5 w-5' />
+              </Post.Button>
+            </div>
+          </MoreButton>
         </>
       }
       className={className}
@@ -92,4 +93,18 @@ const FeedPost: React.FC<{
   );
 };
 
-export default FeedPost;
+export const FeedLinkPost: React.FC<{
+  post: PostT;
+  className?: string;
+}> = ({ post, className }) => {
+  const navigate = useNavigate();
+
+  return (
+    <div
+      onClick={() => navigate(`/@${post.writer.username}/${post._id}`)}
+      className='cursor-pointer border-b last:border-b-0'
+    >
+      <FeedPost post={post} className={className} />
+    </div>
+  );
+};

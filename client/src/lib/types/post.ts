@@ -1,14 +1,10 @@
-// import { ObjectId } from 'mongoose';
-
 interface Comment {
-  // user: ObjectId;
   user: string;
   contents: string;
   createdAt: Date;
 }
 
 export interface Post {
-  // _id: ObjectId;
   _id: string;
   writer: {
     username: string;
@@ -18,11 +14,11 @@ export interface Post {
       description: string | null;
     };
   };
-  createdAt: Date;
   contents: {
     text: string | undefined;
     images: string[] | undefined;
   };
+  createdAt: Date;
   isLiked: boolean;
   likesCount: number;
   commentsCount: number;

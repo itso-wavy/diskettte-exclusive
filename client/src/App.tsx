@@ -12,7 +12,7 @@ const App: React.FC = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <ReactQueryDevtools initialIsOpen={false} />
       <Provider store={store}>
         <ThemeProvider>
           <RouterProvider router={router} />

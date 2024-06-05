@@ -7,5 +7,4 @@ export enum DialogMode {
 export enum PostFormType {
   CREATE = 'create',
   EDIT = 'edit',
-  DELETE = 'delete',
 }

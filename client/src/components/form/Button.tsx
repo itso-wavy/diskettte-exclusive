@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, forwardRef } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -43,20 +43,20 @@ export const StopPropagationButton = ({
   );
 };
 
-export const CircularButton = ({
-  props,
-  onClick,
-  ariaLabel,
-  className,
-  children,
-}: PropsWithChildren<{
+interface CircularButtonProps {
   props?: React.HTMLAttributes<HTMLButtonElement>;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   ariaLabel?: string;
   className?: string;
-}>) => {
+}
+
+export const CircularButton = forwardRef<
+  HTMLButtonElement,
+  PropsWithChildren<CircularButtonProps>
+>(({ props, onClick, ariaLabel, className, children }, ref) => {
   return (
     <button
+      ref={ref}
       onClick={onClick}
       aria-label={ariaLabel}
       className={cn(
@@ -69,6 +69,6 @@ export const CircularButton = ({
       {children}
     </button>
   );
-};
+});
 
 export default Button;
