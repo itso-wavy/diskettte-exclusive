@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'sonner';
 
 import {
   DropdownMenu,
@@ -18,21 +19,18 @@ import {
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import ProfileAvatar from '@/components/ProfileAvatar';
-import {
-  FormMode,
-  LoginForm,
-  // ProfileForm,
-  RegisterForm,
-} from '@/components/form';
+import { LoginForm, RegisterForm, DialogMode } from '@/components/dialog';
 import Icon from '@/components/icons';
 
 import { RootState, setDarkmode, setLogout, setTheme } from '@/lib/store';
-import { ThemeState, themes } from '@/lib/types';
+import { themes } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 const NavMenuBlock: React.FC = () => {
-  const [formMode, setFormMode] = useState<FormMode>(FormMode.LOGIN);
-  const { isLoggedIn } = useSelector((state: RootState) => state.auth);
+  const [formMode, setFormMode] = useState<DialogMode>(DialogMode.LOGIN);
+  const { isLoggedIn, username } = useSelector(
+    (state: RootState) => state.auth
+  );
   const { isDarkmode } = useSelector((state: RootState) => state.theme);
   const { profile } = useSelector((state: RootState) => state.user);
   // const handleLogout = () => dispatch(setLogout());
@@ -43,7 +41,7 @@ const NavMenuBlock: React.FC = () => {
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className='absolute bottom-0 w-[40px] rounded-full ring-[3px] ring-alpha ring-offset-1 ring-offset-background *:rounded-full focus:outline-none'>
+          <button className='absolute bottom-0 w-[40px] rounded-full outline-offset-4 ring-[3px] ring-alpha ring-offset-1 ring-offset-background *:rounded-full'>
             <ProfileAvatar nickname={profile.nickname} image={profile.image} />
           </button>
         </DropdownMenuTrigger>
@@ -113,14 +111,16 @@ const NavMenuBlock: React.FC = () => {
             {!isLoggedIn ? (
               <>
                 <DialogTrigger asChild>
-                  <DropdownMenuItem onClick={() => setFormMode(FormMode.LOGIN)}>
+                  <DropdownMenuItem
+                    onClick={() => setFormMode(DialogMode.LOGIN)}
+                  >
                     <Icon.LogIn viewBox='0 0 24 24' className='mr-2 h-4 w-4' />
                     Login
                   </DropdownMenuItem>
                 </DialogTrigger>
                 <DialogTrigger asChild>
                   <DropdownMenuItem
-                    onClick={() => setFormMode(FormMode.REGISTER)}
+                    onClick={() => setFormMode(DialogMode.REGISTER)}
                   >
                     <Icon.Join viewBox='0 0 24 24' className='mr-2 h-4 w-4' />
                     Join us
@@ -129,14 +129,23 @@ const NavMenuBlock: React.FC = () => {
               </>
             ) : (
               <>
-                {/* <DialogTrigger asChild> */}
-                {/* <DropdownMenuItem onClick={() => setFormMode(FormMode.PROFILE)}> */}
-                <DropdownMenuItem onClick={() => navigate('/profile')}>
+                <DropdownMenuItem onClick={() => navigate(`/@${username}`)}>
+                  <Icon.Profile viewBox='0 0 24 24' className='mr-2 h-4 w-4' />
+                  My Profile
+                </DropdownMenuItem>
+                {/* <DropdownMenuItem
+                  onClick={() => navigate(`${username}/profile`)}
+                >
                   <Icon.Profile viewBox='0 0 24 24' className='mr-2 h-4 w-4' />
                   Change Profile
-                </DropdownMenuItem>
-                {/* </DialogTrigger> */}
-                <DropdownMenuItem onClick={() => dispatch(setLogout())}>
+                </DropdownMenuItem> */}
+                <DropdownMenuItem
+                  onClick={() => {
+                    dispatch(setLogout());
+
+                    toast('다음에 또 만나요. 안녕👋');
+                  }}
+                >
                   <Icon.LogOut viewBox='0 0 24 24' className='mr-2 h-4 w-4' />
                   Log out
                 </DropdownMenuItem>
@@ -156,9 +165,8 @@ const NavMenuBlock: React.FC = () => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {formMode === FormMode.LOGIN && <LoginForm />}
-      {formMode === FormMode.REGISTER && <RegisterForm />}
-      {/* {formMode === FormMode.PROFILE && <ProfileForm />} */}
+      {formMode === DialogMode.LOGIN && <LoginForm />}
+      {formMode === DialogMode.REGISTER && <RegisterForm />}
     </Dialog>
   );
 };
