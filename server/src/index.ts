@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { authRouter } from '@/auth/authRoutes';
-import { profileRouter } from '@/profile/profileRoutes';
-import { postRouter } from '@/post/postRoutes';
+import { authRouter } from '@/users/auth/authRoutes';
+import { profileRouter } from '@/users/profile/profileRoutes';
+import { postRouter } from '@/posts/post/postRoutes';
 
 const app = express();
 const PORT = 3000;

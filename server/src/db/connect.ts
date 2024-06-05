@@ -12,7 +12,10 @@ export const connectToDB = async () => {
     const usersConnection = await createConnection(usersURI);
     const postsConnection = await createConnection(postsURI);
 
-    return { usersConnection, postsConnection };
+    return {
+      usersConnection,
+      postsConnection,
+    };
   } catch (err) {
     console.error('MongoDB connection error:', err);
     process.exit(1);

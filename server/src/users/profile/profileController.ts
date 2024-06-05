@@ -3,7 +3,7 @@ import { z } from 'zod';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { AuthenticatedRequest } from '@/utils/authentication';
+import { AuthenticatedRequest } from '@/middleware/authentication';
 import { IUser, User } from '@/db';
 import { profileSchema } from './profile-schema';
 

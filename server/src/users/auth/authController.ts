@@ -89,8 +89,8 @@ export const loginHandler = async (req: Request, res: Response) => {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30일
       });
 
-      console.log('💛', user);
       return res.json({
+        username: user.username,
         accessToken,
         profile: user.profile,
       });
