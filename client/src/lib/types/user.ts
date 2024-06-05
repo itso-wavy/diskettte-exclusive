@@ -1,7 +1,7 @@
-import { ObjectId } from 'mongoose';
+// import { ObjectId } from 'mongoose';
 
 export interface AuthState {
-  userId: ObjectId | null;
+  username: string;
   isLoggedIn: boolean;
   accessToken: string | null;
 }
@@ -14,5 +14,4 @@ export interface UserProfile {
 
 export interface UserState {
   profile: UserProfile;
-  // theme: Theme;
 }

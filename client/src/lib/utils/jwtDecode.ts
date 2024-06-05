@@ -7,4 +7,3 @@ export const jwtDecode = (token: string | null) => {
     return userId;
   }
 };
-// const userId = jwtDecode(accessToken);
