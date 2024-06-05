@@ -34,7 +34,8 @@ const FeedPost: React.FC<{
             />
             <Post.Date date={relativeTime} />
           </div>
-          <Post.Button
+          <MoreButton username={username} isWriter={isWriter} post={post} />
+          {/* <Post.Button
             ariaLabel='more'
             onClick={() =>
               isLoggedIn ? console.log('login') : console.log('log out')
@@ -42,7 +43,7 @@ const FeedPost: React.FC<{
             className='ml-auto text-muted-foreground'
           >
             <Icon.More viewBox='0 0 24 24' className='h-5 w-5' />
-          </Post.Button>
+          </Post.Button> */}
         </>
       }
       className={className}

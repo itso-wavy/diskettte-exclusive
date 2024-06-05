@@ -23,20 +23,15 @@ const FeedNav = ({
 const FeedNavItem: React.FC<{
   value: View;
   view: View;
-  setView: React.Dispatch<React.SetStateAction<View>>;
-}> = ({ value, view, setView }) => {
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setView(e.currentTarget.value as View);
-  };
-
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}> = ({ value, view, onClick }) => {
   return (
     <button
       value={value}
-      onClick={handleClick}
+      onClick={onClick}
       className={cn(
-        'rounded-[13px] px-3 py-1 first-letter:uppercase hover:bg-secondary active:bg-gray-900/10',
+        'rounded-[13px] px-3 py-1 first-letter:uppercase hover:bg-secondary active:bg-border dark:active:bg-muted',
         view === value && 'bg-secondary text-foreground shadow-inner'
-        // text-accent-foreground hover:bg-gray-100 active:bg-gray-900/10
       )}
     >
       {value}
