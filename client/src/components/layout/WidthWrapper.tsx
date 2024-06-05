@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { cn } from '@/lib/utils';
 
-const FeedWrapper = ({
+const WidthWrapper = ({
   className,
   children,
 }: PropsWithChildren<{ className?: string }>) => {
@@ -12,4 +12,4 @@ const FeedWrapper = ({
   );
 };
 
-export default FeedWrapper;
+export default WidthWrapper;

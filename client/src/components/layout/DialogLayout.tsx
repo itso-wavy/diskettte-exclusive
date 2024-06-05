@@ -12,9 +12,11 @@ import { cn } from '@/lib/utils';
 
 const DialogLayout = ({
   title,
+  className,
   children,
 }: PropsWithChildren<{
   title: string;
+  className?: string;
 }>) => {
   const { theme, isDarkmode } = useSelector((state: RootState) => state.theme);
 
@@ -22,8 +24,9 @@ const DialogLayout = ({
     <DialogContent
       className={cn(
         `theme-${theme}`,
-        'w-[350px] min-w-[300px] max-w-[90vw] text-primary',
-        isDarkmode && 'dark'
+        'min-w-[300px] text-primary max-sm:rounded-none sm:w-[350px] sm:max-w-[90vw]',
+        isDarkmode && 'dark',
+        className
       )}
     >
       <DialogHeader>

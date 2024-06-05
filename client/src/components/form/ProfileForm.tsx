@@ -1,4 +1,5 @@
 import { ReactNode, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FieldValues, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isAxiosError } from 'axios';
@@ -7,11 +8,10 @@ import { Form } from '.';
 import ProfileAvatar from '../ProfileAvatar';
 
 import client from '@/lib/services';
-import { ImageFileValidation, profileSchema } from '@/lib/schemas';
+import { profileSchema, imageFileValidation } from '@/lib/schemas';
 import { store, setProfile } from '@/lib/store';
 import { convertToBase64 } from '@/lib/utils';
 import { UserProfile } from '@/lib/types';
-import { useNavigate } from 'react-router-dom';
 
 const ProfileForm: React.FC<{
   profile: UserProfile;
@@ -82,7 +82,7 @@ const ProfileForm: React.FC<{
       return;
     }
 
-    const result = ImageFileValidation.safeParse(file);
+    const result = imageFileValidation.safeParse(file);
 
     if (result.success) {
       const file = result.data!;
@@ -146,8 +146,8 @@ const ProfileForm: React.FC<{
           type='textarea'
           label='Description'
           placeholder='Introduce you...'
-          className='bg-input'
           rows={3}
+          className='bg-input'
           error={
             errors.description?.message
               ? (errors.description.message as ReactNode)

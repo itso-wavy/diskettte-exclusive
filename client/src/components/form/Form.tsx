@@ -16,7 +16,7 @@ export const Layout = ({
     <Form
       method='POST'
       onSubmit={handleSubmit}
-      className={cn('flex h-full flex-col justify-between', className)}
+      className={cn('flex flex-col justify-between', className)}
     >
       {children}
     </Form>
@@ -127,10 +127,8 @@ export const SubmitButton: React.FC<{
   className?: string;
 }> = ({ text, disabled, className }) => {
   return (
-    <Button type='submit' disabled={disabled} className={cn('mt-5', className)}>
+    <Button type='submit' disabled={disabled} className={cn('mt-7', className)}>
       {text}
     </Button>
   );
 };
-
-// export default { Layout, Input, Feedback, SubmitButton };
