@@ -16,8 +16,8 @@ import { Post } from '.';
 import { PostForm, PostFormType } from '@/components/dialog';
 import Icon from '@/components/icons';
 
-import client from '@/lib/services';
 import { RootState } from '@/lib/store';
+import { postKeys, deletePost } from '@/lib/queries/post';
 import { cn } from '@/lib/utils';
 import { Post as PostT } from '@/lib/types';
 
@@ -37,21 +37,21 @@ const MoreButton = ({
   const navigate = useNavigate();
 
   const { mutate } = useMutation({
-    mutationFn: async () => {
-      await client.delete(`post/${post?._id}/delete`);
-    },
+    // mutationFn: async () => {
+    //   await client.delete(`post/${post?._id}/delete`);
+    // },
+    mutationFn: () => deletePost(post?._id),
     onMutate: () => toast('삭제 중...'),
     onSuccess: () => {
       toast('삭제되었습니다');
 
+      queryClient.invalidateQueries({
+        queryKey: postKeys.posts,
+      });
+
       const pathParts = pathname.split('/');
       if (pathParts.length === 3 && pathParts[1]!.startsWith('@'))
         navigate('..');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['posts', { postId: post._id }],
-      });
     },
     onError: err => {
       console.log(err);
@@ -75,8 +75,7 @@ const MoreButton = ({
         <DropdownMenuContent
           className={cn(
             isDarkmode && 'dark',
-            '-translate-x-4 -translate-y-3 font-normal *:text-[13px] sm:-translate-x-10 md:-translate-x-14'
-            // w-44
+            '-translate-x-5 -translate-y-3 font-normal *:text-[13px] sm:-translate-x-11 md:-translate-x-14'
           )}
         >
           {!isWriter ? (
@@ -116,16 +115,14 @@ const MoreButton = ({
                 </DropdownMenuItem>
               </DialogTrigger>
               <DropdownMenuSeparator />
-              <DialogTrigger asChild>
-                <DropdownMenuItem
-                  onClick={e => {
-                    mutate();
-                    e.stopPropagation();
-                  }}
-                >
-                  삭제하기
-                </DropdownMenuItem>
-              </DialogTrigger>
+              <DropdownMenuItem
+                onClick={e => {
+                  mutate();
+                  e.stopPropagation();
+                }}
+              >
+                삭제하기
+              </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>

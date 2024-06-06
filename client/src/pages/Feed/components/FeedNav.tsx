@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
-import { cn } from '@/lib/utils';
 
-export type View = 'everyone' | 'following';
+import { ViewT } from '..';
+import { cn } from '@/lib/utils';
 
 const FeedNav = ({
   className,
@@ -21,8 +21,8 @@ const FeedNav = ({
 };
 
 const FeedNavItem: React.FC<{
-  value: View;
-  view: View;
+  value: ViewT;
+  view: ViewT;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }> = ({ value, view, onClick }) => {
   return (

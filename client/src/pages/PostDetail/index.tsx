@@ -6,8 +6,8 @@ import { PageWrapper, WidthWrapper } from '@/components/layout';
 import { FeedPost, PostSkeleton } from '@/components/post';
 import ErrorText from '@/components/ErrorText';
 
-import client from '@/lib/services';
 import { UserLayoutContext } from '../UserLayout';
+import { postKeys, getPostDetail } from '@/lib/queries/post';
 import { Post } from '@/lib/types';
 
 const PostDetail: React.FC = () => {
@@ -20,19 +20,19 @@ const PostDetail: React.FC = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: [
-      'posts',
-      { postId },
-      { username: usernameParam },
-      { isLoggedIn },
-    ],
-    queryFn: () =>
-      client(
-        !isLoggedIn
-          ? `post/${usernameParam}/${postId}`
-          : `post/${usernameParam}/${postId}/auth`
-      ),
-    retry: 3,
+    // queryKey: ['posts', { postId, username: usernameParam, isLoggedIn }],
+    // queryFn: () =>
+    //   client(
+    //     !isLoggedIn
+    //       ? `post/${usernameParam}/${postId}`
+    //       : `post/${usernameParam}/${postId}/auth`
+    //   ),
+    queryKey: postKeys.postDetail({
+      postId,
+      username: usernameParam,
+      isLoggedIn,
+    }),
+    queryFn: getPostDetail,
   });
   const post: Post = response?.data;
 

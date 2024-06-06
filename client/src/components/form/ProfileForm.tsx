@@ -14,8 +14,9 @@ import { convertToBase64 } from '@/lib/utils';
 import { UserProfile } from '@/lib/types';
 
 const ProfileForm: React.FC<{
+  username: string;
   profile: UserProfile;
-}> = ({ profile }) => {
+}> = ({ username, profile }) => {
   const {
     handleSubmit,
     register,
@@ -40,7 +41,7 @@ const ProfileForm: React.FC<{
     try {
       const {
         data: { profile },
-      } = await client.post('profile/edit', {
+      } = await client.post(`user/${username}/profile/edit`, {
         ...request,
         image: selectedImage,
       });
@@ -51,7 +52,7 @@ const ProfileForm: React.FC<{
       setTimeout(() => {
         navigate('/');
         setSuccess('');
-      }, 1500);
+      }, 1000);
     } catch (err) {
       console.log(err);
       if (isAxiosError(err)) {

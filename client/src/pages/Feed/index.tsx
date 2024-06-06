@@ -4,18 +4,20 @@ import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 
-import { FeedNav, FeedNavItem, View } from './components';
+import { FeedNav, FeedNavItem } from './components';
 import { PageWrapper, WidthWrapper } from '@/components/layout';
 import { FeedLinkPost, PostSkeleton } from '@/components/post';
 import ErrorText from '@/components/ErrorText';
 
-import client from '@/lib/services';
 import { RootState } from '@/lib/store';
+import { postKeys, getViewFeed } from '@/lib/queries/post';
 import { Post } from '@/lib/types';
+
+export type ViewT = 'everyone' | 'following';
 
 const Feed: React.FC = () => {
   const { isLoggedIn } = useSelector((state: RootState) => state.auth);
-  const [view, setView] = useState<View>('everyone');
+  const [view, setView] = useState<ViewT>('everyone');
 
   const {
     data: response,
@@ -23,13 +25,15 @@ const Feed: React.FC = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['posts', { view }, { isLoggedIn }],
-    queryFn: () => client(!isLoggedIn ? `post/${view}` : `post/${view}/auth`),
+    // queryKey: ['posts', { view, isLoggedIn }],
+    // queryFn: () => client(!isLoggedIn ? `post/${view}` : `post/${view}/auth`),
+    queryKey: postKeys.viewfeed({ view, isLoggedIn }),
+    queryFn: getViewFeed,
   });
   const postList: Post[] = response?.data || [];
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setView(e.currentTarget.value as View);
+    setView(e.currentTarget.value as ViewT);
   };
 
   let result;

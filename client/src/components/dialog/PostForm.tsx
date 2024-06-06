@@ -14,9 +14,9 @@ import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import Icon from '../icons';
 
 import { RootState } from '@/lib/store';
-import client from '@/lib/services';
 import { postSchema, imageFileValidation } from '@/lib/schemas';
 import { convertToBase64 } from '@/lib/utils';
+import { postKeys, createPost, editPost } from '@/lib/queries/post';
 import { Post as PostT } from '@/lib/types';
 import { PostFormType } from '.';
 
@@ -48,21 +48,35 @@ const PostForm: React.FC<{
   const queryClient = useQueryClient();
 
   const { mutate, error, isPending, isError } = useMutation({
+    // mutationFn: async (request: any) => {
+    //   switch (type) {
+    //     case PostFormType.CREATE:
+    //       await client.post(`post/${type}`, request);
+    //       break;
+    //     case PostFormType.EDIT:
+    //       const response = await client.patch(
+    //         `post/${post?._id}/${type}`,
+    //         request
+    //       );
+
+    //       const { contents } = response.data;
+    //       setValue('text', contents.text);
+    //       setValue('images', contents.images);
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // },
     mutationFn: async (request: any) => {
       switch (type) {
         case PostFormType.CREATE:
-          await client.post(`post/${type}`, request);
+          createPost(request);
           break;
         case PostFormType.EDIT:
-          const response = await client.patch(
-            `post/${post?._id}/${type}`,
-            request
-          );
-
+          const response = await editPost(post?._id, request);
           const { contents } = response.data;
-          setValue('text', contents.text, {
-            shouldValidate: true,
-          });
+
+          setValue('text', contents.text);
           setValue('images', contents.images);
           break;
         default:
@@ -77,12 +91,10 @@ const PostForm: React.FC<{
     },
     onSuccess: () => {
       toast('게시되었습니다.');
-    },
-    onSettled: () => {
-      if (type === PostFormType.EDIT)
-        queryClient.invalidateQueries({
-          queryKey: ['posts', { postId: post!._id }],
-        });
+
+      queryClient.invalidateQueries({
+        queryKey: postKeys.posts,
+      });
     },
     onError: err => {
       console.log(err);
