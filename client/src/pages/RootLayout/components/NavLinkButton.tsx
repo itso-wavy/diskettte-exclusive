@@ -18,14 +18,14 @@ interface NavLinkButtonProps {
 const NavLinkButton = forwardRef<
   HTMLButtonElement,
   PropsWithChildren<NavLinkButtonProps>
->(({ tooltip, onClick, className, children }, forwardedRef) => {
+>(({ tooltip, onClick, className, children }, ref) => {
   return (
     <li className={cn('relative', className)}>
       <TooltipProvider>
         <Tooltip delayDuration={200}>
           <TooltipTrigger asChild>
             <button
-              ref={forwardedRef}
+              ref={ref}
               onClick={onClick}
               className='grid aspect-square w-full place-content-center overflow-hidden rounded-lg border hover:bg-gray-500/10'
             >

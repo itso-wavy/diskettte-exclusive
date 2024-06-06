@@ -55,7 +55,6 @@ export const getFollowingPosts = async (
     const posts = await Post.find({
       user: { $in: followingIds },
     }).sort({ createdAt: -1 });
-    // .exec();
 
     const formattedPosts = await Promise.all(
       posts.map(async (post: IPost) => {
@@ -97,7 +96,13 @@ export const getUserPosts = async (
 
   try {
     const writer = (await User.findOne({ username }))!;
-    const posts = await Post.find({ 'writer.username': username }).sort({
+    if (!writer) {
+      return res
+        .status(404)
+        .json({ error: '해당하는 사용자를 찾을 수 없습니다.' });
+    }
+
+    const posts = await Post.find({ writer: writer._id }).sort({
       createdAt: -1,
     });
 

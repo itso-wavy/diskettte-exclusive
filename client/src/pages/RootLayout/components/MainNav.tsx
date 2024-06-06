@@ -42,18 +42,18 @@ const MainNav: React.FC = () => {
                   : toast('로그인이 필요합니다.');
               }}
             >
-              <Icon.Post className={cn(pathname === '/post' && 'svg-fill')} />
+              <Icon.Post />
             </NavLinkButton>
           </DialogTrigger>
           <NavLinkButton
-            tooltip='Bookmark'
-            onClick={() => navigate(`@${username}/bookmark`)}
+            tooltip='My Profile'
+            onClick={() => navigate(`@${username}`)}
           >
-            <Icon.Bookmark
-              className={cn(
-                pathname === `/@${username}/bookmark` && 'svg-fill'
-              )}
-            />
+            {pathname === `/@${username}` ? (
+              <Icon.AtSign style={{ strokeWidth: 3 }} />
+            ) : (
+              <Icon.AtSign />
+            )}
           </NavLinkButton>
           <NavMenuBlock />
         </ul>

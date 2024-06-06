@@ -5,12 +5,12 @@ import { toast } from 'sonner';
 
 import {
   DropdownMenu,
+  DropdownMenuSeparator,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuPortal,
-  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -33,7 +33,6 @@ const NavMenuBlock: React.FC = () => {
   );
   const { isDarkmode } = useSelector((state: RootState) => state.theme);
   const { profile } = useSelector((state: RootState) => state.user);
-  // const handleLogout = () => dispatch(setLogout());
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -129,16 +128,16 @@ const NavMenuBlock: React.FC = () => {
               </>
             ) : (
               <>
-                <DropdownMenuItem onClick={() => navigate(`/@${username}`)}>
+                {/* <DropdownMenuItem onClick={() => navigate(`/@${username}`)}>
                   <Icon.Profile viewBox='0 0 24 24' className='mr-2 h-4 w-4' />
                   My Profile
-                </DropdownMenuItem>
-                {/* <DropdownMenuItem
-                  onClick={() => navigate(`${username}/profile`)}
+                </DropdownMenuItem> */}
+                <DropdownMenuItem
+                  onClick={() => navigate(`@${username}/profile`)}
                 >
                   <Icon.Profile viewBox='0 0 24 24' className='mr-2 h-4 w-4' />
                   Change Profile
-                </DropdownMenuItem> */}
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
                     dispatch(setLogout());
