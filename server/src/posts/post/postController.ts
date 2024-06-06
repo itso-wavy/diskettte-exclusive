@@ -133,16 +133,19 @@ export const getUserPosts = async (
 
 export const getPost = async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user?._id;
-  const postId = req.params.postId;
+  const { username, postId } = req.params;
 
   try {
     const post = await Post.findById(postId);
-
     if (!post) {
       return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
     }
 
     const writer = (await User.findById(post.writer))!;
+    if (username !== writer.username) {
+      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
+    }
+
     const likes = await Likes.find({ post: post._id });
     const comments = await Comment.find({ post: post._id });
     // .map(comment => ({

@@ -1,5 +1,6 @@
 import { useOutletContext, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 
 import { PageWrapper, WidthWrapper } from '@/components/layout';
 import { FeedPost, PostSkeleton } from '@/components/post';
@@ -19,7 +20,12 @@ const PostDetail: React.FC = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['posts', { postId }, { isLoggedIn }],
+    queryKey: [
+      'posts',
+      { postId },
+      { username: usernameParam },
+      { isLoggedIn },
+    ],
     queryFn: () =>
       client(
         !isLoggedIn
@@ -32,7 +38,8 @@ const PostDetail: React.FC = () => {
 
   let result;
   if (error) {
-    console.log(error);
+    if (isAxiosError(error)) console.log(error.response?.data);
+
     result = <ErrorText handleRetry={refetch} />;
   } else {
     result = isLoading ? <PostSkeleton /> : <FeedPost post={post} />;

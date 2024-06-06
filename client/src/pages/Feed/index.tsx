@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { isAxiosError } from 'axios';
 
 import { FeedNav, FeedNavItem, View } from './components';
 import { PageWrapper, WidthWrapper } from '@/components/layout';
@@ -33,7 +34,8 @@ const Feed: React.FC = () => {
 
   let result;
   if (error) {
-    console.log(error);
+    if (isAxiosError(error)) console.log(error.response?.data);
+
     result = <ErrorText handleRetry={refetch} />;
   } else {
     result = isLoading

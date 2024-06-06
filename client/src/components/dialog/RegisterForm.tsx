@@ -39,7 +39,6 @@ const RegisterForm: React.FC = () => {
       }, 750);
     } catch (err) {
       console.log(err);
-
       if (isAxiosError(err)) {
         const error = err.response!.data;
         if (error.username) {
