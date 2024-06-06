@@ -17,6 +17,7 @@ const PostDetail: React.FC = () => {
     data: response,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ['posts', { postId }, { isLoggedIn }],
     queryFn: () =>
@@ -32,8 +33,7 @@ const PostDetail: React.FC = () => {
   let result;
   if (error) {
     console.log(error);
-
-    result = <ErrorText />;
+    result = <ErrorText handleRetry={refetch} />;
   } else {
     result = isLoading ? <PostSkeleton /> : <FeedPost post={post} />;
   }

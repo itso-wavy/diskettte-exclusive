@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { FeedNav, FeedNavItem, View } from './components';
@@ -20,11 +20,10 @@ const Feed: React.FC = () => {
     data: response,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ['posts', { view }, { isLoggedIn }],
     queryFn: () => client(!isLoggedIn ? `post/${view}` : `post/${view}/auth`),
-    // retry: 3,
-    // retryDelay: 100,
   });
   const postList: Post[] = response?.data || [];
 
@@ -35,7 +34,7 @@ const Feed: React.FC = () => {
   let result;
   if (error) {
     console.log(error);
-    result = <ErrorText />;
+    result = <ErrorText handleRetry={refetch} />;
   } else {
     result = isLoading
       ? Array(2)
