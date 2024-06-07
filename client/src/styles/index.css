@@ -115,6 +115,9 @@
   .svg-fill * {
     --svg-fill: hsl(var(--primary));
   }
+  .svg-fill-theme * {
+    --svg-fill: hsl(var(--color-alpha));
+  }
 }
 
 .theme-strawberry * {

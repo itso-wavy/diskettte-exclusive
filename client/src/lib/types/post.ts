@@ -1,9 +1,3 @@
-interface Comment {
-  user: string;
-  contents: string;
-  createdAt: Date;
-}
-
 export interface Post {
   _id: string;
   writer: {
@@ -22,5 +16,11 @@ export interface Post {
   isLiked: boolean;
   likesCount: number;
   commentsCount: number;
-  comments: Comment[] | undefined;
+  isBookmarked: boolean;
+}
+
+export interface Comment {
+  user: string;
+  contents: string;
+  createdAt: Date;
 }

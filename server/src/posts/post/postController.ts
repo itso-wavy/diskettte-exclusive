@@ -15,9 +15,9 @@ import { AuthenticatedRequest } from '@/middleware/authentication';
 
 const getFormattedPost = async (post: IPost, userId: string | undefined) => {
   const writer = (await User.findById(post.writer))!;
-  const likes = await Likes.find({ post: post._id });
-  const comments = await Comment.find({ post: post._id });
-  const bookmarks = userId ? await Bookmark.find({ user: userId }) : [];
+  const likes = await Likes.findOne({ post: post._id });
+  const comments  = await Comment.findOne({ post: post._id });
+  const bookmarks = userId ? await Bookmark.findOne({ user: userId }) : null;
 
   return {
     _id: post.id,
@@ -27,10 +27,10 @@ const getFormattedPost = async (post: IPost, userId: string | undefined) => {
     },
     contents: post.contents,
     createdAt: post.createdAt,
-    isLiked: userId ? likes.some(user => user.toString() === userId) : false,
-    likesCount: likes.length,
-    commentsCount: comments.length,
-    isBookmarked: bookmarks.some(post => post.toString() === post._id),
+    isLiked: userId ? likes?.likes.some(user => user.toString() === userId) : false,
+    likesCount: likes?.likes.length,
+    commentsCount: comments?.comments.length,
+    isBookmarked: bookmarks?.bookmarks.some(post => post === post._id),
   };
 };
 

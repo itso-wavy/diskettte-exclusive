@@ -6,6 +6,15 @@ export interface IBookmark extends Document {
 }
 
 export const bookmarkSchema: Schema<IBookmark> = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  bookmarks: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  bookmarks: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  ],
 });

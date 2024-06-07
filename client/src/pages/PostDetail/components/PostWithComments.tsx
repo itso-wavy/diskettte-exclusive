@@ -21,13 +21,6 @@ const PostWithComments: React.FC<{
     error,
     refetch,
   } = useQuery({
-    // queryKey: ['posts', { postId, username: usernameParam, isLoggedIn }],
-    // queryFn: () =>
-    //   client(
-    //     !isLoggedIn
-    //       ? `post/${usernameParam}/${postId}`
-    //       : `post/${usernameParam}/${postId}/auth`
-    //   ),
     queryKey: postKeys.postDetail({
       postId,
       username: usernameParam,
@@ -41,7 +34,7 @@ const PostWithComments: React.FC<{
     let message;
     if (isAxiosError(error)) {
       console.log(error.response?.data);
-      message = error.response?.data.error;
+      message = error.response?.status === 404 && error.response?.data.error;
     }
 
     return (

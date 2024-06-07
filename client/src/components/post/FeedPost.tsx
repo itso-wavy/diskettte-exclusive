@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { MoreButton, Post } from '.';
 import Icon from '../icons';
 
-import { getRelativeTime } from '@/lib/utils';
+import { cn, getRelativeTime } from '@/lib/utils';
 import { Post as PostT } from '@/lib/types';
 import { RootState } from '@/lib/store';
 
@@ -12,10 +13,15 @@ export const FeedPost: React.FC<{
   post: PostT;
   className?: string;
 }> = ({ post, className }) => {
+  const navigate = useNavigate();
   const { username } = useSelector((state: RootState) => state.auth);
 
   const relativeTime = getRelativeTime(post.createdAt);
   const isWriter = post.writer.username === username;
+
+  const [isLiked, setIsLiked] = useState(post.isLiked);
+  const [isBookmarked, setIsBookmarked] = useState(post.isBookmarked);
+  const [likesCount, setLikesCount] = useState(post.likesCount);
 
   return (
     <Post.Layout
@@ -57,18 +63,24 @@ export const FeedPost: React.FC<{
       <div className='-mb-1 mt-1.5 flex h-9 items-center gap-4'>
         <Post.Button
           ariaLabel='likes'
-          onClick={() => console.log('likes')}
-          count={post.likesCount}
+          onClick={() => {
+            setIsLiked(prev => !prev); // TODO:
+            setLikesCount(prev => prev + (isLiked ? -1 : 1));
+          }}
+          count={likesCount}
         >
           <Icon.Heart
             viewBox='0 0 24 24'
             strokeWidth={1}
-            className='h-[20px] w-[20px]'
+            className={cn(
+              'h-[20px] w-[20px]',
+              isLiked && 'svg-fill-theme text-alpha'
+            )}
           />
         </Post.Button>
         <Post.Button
           ariaLabel='comments'
-          onClick={() => console.log('comments')}
+          onClick={() => navigate(`/@${post.writer.username}/${post._id}`)}
           count={post.commentsCount}
         >
           <Icon.Comment
@@ -85,7 +97,10 @@ export const FeedPost: React.FC<{
           <Icon.Bookmark
             viewBox='0 0 24 24'
             strokeWidth={0.9}
-            className='h-[20px] w-[20px]'
+            className={cn(
+              'h-[20px] w-[20px]',
+              isBookmarked && 'svg-fill-theme text-alpha'
+            )}
           />
         </Post.Button>
       </div>
