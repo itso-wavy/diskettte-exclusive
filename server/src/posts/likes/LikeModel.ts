@@ -7,5 +7,5 @@ export interface ILike extends Document {
 
 export const likesSchema: Schema<ILike> = new Schema({
   post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
-  likes: [{ type: Schema.Types.ObjectId, ref: 'Like' }],
+  likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });

@@ -8,14 +8,17 @@ import Loader from '@/components/Loader';
 import { postKeys, getUserPosts } from '@/lib/queries/post';
 import { Post } from '@/lib/types';
 
-const PostListField: React.FC<{ username: string }> = ({ username }) => {
+const PostListField: React.FC<{ username: string; isLoggedIn: boolean }> = ({
+  username,
+  isLoggedIn,
+}) => {
   const {
     data: response,
     isLoading,
     error,
     refetch,
   } = useQuery({
-    queryKey: postKeys.userPost(username),
+    queryKey: postKeys.userPost({ username, isLoggedIn }),
     queryFn: getUserPosts,
   });
   const postList: Post[] = response?.data || [];
@@ -39,9 +42,3 @@ const PostListField: React.FC<{ username: string }> = ({ username }) => {
 };
 
 export default PostListField;
-{
-  /*  <div className='relative h-[calc(100vh-419px)]'> */
-}
-{
-  /* </div> */
-}

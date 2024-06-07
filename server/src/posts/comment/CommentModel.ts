@@ -11,9 +11,11 @@ export interface IComment extends Document {
 
 export const commentSchema: Schema<IComment> = new Schema({
   post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
-  comments: {
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    content: { type: String },
-    createdAt: { type: Date },
-  },
+  comments: [
+    {
+      user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      content: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
 });

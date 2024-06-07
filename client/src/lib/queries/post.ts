@@ -1,19 +1,21 @@
-import { ViewT } from '@/pages/Feed';
-
 import client from '../services';
 
+import { ViewT } from '@/pages/Feed';
+
 type FeedP = { view: ViewT; isLoggedIn: boolean };
+// type InteractionP = { username: string; isLoggedIn: boolean };
 type DetailP = {
-  postId: string | undefined;
   username: string;
   isLoggedIn: boolean;
+  postId?: string | undefined;
 };
 
 export const postKeys = {
   posts: ['posts'] as const,
   viewfeed: ({ view, isLoggedIn }: FeedP) =>
     [...postKeys.posts, { view, isLoggedIn }] as const,
-  userPost: (username: string) => [...postKeys.posts, { username }] as const,
+  userPost: ({ username, isLoggedIn }: DetailP) =>
+    [...postKeys.posts, { username, isLoggedIn }] as const,
   postDetail: ({ postId, username, isLoggedIn }: DetailP) =>
     [...postKeys.posts, { postId, username, isLoggedIn }] as const,
 };
@@ -25,9 +27,9 @@ export const getViewFeed = ({ signal, queryKey }: any) => {
 };
 
 export const getUserPosts = ({ queryKey }: any) => {
-  const { username } = queryKey[1];
+  const { username, isLoggedIn } = queryKey[1];
 
-  return client(`post/${username}`);
+  return client(!isLoggedIn ? `post/${username}` : `post/${username}/auth`);
 };
 
 export const getPostDetail = ({ queryKey }: any) => {

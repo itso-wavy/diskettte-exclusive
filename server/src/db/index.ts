@@ -23,7 +23,7 @@ connectToDB()
     Bookmark = usersConnection.model<IBookmark>('Bookmark', bookmarkSchema);
 
     Post = postsConnection.model<IPost>('Post', postSchema);
-    Likes = usersConnection.model<ILike>('Likes', likesSchema);
+    Likes = postsConnection.model<ILike>('Likes', likesSchema);
     Comment = postsConnection.model<IComment>('Comment', commentSchema);
   })
   .catch(err => console.error(err));

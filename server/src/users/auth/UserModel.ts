@@ -9,7 +9,6 @@ export interface IUser extends Document {
     description: string | null;
   };
   createdAt: Date;
-  // bookmarks: Types.ObjectId[];
 }
 
 export const userSchema: Schema<IUser> = new Schema({
@@ -21,5 +20,4 @@ export const userSchema: Schema<IUser> = new Schema({
     description: { type: String, default: null },
   },
   createdAt: { type: Date, default: Date.now },
-  // bookmarks: [{ type: Schema.Types.ObjectId, ref: 'Posts' }],
 });
