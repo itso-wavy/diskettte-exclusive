@@ -4,7 +4,7 @@ import { z } from 'zod';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { User } from '@/db';
+import { User, Follow, IFollow, Bookmark, IBookmark } from '@/db';
 import { IUser } from './UserModel';
 import { loginSchema, registerSchema } from './auth-schema';
 import {
@@ -45,8 +45,20 @@ export const registerHandler = async (req: Request, res: Response) => {
         description: null,
       },
     });
-
     await newUser.save();
+
+    const newFollow: IFollow = new Follow({
+      user: newUser._id,
+      following: [],
+      followers: [],
+    });
+    await newFollow.save();
+
+    const newBookmark: IBookmark = new Bookmark({
+      user: newUser._id,
+      comments: [],
+    });
+    await newBookmark.save();
 
     return res
       .status(201)

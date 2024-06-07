@@ -2,13 +2,13 @@ import { Response } from 'express';
 import {
   Post,
   IPost,
+  User,
   Follow,
   Likes,
-  Comment,
-  User,
-  Bookmark,
   ILike,
+  Comment,
   IComment,
+  Bookmark,
 } from '@/db';
 import { postContentsSchema } from './post-schema';
 import { AuthenticatedRequest } from '@/middleware/authentication';
