@@ -8,15 +8,15 @@ import { RootState } from '@/lib/store';
 import { UserLayoutContext } from '../UserLayout';
 
 const Profile: React.FC = () => {
-  const { isUserMatch } = useOutletContext<UserLayoutContext>();
+  const { isUserMatch, username } = useOutletContext<UserLayoutContext>();
   const { profile } = useSelector((state: RootState) => state.user);
 
-  if (!isUserMatch) throw new Error('User not match!😥');
+  if (!isUserMatch) throw new Error(`User isn't match!😥`);
 
   return (
     <PageWrapper>
       <WidthWrapper>
-        <ProfileForm profile={profile} />
+        <ProfileForm username={username} profile={profile} />
       </WidthWrapper>
     </PageWrapper>
   );

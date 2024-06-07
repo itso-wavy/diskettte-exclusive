@@ -13,6 +13,7 @@ import LogOut from './log-out.svg?react';
 import Profile from './smile.svg?react';
 import Join from './users.svg?react';
 import Diskette from './diskette.svg?react';
+import Loader from './loader.svg?react';
 
 import More from './more.svg?react';
 import Heart from './heart.svg?react';
@@ -35,6 +36,7 @@ const Icon = {
   AtSign,
   Join,
   Diskette,
+  Loader,
 
   More,
   Heart,
