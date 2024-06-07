@@ -16,14 +16,12 @@ export const followSchema: Schema<IFollow> = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
   ],
   followers: [
     {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
   ],
 });

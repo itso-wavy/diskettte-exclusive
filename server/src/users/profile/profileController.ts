@@ -4,17 +4,54 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { AuthenticatedRequest } from '@/middleware/authentication';
-import { IUser, User } from '@/db';
+import { IUser, User, Follow } from '@/db';
 import { profileSchema } from './profile-schema';
 
-export const editProfileHandler = async (
+export const getUserProfileDetail = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const userId = req.user?._id;
+  const { username } = req.params;
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: '해당하는 사용자가 없습니다.' });
+    }
+
+    const follow = await Follow.findOne({ user: user._id });
+
+    let profileDetail: any = {
+      username: user.username,
+      profile: user.profile,
+      following: follow?.following.length,
+      followers: follow?.followers.length,
+    };
+
+    if (user._id.toString() !== userId) {
+      profileDetail.isFollowing = true;
+    }
+
+    return res.status(200).json({ profileDetail });
+  } catch (err) {
+    return res.status(500).json({ error: 'Internal Server Error', err });
+  }
+};
+
+export const editUserProfile = async (
   req: AuthenticatedRequest,
   res: Response
 ) => {
   try {
-    const { nickname, image, description } = profileSchema.parse(req.body);
-
     const userId = req.user!._id;
+
+    const user = await User.findById(userId).select('profile');
+    if (!user) {
+      return res.status(404).json({ message: '해당하는 사용자가 없습니다.' });
+    }
+
+    const { nickname, image, description } = profileSchema.parse(req.body);
 
     const updatedProfile: Partial<IUser['profile']> = {
       nickname,
@@ -28,12 +65,8 @@ export const editProfileHandler = async (
       { new: true } // 반환 값은 업데이트 후의 문서
     );
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: '해당하는 사용자가 없습니다.' });
-    }
-
     return res.status(200).json({
-      profile: updatedUser.profile,
+      profile: updatedUser!.profile,
       message: 'profile updated!',
     });
   } catch (err) {
@@ -43,29 +76,6 @@ export const editProfileHandler = async (
       return res.status(400).json(err.flatten().fieldErrors);
     }
 
-    return res.status(500).send(
-      JSON.stringify({
-        general: '서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-      })
-    );
-  }
-};
-
-export const getProfileHandler = async (
-  req: AuthenticatedRequest,
-  res: Response
-) => {
-  try {
-    const userId = req.user?._id;
-
-    const user = await User.findById(userId).select('profile');
-
-    if (!user) {
-      return res.status(404).json({ message: '해당하는 사용자가 없습니다.' });
-    }
-
-    return res.status(200).json({ profile: user.profile });
-  } catch (err) {
     return res.status(500).send(
       JSON.stringify({
         general: '서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',

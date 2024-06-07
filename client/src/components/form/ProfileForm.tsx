@@ -41,7 +41,7 @@ const ProfileForm: React.FC<{
     try {
       const {
         data: { profile },
-      } = await client.post(`user/${username}/profile/edit`, {
+      } = await client.post(`profile/${username}/edit`, {
         ...request,
         image: selectedImage,
       });

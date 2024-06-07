@@ -1,5 +1,3 @@
-// import { ObjectId } from 'mongoose';
-
 export interface AuthState {
   username: string;
   isLoggedIn: boolean;
@@ -10,6 +8,14 @@ export interface UserProfile {
   nickname: string;
   image: string | null;
   description: string | null;
+}
+
+export interface ProfileDetail {
+  username: string;
+  profile: UserProfile;
+  following: number;
+  followers: number;
+  isFollowing?: boolean;
 }
 
 export interface UserState {

@@ -1,11 +1,12 @@
 import { Router } from 'express';
 
 import { authentication } from '@/middleware/authentication';
-import { editProfileHandler, getProfileHandler } from './profileController';
+import { getUserProfileDetail, editUserProfile } from './profileController';
 
 const router: Router = Router();
 
-router.get('/profile', authentication, getProfileHandler);
-router.post('/profile/edit', authentication, editProfileHandler);
+router.get('/profile/:username', getUserProfileDetail);
+router.get('/profile/:username/auth', authentication, getUserProfileDetail);
+router.post('/profile/:username/edit', authentication, editUserProfile);
 
 export { router as profileRouter };
