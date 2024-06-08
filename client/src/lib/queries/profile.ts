@@ -15,6 +15,6 @@ export const getUserProfile = ({ queryKey }: any) => {
   const { username, isUserMatch } = queryKey[1];
 
   return client(
-    !isUserMatch ? `profile/${username}` : `profile/${username}/auth`
+    !isUserMatch ? `user/${username}/profile` : `user/${username}/profile/auth`
   );
 };

@@ -1,9 +1,8 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { authRouter } from '@/users/auth/authRoutes';
-import { profileRouter } from '@/users/profile/profileRoutes';
-import { postRouter } from '@/posts/post/postRoutes';
+import { userRouter } from '@/users/userRoutes';
+import { postRouter } from '@/posts/postRoutes';
 
 const app = express();
 const PORT = 3000;
@@ -18,8 +17,7 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(authRouter);
-app.use(profileRouter);
+app.use(userRouter);
 app.use(postRouter);
 
 app.get('/', (_req: Request, res: Response) => {

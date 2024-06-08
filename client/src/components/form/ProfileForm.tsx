@@ -41,11 +41,11 @@ const ProfileForm: React.FC<{
     try {
       const {
         data: { profile },
-      } = await client.post(`profile/${username}/edit`, {
+      } = await client.post(`user/${username}/profile/edit`, {
         ...request,
         image: selectedImage,
       });
-
+      
       store.dispatch(setProfile({ profile }));
 
       setSuccess('변경 완료되었습니다.');
