@@ -24,7 +24,7 @@ export const Layout = ({
         className
       )}
     >
-      <div className='select *:select grid grid-cols-[min-content,minmax(0,1fr)] grid-rows-[21px,19px,max-content]'>
+      <div className='select *:select grid grid-cols-[min-content,minmax(0,1fr)] grid-rows-[fit-content,19px,max-content]'>
         <div className='row-span-2 pr-2 pt-1'>{avatarPart}</div>
         <div className='*:select grid grid-cols-[1fr,max-content] gap-x-1.5 leading-tight'>
           {topLinePart}

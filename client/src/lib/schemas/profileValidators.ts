@@ -5,7 +5,7 @@ export const profileSchema = z.object({
     .string()
     .trim()
     .min(1, '필수 항목입니다.')
-    .max(10, '닉네임은 10자 이하여야 합니다.'),
+    .max(15, '닉네임은 15자 이하여야 합니다.'),
   description: z
     .string()
     .trim()
