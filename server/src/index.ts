@@ -1,8 +1,9 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { userRouter } from '@/users/userRoutes';
 import { postRouter } from '@/posts/postRoutes';
+import { responseHandler, errorHandler } from '@/middleware/response-handler';
 
 const app = express();
 const PORT = 3000;
@@ -20,8 +21,7 @@ app.use(cookieParser());
 app.use(userRouter);
 app.use(postRouter);
 
-app.get('/', (_req: Request, res: Response) => {
-  res.send('hello world!');
-});
+app.use(responseHandler);
+app.use(errorHandler);
 
 app.listen(PORT);

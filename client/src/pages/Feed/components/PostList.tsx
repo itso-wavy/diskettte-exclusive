@@ -18,12 +18,10 @@ const PostList: React.FC<{ view: ViewT; isLoggedIn: boolean }> = ({
     error,
     refetch,
   } = useQuery({
-    // queryKey: ['posts', { view, isLoggedIn }],
-    // queryFn: () => client(!isLoggedIn ? `post/${view}` : `post/${view}/auth`),
     queryKey: postKeys.viewfeed({ view, isLoggedIn }),
     queryFn: getViewFeed,
   });
-  const postList: Post[] = response?.data || [];
+  const body = response?.data;
 
   if (error) {
     if (isAxiosError(error)) console.log(error.response?.data);
@@ -36,7 +34,7 @@ const PostList: React.FC<{ view: ViewT; isLoggedIn: boolean }> = ({
       ? Array(2)
           .fill(0)
           .map((_, index) => <PostSkeleton key={'wavy' + index} />)
-      : postList?.map((post: Post) => {
+      : body.posts?.map((post: Post) => {
           if (!post) return;
           return <FeedLinkPost key={post._id} post={post} />;
         });

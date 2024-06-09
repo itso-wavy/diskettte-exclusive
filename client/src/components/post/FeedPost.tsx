@@ -80,7 +80,9 @@ export const FeedPost: React.FC<{
         </Post.Button>
         <Post.Button
           ariaLabel='comments'
-          onClick={() => navigate(`/@${post.writer.username}/${post._id}`)}
+          onClick={() => {
+            navigate(`/@${post.writer.username}/${post._id}`);
+          }} // TODO:
           count={post.commentsCount}
         >
           <Icon.Comment

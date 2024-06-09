@@ -24,25 +24,24 @@ import { authentication } from '@/middleware/authentication';
 const router: Router = Router();
 
 // post crud
-router.get('/post/everyone', getPosts);
-router.get('/post/everyone/auth', authentication, getPosts);
-router.get('/post/following/auth', authentication, getFollowingPosts);
-router.get('/post/:username', getUserPosts);
-router.get('/post/:username/auth', authentication, getUserPosts);
-router.get('/post/:username/:postId', getPost);
-router.get('/post/:username/:postId/auth', authentication, getPost);
+router.get('/posts/view/everyone', getPosts);
+router.get('/posts/view/everyone/auth', authentication, getPosts);
+router.get('/posts/view/following/auth', authentication, getFollowingPosts);
+router.get('/posts/user/:username', getUserPosts);
+router.get('/posts/user/:username/auth', authentication, getUserPosts);
+router.get('/post/user/:username/:postId', getPost, getPostComments);
+router.get(
+  '/post/user/:username/:postId/auth',
+  authentication,
+  getPost,
+  getPostComments
+);
 
 router.post('/post/create', authentication, createPost);
 router.patch('/post/:postId/edit', authentication, editPost);
 router.delete('/post/:postId/delete', authentication, deletePost);
 
 // comments crud
-router.get('/post/:username/:postId/comment', getPostComments);
-router.get(
-  '/post/:username/:postId/comment/auth',
-  authentication,
-  getPostComments
-);
 router.post('/post/:postId/comment', authentication, addComment);
 router.delete('/post/:postId/comment', authentication, removeComment);
 

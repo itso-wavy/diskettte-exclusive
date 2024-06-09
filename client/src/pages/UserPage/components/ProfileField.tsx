@@ -24,10 +24,10 @@ const ProfileField: React.FC<{
     queryKey: profileKeys.userProfile({ username, isUserMatch }),
     queryFn: getUserProfile,
   });
-  const profileDetail: ProfileDetail = response?.data.profileDetail || {};
+  const body = response?.data;
 
   const [isFollowing, setIsFollowing] = useState<boolean | undefined>(
-    profileDetail.isFollowing
+    body.profile.isFollowing
   );
 
   if (error) {
@@ -39,24 +39,24 @@ const ProfileField: React.FC<{
   ) : (
     <div className='flex flex-col gap-x-5 gap-y-2 sm:flex-row'>
       <ProfileAvatar
-        image={profileDetail.profile.image}
+        image={body.profile.profile.image}
         nickname={username || ''}
         className='h-20 w-20 rounded-full hover:opacity-100 max-sm:ml-auto'
       />
       <div className='*:select break-words text-[15px] leading-tight'>
-        <p className='text-xl font-medium'>{profileDetail.profile.nickname}</p>
+        <p className='text-xl font-medium'>{body.profile.profile.nickname}</p>
         <p className='text-sm text-muted-foreground'>
-          @{profileDetail.username}
+          @{body.profile.username}
         </p>
         <p className='mt-1 leading-[1.15rem]'>
-          {profileDetail.profile.description}
+          {body.profile.profile.description}
         </p>
         <div className='mt-3 flex gap-4 text-sm leading-[21px] text-muted-foreground underline-offset-[3px]'>
           <p className='cursor-pointer hover:underline'>
-            following {profileDetail.following}
+            following {body.profile.following}
           </p>
           <p className='cursor-pointer hover:underline'>
-            followers {profileDetail.followers}
+            followers {body.profile.followers}
           </p>
         </div>
       </div>

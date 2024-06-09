@@ -5,10 +5,6 @@ import { FeedPost, PostSkeleton } from '@/components/post';
 import ErrorText from '@/components/ErrorText';
 
 import { getPostDetail, postKeys } from '@/lib/queries/post';
-import { Post as PostT } from '@/lib/types';
-
-// import { getViewFeed, postKeys } from '@/lib/queries/post';
-// import { Post } from '@/lib/types';
 
 const PostWithComments: React.FC<{
   postId: string;
@@ -28,7 +24,7 @@ const PostWithComments: React.FC<{
     }),
     queryFn: getPostDetail,
   });
-  const post: PostT = response?.data;
+  const body = response?.data;
 
   if (error) {
     let message;
@@ -45,7 +41,7 @@ const PostWithComments: React.FC<{
       />
     );
   } else {
-    return isLoading ? <PostSkeleton /> : <FeedPost post={post} />;
+    return isLoading ? <PostSkeleton /> : <FeedPost post={body.post} />;
   }
 };
 

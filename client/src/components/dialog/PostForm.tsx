@@ -48,25 +48,6 @@ const PostForm: React.FC<{
   const queryClient = useQueryClient();
 
   const { mutate, error, isPending, isError } = useMutation({
-    // mutationFn: async (request: any) => {
-    //   switch (type) {
-    //     case PostFormType.CREATE:
-    //       await client.post(`post/${type}`, request);
-    //       break;
-    //     case PostFormType.EDIT:
-    //       const response = await client.patch(
-    //         `post/${post?._id}/${type}`,
-    //         request
-    //       );
-
-    //       const { contents } = response.data;
-    //       setValue('text', contents.text);
-    //       setValue('images', contents.images);
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // },
     mutationFn: async (request: any) => {
       switch (type) {
         case PostFormType.CREATE:
@@ -74,10 +55,10 @@ const PostForm: React.FC<{
           break;
         case PostFormType.EDIT:
           const response = await editPost(post?._id, request);
-          const { contents } = response.data;
+          const body = response.data;
 
-          setValue('text', contents.text);
-          setValue('images', contents.images);
+          setValue('text', body.text);
+          setValue('images', body.images);
           break;
         default:
           break;
@@ -121,7 +102,7 @@ const PostForm: React.FC<{
   const onSubmit = (request: FieldValues) => {
     mutate({
       ...request,
-      image: selectedImage,
+      images: selectedImage,
     });
   };
 

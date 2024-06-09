@@ -1,23 +1,18 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
+import { ExpandedRequest } from './ExpandedRequestType';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
-
-export interface AuthenticatedRequest extends Request {
-  user?: { _id: string };
-}
 
 export const authentication = (
-  req: AuthenticatedRequest,
-  res: Response,
+  req: ExpandedRequest,
+  _res: Response,
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    return res.status(401).json({ message: 'unauthorized' });
+    next({ status: 401 });
   }
 
-  const token = authHeader.split(' ')[1]!;
+  const token = authHeader!.split(' ')[1]!;
   try {
     const decoded = jwt.verify(
       token,
@@ -25,7 +20,7 @@ export const authentication = (
     ) as jwt.JwtPayload;
 
     if (!decoded.payload) {
-      return res.status(401).json({ message: 'unauthorized' });
+      next({ status: 401 });
     }
 
     req.user = { _id: decoded.payload };
@@ -33,6 +28,6 @@ export const authentication = (
     next();
     return;
   } catch (err) {
-    return res.status(403).json({ message: '인증에 실패했습니다.' });
+    next({ message: '인증에 실패했습니다.', status: 403 });
   }
 };

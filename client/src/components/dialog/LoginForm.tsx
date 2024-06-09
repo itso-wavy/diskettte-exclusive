@@ -40,7 +40,7 @@ const LoginForm: React.FC = () => {
     } catch (err) {
       console.log(err);
       if (isAxiosError(err)) {
-        const error = err.response!.data;
+        const error = err.response!.data.error;
         if (error.username) {
           setError('username', { message: error.username });
         }

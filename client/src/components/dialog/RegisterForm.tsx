@@ -21,7 +21,6 @@ const RegisterForm: React.FC = () => {
       username: '',
       password: '',
       confirmPassword: '',
-      general: '',
     },
     resolver: zodResolver(registerSchema),
   });
@@ -40,12 +39,15 @@ const RegisterForm: React.FC = () => {
     } catch (err) {
       console.log(err);
       if (isAxiosError(err)) {
-        const error = err.response!.data;
+        const error = err.response!.data.error;
         if (error.username) {
           setError('username', { message: error.username });
         }
         if (error.password) {
           setError('password', { message: error.password });
+        }
+        if (error.confirmPassword) {
+          setError('confirmPassword', { message: error.confirmPassword });
         }
       }
     }
@@ -82,9 +84,7 @@ const RegisterForm: React.FC = () => {
           error={
             errors.confirmPassword?.message
               ? (errors.confirmPassword.message as ReactNode)
-              : errors.general?.message
-                ? (errors.general.message as ReactNode)
-                : ''
+              : ''
           }
           success={success || ''}
           {...register('confirmPassword')}

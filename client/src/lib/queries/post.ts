@@ -23,13 +23,20 @@ export const postKeys = {
 export const getViewFeed = ({ signal, queryKey }: any) => {
   const { view, isLoggedIn } = queryKey[1];
 
-  return client(!isLoggedIn ? `post/${view}` : `post/${view}/auth`, { signal });
+  return client(
+    !isLoggedIn ? `posts/view/${view}` : `posts/view/${view}/auth`,
+    {
+      signal,
+    }
+  );
 };
 
 export const getUserPosts = ({ queryKey }: any) => {
   const { username, isLoggedIn } = queryKey[1];
 
-  return client(!isLoggedIn ? `post/${username}` : `post/${username}/auth`);
+  return client(
+    !isLoggedIn ? `posts/user/${username}` : `posts/user/${username}/auth`
+  );
 };
 
 export const getPostDetail = ({ queryKey }: any) => {
@@ -37,8 +44,8 @@ export const getPostDetail = ({ queryKey }: any) => {
 
   return client(
     !isLoggedIn
-      ? `post/${username}/${postId}`
-      : `post/${username}/${postId}/auth`
+      ? `post/user/${username}/${postId}`
+      : `post/user/${username}/${postId}/auth`
   );
 };
 

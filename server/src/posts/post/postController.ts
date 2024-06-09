@@ -1,4 +1,6 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
+import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
+import { postContentsSchema } from './post-schema';
 import {
   Post,
   IPost,
@@ -10,13 +12,11 @@ import {
   IComment,
   Bookmark,
 } from '@/db';
-import { postContentsSchema } from './post-schema';
-import { AuthenticatedRequest } from '@/middleware/authentication';
 
 const getFormattedPost = async (post: IPost, userId: string | undefined) => {
   const writer = (await User.findById(post.writer))!;
   const likes = await Likes.findOne({ post: post._id });
-  const comments  = await Comment.findOne({ post: post._id });
+  const comments = await Comment.findOne({ post: post._id });
   const bookmarks = userId ? await Bookmark.findOne({ user: userId }) : null;
 
   return {
@@ -27,45 +27,24 @@ const getFormattedPost = async (post: IPost, userId: string | undefined) => {
     },
     contents: post.contents,
     createdAt: post.createdAt,
-    isLiked: userId ? likes?.likes.some(user => user.toString() === userId) : false,
+    isLiked: userId
+      ? likes?.likes.some(user => user.toString() === userId)
+      : false,
     likesCount: likes?.likes.length,
     commentsCount: comments?.comments.length,
     isBookmarked: bookmarks?.bookmarks.some(post => post === post._id),
   };
 };
 
-export const getPosts = async (req: AuthenticatedRequest, res: Response) => {
+export const getPosts = async (
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
+) => {
   const userId = req.user?._id;
 
   try {
     const posts = await Post.find().sort({ createdAt: -1 });
-
-    // const formattedPosts = await Promise.all(
-    //   posts.map(async (post: IPost) => {
-    //     if (post.writer.toString() === userId) return;
-
-    //     const writer = (await User.findById(post.writer))!;
-    //     const likes = await Likes.find({ post: post._id });
-    //     const comments = await Comment.find({ post: post._id });
-    //     const bookmarks = userId ? await Bookmark.find({ user: userId }) : [];
-
-    //     return {
-    //       _id: post.id,
-    //       writer: {
-    //         username: writer.username,
-    //         profile: writer.profile,
-    //       },
-    //       createdAt: post.createdAt,
-    //       contents: post.contents,
-    //       isLiked: userId
-    //         ? likes.some(user => user.toString() === userId)
-    //         : false,
-    //       likesCount: likes.length,
-    //       commentsCount: comments.length,
-    //       isBookmarked: bookmarks.some(post => post.toString() === post._id),
-    //     };
-    //   })
-    // );
 
     const formattedPosts = await Promise.all(
       posts.map(async (post: IPost) => getFormattedPost(post, userId))
@@ -80,15 +59,17 @@ export const getPosts = async (req: AuthenticatedRequest, res: Response) => {
       );
     }
 
-    return res.send(otherUserPosts || formattedPosts);
+    req.body.posts = otherUserPosts || formattedPosts;
+    next();
   } catch (err) {
-    return res.status(500).json({ error: 'Internal Server Error', err });
+    next(err);
   }
 };
 
 export const getFollowingPosts = async (
-  req: AuthenticatedRequest,
-  res: Response
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
 ) => {
   const userId = req.user?._id;
 
@@ -102,44 +83,21 @@ export const getFollowingPosts = async (
       user: { $in: followingIds },
     }).sort({ createdAt: -1 });
 
-    // const formattedPosts = await Promise.all(
-    //   posts.map(async (post: IPost) => {
-    //     const writer = (await User.findById(post.writer))!;
-    //     const likes = await Likes.find({ post: post._id });
-    //     const comments = await Comment.find({ post: post._id });
-    //     const bookmarks = userId ? await Bookmark.find({ user: userId }) : [];
-
-    //     return {
-    //       _id: post.id,
-    //       writer: {
-    //         username: writer.username,
-    //         profile: writer.profile,
-    //       },
-    //       contents: post.contents,
-    //       createdAt: post.createdAt,
-    //       isLiked: userId
-    //         ? likes.some(user => user.toString() === userId)
-    //         : false,
-    //       likesCount: likes.length,
-    //       commentsCount: comments.length,
-    //       isBookmarked: bookmarks.some(post => post.toString() === post._id),
-    //     };
-    //   })
-    // );
-
     const formattedPosts = await Promise.all(
       posts.map(async (post: IPost) => getFormattedPost(post, userId))
     );
 
-    return res.send(formattedPosts);
+    req.body.posts = formattedPosts;
+    next();
   } catch (err) {
-    return res.status(500).json({ error: 'Internal Server Error' });
+    next(err);
   }
 };
 
 export const getUserPosts = async (
-  req: AuthenticatedRequest,
-  res: Response
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
 ) => {
   const userId = req.user?._id;
   const { username } = req.params;
@@ -147,112 +105,58 @@ export const getUserPosts = async (
   try {
     const writer = (await User.findOne({ username }))!;
     if (!writer) {
-      return res
-        .status(404)
-        .json({ error: '해당하는 사용자를 찾을 수 없습니다.' });
+      next({ message: '해당하는 사용자를 찾을 수 없습니다.', status: 404 });
     }
 
     const posts = await Post.find({ writer: writer._id }).sort({
       createdAt: -1,
     });
 
-    // const formattedPosts = await Promise.all(
-    //   posts.map(async (post: IPost) => {
-    //     const writer = (await User.findById(post.writer))!;
-    //     const likes = await Likes.find({ post: post._id });
-    //     const comments = await Comment.find({ post: post._id });
-    //     const bookmarks = userId ? await Bookmark.find({ user: userId }) : [];
-
-    //     return {
-    //       _id: post.id,
-    //       writer: {
-    //         username: writer.username,
-    //         profile: writer.profile,
-    //       },
-    //       contents: post.contents,
-    //       createdAt: post.createdAt,
-    //       isLiked: userId
-    //         ? likes.some(user => user.toString() === userId)
-    //         : false,
-    //       likesCount: likes.length,
-    //       commentsCount: comments.length,
-    //       isBookmarked: bookmarks.some(post => post.toString() === post._id),
-    //     };
-    //   })
-    // );
-
     const formattedPosts = await Promise.all(
       posts.map(async (post: IPost) => getFormattedPost(post, userId))
     );
 
-    return res.send(formattedPosts);
+    req.body.posts = formattedPosts;
+    next();
   } catch (err) {
-    return res.status(500).json({ error: 'Internal Server Error' });
+    next(err);
   }
 };
 
-export const getPost = async (req: AuthenticatedRequest, res: Response) => {
-  const userId = req.user?._id;
-  const { username, postId } = req.params;
-
-  try {
-    const post = await Post.findById(postId);
-    if (!post) {
-      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
-    }
-
-    const writer = (await User.findById(post.writer))!;
-    if (username !== writer.username) {
-      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
-    }
-
-    const formattedPost = async (post: IPost) => getFormattedPost(post, userId);
-
-    return res.send(formattedPost);
-  } catch (err) {
-    return res.status(500).json({ error: 'Internal Server Error', err });
-  }
-};
-
-export const getPostComments = async (
-  req: AuthenticatedRequest,
-  res: Response
+export const getPost = async (
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
 ) => {
   const userId = req.user?._id;
   const { username, postId } = req.params;
 
   try {
     const post = await Post.findById(postId);
-    if (!post) {
-      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
-    }
 
-    const writer = (await User.findById(post.writer))!;
+    const writer = (await User.findById(post!.writer))!;
     if (username !== writer.username) {
-      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
+      next({ status: 404 });
     }
 
-    // TODO:
-    // .map(comment => ({
-    //   user: comment.user,
-    //   contents: comment.contents,
-    //   createdAt: comment.createdAt,
-    // }));
+    const formattedPost = await getFormattedPost(post!, userId);
 
-    const formattedPost = async (post: IPost) => getFormattedPost(post, userId);
-
-    return res.send(formattedPost);
+    req.body.post = formattedPost;
+    next();
   } catch (err) {
-    return res.status(500).json({ error: 'Internal Server Error', err });
+    next(err);
   }
 };
 
-export const createPost = async (req: AuthenticatedRequest, res: Response) => {
+export const createPost = async (
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
+) => {
   try {
     const userId = req.user?._id;
-
     if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      next({ status: 404 });
     }
 
     const { text } = postContentsSchema.parse(req.body);
@@ -280,13 +184,18 @@ export const createPost = async (req: AuthenticatedRequest, res: Response) => {
     });
     await newComments.save();
 
-    return res.status(201).json(savedPost);
+    req.body.post = savedPost;
+    next();
   } catch (err) {
-    return res.status(500).json({ error: 'Internal Server Error', err });
+    next(err);
   }
 };
 
-export const editPost = async (req: AuthenticatedRequest, res: Response) => {
+export const editPost = async (
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
+) => {
   const userId = req.user?._id;
   const { postId } = req.params;
 
@@ -298,47 +207,54 @@ export const editPost = async (req: AuthenticatedRequest, res: Response) => {
 
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
+      next({ status: 404 });
     }
 
-    if (post.writer.toString() !== userId) {
-      return res.status(403).json({ error: '권한이 없습니다.' });
+    if (post!.writer.toString() !== userId) {
+      next({ status: 403 });
     }
 
-    post.contents = { text, images };
+    post!.contents = { text, images };
 
-    const updatedPost = await post.save();
+    const updatedPost = await post!.save();
 
-    return res.json(updatedPost);
+    req.body.text = updatedPost.contents.text;
+    req.body.images = updatedPost.contents.images;
+    next();
   } catch (err) {
-    return res.status(500).json({ error: 'Internal Server Error', err });
+    next(err);
   }
 };
 
-export const deletePost = async (req: AuthenticatedRequest, res: Response) => {
+export const deletePost = async (
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
+) => {
   const userId = req.user?._id;
   const { postId } = req.params;
 
   try {
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
+      next({ status: 404 });
     }
 
-    if (post.writer.toString() !== userId) {
-      return res.status(403).json({ error: '권한이 없습니다.' });
+    if (post!.writer.toString() !== userId) {
+      next({ status: 403 });
     }
 
     const deletedPost = await Post.findByIdAndDelete(postId);
     if (!deletedPost) {
-      return res.status(404).json({ error: '문서를 찾을 수 없습니다.' });
+      next({ status: 404 });
     }
 
-    await Likes.findOneAndDelete({ post: deletedPost._id });
-    await Comment.findOneAndDelete({ post: deletedPost._id });
+    await Likes.findOneAndDelete({ post: deletedPost!._id });
+    await Comment.findOneAndDelete({ post: deletedPost!._id });
 
-    return res.json(deletedPost);
+    req.body.post = deletedPost;
+    next();
   } catch (err) {
-    return res.status(500).json({ error: 'Internal Server Error', err });
+    next(err);
   }
 };

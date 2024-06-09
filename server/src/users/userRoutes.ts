@@ -35,8 +35,8 @@ router.get(
 router.post('/user/:username/profile/edit', authentication, editUserProfile);
 
 // follow
-router.get('/user/:username/follower', getUserFollowers);
 router.get('/user/:username/follow', getUserFollows);
+router.get('/user/:username/follower', getUserFollowers);
 router.post('/user/:username/follower', followUser);
 router.delete('/user/:username/follower', unfollowUser);
 

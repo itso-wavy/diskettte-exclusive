@@ -1,11 +1,7 @@
-import { Request, Response } from 'express';
+import { Response, NextFunction } from 'express';
 import argon2 from 'argon2';
-import { z } from 'zod';
-import dotenv from 'dotenv';
-dotenv.config();
-
-import { User, Follow, IFollow, Bookmark, IBookmark } from '@/db';
-import { IUser } from './UserModel';
+import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
+import { User, IUser, Follow, IFollow, Bookmark, IBookmark } from '@/db';
 import { loginSchema, registerSchema } from './auth-schema';
 import {
   generateAccessToken,
@@ -13,7 +9,11 @@ import {
   verifyRefreshToken,
 } from './token-utils';
 
-export const registerHandler = async (req: Request, res: Response) => {
+export const registerHandler = async (
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
+) => {
   try {
     const { username, password, confirmPassword } = registerSchema.parse(
       req.body
@@ -21,17 +21,17 @@ export const registerHandler = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ username });
     if (user) {
-      return res
-        .status(400)
-        .send(JSON.stringify({ username: '중복되는 아이디가 있습니다.' }));
+      next({
+        message: { username: '중복되는 아이디가 있습니다.' },
+        status: 400,
+      });
     }
 
     if (password !== confirmPassword) {
-      return res
-        .status(400)
-        .send(
-          JSON.stringify({ confirmPassword: '비밀번호가 일치하지 않습니다.' })
-        );
+      next({
+        message: { confirmPassword: '비밀번호가 일치하지 않습니다.' },
+        status: 400,
+      });
     }
 
     const hashedPassword = await argon2.hash(password);
@@ -60,39 +60,35 @@ export const registerHandler = async (req: Request, res: Response) => {
     });
     await newBookmark.save();
 
-    return res
-      .status(201)
-      .send(JSON.stringify({ message: 'register seccess!' }));
+    req.body = { message: 'register seccess!' };
+    next();
   } catch (err) {
-    if (err instanceof z.ZodError) {
-      return res.status(400).json(err.flatten().fieldErrors);
-    }
-
-    return res.status(500).send(
-      JSON.stringify({
-        general: '서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-      })
-    );
+    next(err);
   }
 };
 
-export const loginHandler = async (req: Request, res: Response) => {
+export const loginHandler = async (
+  req: ExpandedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { username, password } = loginSchema.parse(req.body);
 
     const user = await User.findOne({ username });
 
     if (!user) {
-      return res
-        .status(400)
-        .send(JSON.stringify({ username: '해당하는 아이디가 없습니다.' }));
+      next({
+        message: { username: '해당하는 아이디가 없습니다.' },
+        status: 400,
+      });
     }
 
-    const validPassword = await argon2.verify(user.password, password); // hash, string
+    const validPassword = await argon2.verify(user!.password, password); // hash, string
 
     if (validPassword) {
-      const accessToken = generateAccessToken(user._id);
-      const refreshToken = generateRefreshToken(user._id);
+      const accessToken = generateAccessToken(user!._id);
+      const refreshToken = generateRefreshToken(user!._id);
 
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
@@ -101,41 +97,45 @@ export const loginHandler = async (req: Request, res: Response) => {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30일
       });
 
-      return res.json({
-        username: user.username,
+      req.body = {
+        username: user!.username,
         accessToken,
-        profile: user.profile,
-      });
+        profile: user!.profile,
+      };
     } else {
-      return res
-        .status(400)
-        .send(JSON.stringify({ password: '비밀번호가 일치하지 않습니다.' }));
+      next({
+        message: { password: '비밀번호가 일치하지 않습니다.' },
+        status: 400,
+      });
     }
+    next();
   } catch (err) {
-    if (err instanceof z.ZodError) {
-      return res.status(400).json(err.flatten().fieldErrors);
-    }
-
-    return res.status(500).send(
-      JSON.stringify({
-        general: '서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-      })
-    );
+    next(err);
   }
 };
 
-export const refreshTokenHandler = async (req: Request, res: Response) => {
+export const refreshTokenHandler = async (
+  req: ExpandedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
-    return res.status(401).json({ message: 'no token' });
+    next({
+      message: 'no token',
+      status: 401,
+    });
   }
 
   const decoded = verifyRefreshToken(refreshToken);
   if (!decoded) {
-    return res.status(403).json({ message: 'invalid token' });
+    next({
+      message: 'invalid token',
+      status: 403,
+    });
   }
 
-  const _id = decoded.payload;
+  const _id = decoded!.payload;
   const accessToken = generateAccessToken(_id);
   const newRefreshToken = generateRefreshToken(_id);
 
@@ -145,5 +145,6 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 
-  return res.json({ accessToken });
+  req.body = { accessToken };
+  next();
 };
