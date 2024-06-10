@@ -6,14 +6,18 @@ import { ProfileField, PostListField } from './components';
 import { UserLayoutContext } from '../UserLayout';
 
 const UserPage: React.FC = () => {
-  const { usernameParam, isUserMatch, isLoggedIn } =
+  const { usernameParam, isLoggedIn, isUserMatch } =
     useOutletContext<UserLayoutContext>();
 
   return (
     <PageWrapper>
       <WidthWrapper className='border-b'>
         <div className='mb-5'>
-          <ProfileField username={usernameParam} isUserMatch={isUserMatch} />
+          <ProfileField
+            username={usernameParam}
+            isLoggedIn={isLoggedIn}
+            isUserMatch={isUserMatch}
+          />
         </div>
       </WidthWrapper>
       <WidthWrapper>

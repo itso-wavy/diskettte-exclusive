@@ -47,7 +47,11 @@ const MainNav: React.FC = () => {
           </DialogTrigger>
           <NavLinkButton
             tooltip='My Profile'
-            onClick={() => navigate(`@${username}`)}
+            onClick={() => {
+              isLoggedIn
+                ? navigate(`@${username}`)
+                : toast('로그인이 필요합니다.');
+            }}
           >
             {pathname === `/@${username}` ? (
               <Icon.AtSign style={{ strokeWidth: 3 }} />

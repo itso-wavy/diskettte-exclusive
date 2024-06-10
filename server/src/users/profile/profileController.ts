@@ -12,31 +12,33 @@ export const getUserProfileDetail = async (
   const { username } = req.params;
 
   try {
-    const user = await User.findOne({ username });
-    if (!user) {
-      next({
+    const profileUser = await User.findOne({ username });
+    if (!profileUser) {
+      return next({
         message: '해당하는 사용자가 없습니다.',
         status: 404,
       });
     }
 
-    const follow = await Follow.findOne({ user: user!._id });
+    const profileFollow = (await Follow.findOne({ user: profileUser._id }))!;
 
     let profileDetail: any = {
-      username: user!.username,
-      profile: user!.profile,
-      following: follow?.following.length,
-      followers: follow?.followers.length,
+      username: profileUser.username,
+      profile: profileUser.profile,
+      following: profileFollow?.following.length,
+      followers: profileFollow?.followers.length,
     };
 
-    if (user!._id.toString() !== userId) {
-      profileDetail.isFollowing = true;
+    if (userId && profileUser._id.toString() !== userId) {
+      profileDetail.isFollowing = profileFollow.followers.some(
+        follower => follower.toString() === userId
+      );
     }
 
-    req.body.profile = profileDetail;
-    next();
+    req.body.profileDetail = profileDetail;
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -46,11 +48,11 @@ export const editUserProfile = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.user!._id;
+    const userId = req.user?._id;
 
     const user = await User.findById(userId).select('profile');
     if (!user) {
-      next({
+      return next({
         message: '해당하는 사용자가 없습니다.',
         status: 404,
       });
@@ -64,15 +66,15 @@ export const editUserProfile = async (
       description,
     };
 
-    const updatedUser = await User.findByIdAndUpdate(
+    const updatedUser = (await User.findByIdAndUpdate(
       userId,
       { $set: { profile: updatedProfile } },
       { new: true } // 반환 값은 업데이트 후의 문서
-    );
+    ))!;
 
-    req.body.profile = updatedUser!.profile;
-    next();
+    req.body.profile = updatedUser.profile;
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };

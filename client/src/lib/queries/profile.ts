@@ -4,17 +4,23 @@ export const profileKeys = {
   profile: ['profile'] as const,
   userProfile: ({
     username,
-    isUserMatch,
+    isLoggedIn,
   }: {
     username: string;
-    isUserMatch: boolean;
-  }) => [...profileKeys.profile, { username, isUserMatch }] as const,
+    isLoggedIn: boolean;
+  }) => [...profileKeys.profile, { username, isLoggedIn }] as const,
 };
 
 export const getUserProfile = ({ queryKey }: any) => {
-  const { username, isUserMatch } = queryKey[1];
+  const { username, isLoggedIn } = queryKey[1];
 
   return client(
-    !isUserMatch ? `user/${username}/profile` : `user/${username}/profile/auth`
+    !isLoggedIn ? `user/${username}/profile` : `user/${username}/profile/auth`
   );
+};
+
+export const toggleUserFollow = ({ isFollowing, username }: any) => {
+  return !isFollowing
+    ? client.post(`user/${username}/follower`)
+    : client.delete(`user/${username}/follower`);
 };
