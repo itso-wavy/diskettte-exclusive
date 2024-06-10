@@ -6,47 +6,87 @@ import { toast } from 'sonner';
 import { Post } from '.';
 import Icon from '../icons';
 
-import { toggleLike } from '@/lib/queries/post-interaction';
 import { postKeys } from '@/lib/queries/post';
+import { toggleLike } from '@/lib/queries/post-interaction';
 import { cn } from '@/lib/utils';
 
 const LikeButton: React.FC<{
   postId: string;
-  username: string;
+  writer: string;
   isLoggedIn: boolean;
   defaultLiked: boolean;
   defaultCount: number;
-}> = ({ postId, username, isLoggedIn, defaultLiked, defaultCount }) => {
+}> = ({ postId, writer, isLoggedIn, defaultLiked, defaultCount }) => {
   const [isLiked, setIsLiked] = useState<boolean>(defaultLiked);
   const [likesCount, setLikesCount] = useState<number>(defaultCount);
 
+  const queryKeys = [
+    postKeys.viewfeed({ view: 'everyone', isLoggedIn }),
+    postKeys.viewfeed({ view: 'following', isLoggedIn }),
+    postKeys.userPost({ username: writer, isLoggedIn }),
+  ];
   const queryClient = useQueryClient();
-  const queryKey = postKeys.postDetail({ postId, username, isLoggedIn: true });
   const { mutate } = useMutation({
     mutationFn: toggleLike,
     onMutate: ({ isLiked, likesCount }) => {
       setIsLiked(() => !isLiked);
       setLikesCount(() => likesCount + (isLiked ? -1 : 1));
+
+      const prevPosts: any[] = [];
+      queryKeys.forEach(async (queryKey, index) => {
+        await queryClient.cancelQueries({ queryKey });
+
+        prevPosts[index] = queryClient.getQueryData(queryKey);
+        if (prevPosts[index]) {
+          queryClient.setQueryData(queryKey, (prev: any) => {
+            const newPost = { ...prev };
+
+            const postIndex = newPost.data.posts.findIndex(
+              (post: any) => post._id === postId
+            );
+            const postInArray = newPost.data.posts[postIndex];
+            postInArray.isLiked = !isLiked;
+            postInArray.likesCount = isLiked
+              ? postInArray.likesCount + 1
+              : postInArray.likesCount - 1;
+
+            return newPost;
+          });
+        }
+      });
+
+      return { prevPosts };
     },
-    onError: (err, variables, _context) => {
+    onError: (err, variables, context) => {
+      setIsLiked(() => variables.isLiked);
+      setLikesCount(() => variables.likesCount);
+
       console.error(err);
 
       if (isAxiosError(err)) {
         const error = err.response!.data.error;
         console.log(error);
 
-        toast('에러가 발생했습니다.😥', { description: '새로고침 해주세요.' });
+        toast('에러가 발생했습니다.😥', {
+          description: '다음에 다시 시도해주세요.',
+        });
       }
 
-      setIsLiked(() => variables.isLiked);
-      setLikesCount(() => variables.likesCount);
+      context!.prevPosts.forEach((prevPost, index) => {
+        queryClient.setQueryData(queryKeys[index]!, prevPost);
+      });
     },
     onSuccess: ({ data }) => {
       setIsLiked(() => data.isLiked);
       setLikesCount(() => data.likesCount);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey });
+      queryKeys.forEach(queryKey => {
+        queryClient.invalidateQueries({
+          queryKey,
+          refetchType: 'all',
+        });
+      });
     },
   });
 

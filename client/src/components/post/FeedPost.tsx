@@ -60,7 +60,7 @@ export const FeedPost: React.FC<{
       <div className='-mb-1 mt-1.5 flex h-9 items-center gap-4'>
         <LikeButton
           postId={post._id}
-          username={username}
+          writer={post.writer.username}
           isLoggedIn={isLoggedIn}
           defaultLiked={post.isLiked}
           defaultCount={post.likesCount}
@@ -97,7 +97,7 @@ export const FeedPost: React.FC<{
         </Post.Button>
         <BookmarkButton
           postId={post._id}
-          username={username}
+          writer={post.writer.username}
           isLoggedIn={isLoggedIn}
           defaultBookmarked={post.isBookmarked}
         />

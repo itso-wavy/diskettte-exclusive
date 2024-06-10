@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { NextFunction, Response } from 'express';
 import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
 import { postContentsSchema } from './post-schema';
@@ -27,12 +28,12 @@ const getFormattedPost = async (post: IPost, userId: string | undefined) => {
     },
     contents: post.contents,
     createdAt: post.createdAt,
-    isLiked: userId
-      ? likes?.likes.some(user => user.toString() === userId)
-      : false,
+    isLiked: userId ? !!likes?.likes.find(user => user.equals(userId)) : false,
     likesCount: likes?.likes.length,
     commentsCount: comments?.comments.length,
-    isBookmarked: bookmarks?.bookmarks.some(post => post === post._id),
+    isBookmarked: !!bookmarks?.bookmarks.find(bookmark =>
+      bookmark.equals(post._id)
+    ),
   };
 };
 
@@ -47,7 +48,7 @@ export const getPosts = async (
     const posts = await Post.find().sort({ createdAt: -1 });
 
     const formattedPosts = await Promise.all(
-      posts.map(async (post: IPost) => getFormattedPost(post, userId))
+      posts.map((post: IPost) => getFormattedPost(post, userId))
     );
 
     let otherUserPosts;
