@@ -12,36 +12,74 @@ import { cn } from '@/lib/utils';
 
 const BookmarkButton: React.FC<{
   postId: string;
-  username: string;
+  writer: string;
   isLoggedIn: boolean;
   defaultBookmarked: boolean;
-}> = ({ postId, username, isLoggedIn, defaultBookmarked }) => {
+}> = ({ postId, writer, isLoggedIn, defaultBookmarked }) => {
   const [isBookmarked, setIsBookmarked] = useState(defaultBookmarked);
 
+  const queryKeys = [
+    postKeys.viewfeed({ view: 'everyone', isLoggedIn }),
+    postKeys.viewfeed({ view: 'following', isLoggedIn }),
+    postKeys.userPost({ username: writer, isLoggedIn }),
+  ];
   const queryClient = useQueryClient();
-  const queryKey = postKeys.postDetail({ postId, username, isLoggedIn: true });
   const { mutate } = useMutation({
     mutationFn: toggleBookmark,
     onMutate: ({ isBookmarked }) => {
       setIsBookmarked(() => !isBookmarked);
+
+      const prevPosts: any[] = [];
+      queryKeys.forEach(async (queryKey, index) => {
+        await queryClient.cancelQueries({ queryKey });
+
+        prevPosts[index] = queryClient.getQueryData(queryKey);
+        if (prevPosts[index]) {
+          queryClient.setQueryData(queryKey, (prev: any) => {
+            const newPost = { ...prev };
+
+            const postIndex = newPost.data.posts.findIndex(
+              (post: any) => post._id === postId
+            );
+            const postInArray = newPost.data.posts[postIndex];
+
+            postInArray.isBookmarked = !isBookmarked;
+
+            return newPost;
+          });
+        }
+      });
+
+      return { prevPosts };
     },
-    onError: (err, variables, _context) => {
+    onError: (err, variables, context) => {
+      setIsBookmarked(() => variables.isBookmarked);
+
       console.error(err);
 
       if (isAxiosError(err)) {
         const error = err.response!.data.error;
         console.log(error);
 
-        toast('에러가 발생했습니다.😥', { description: '새로고침 해주세요.' });
+        toast('에러가 발생했습니다.😥', {
+          description: '다음에 다시 시도해주세요.',
+        });
       }
 
-      setIsBookmarked(() => variables.isBookmarked);
+      context!.prevPosts.forEach((prevPost, index) => {
+        queryClient.setQueryData(queryKeys[index]!, prevPost);
+      });
     },
     onSuccess: ({ data }) => {
       setIsBookmarked(() => data.isBookmarked);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey });
+      queryKeys.forEach(queryKey => {
+        queryClient.invalidateQueries({
+          queryKey,
+          refetchType: 'all',
+        });
+      });
     },
   });
 

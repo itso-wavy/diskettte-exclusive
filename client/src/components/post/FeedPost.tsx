@@ -65,23 +65,6 @@ export const FeedPost: React.FC<{
           defaultLiked={post.isLiked}
           defaultCount={post.likesCount}
         />
-        {/* <Post.Button
-          ariaLabel='likes'
-          onClick={() => {
-            setIsLiked(prev => !prev); 
-            setLikesCount(prev => prev + (isLiked ? -1 : 1));
-          }}
-          count={likesCount}
-        >
-          <Icon.Heart
-            viewBox='0 0 24 24'
-            strokeWidth={1}
-            className={cn(
-              'h-[20px] w-[20px]',
-              isLiked && 'svg-fill-theme text-alpha'
-            )}
-          />
-        </Post.Button> */}
         <Post.Button
           ariaLabel='comments'
           onClick={() => {
@@ -101,20 +84,6 @@ export const FeedPost: React.FC<{
           isLoggedIn={isLoggedIn}
           defaultBookmarked={post.isBookmarked}
         />
-        {/* <Post.Button
-          ariaLabel='bookmark'
-          onClick={() => console.log('bookmark')}
-          className='ml-auto'
-        >
-          <Icon.Bookmark
-            viewBox='0 0 24 24'
-            strokeWidth={0.9}
-            className={cn(
-              'h-[20px] w-[20px]',
-              isBookmarked && 'svg-fill-theme text-alpha'
-            )}
-          />
-        </Post.Button> */}
       </div>
     </Post.Layout>
   );

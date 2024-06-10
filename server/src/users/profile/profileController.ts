@@ -30,8 +30,8 @@ export const getUserProfileDetail = async (
     };
 
     if (userId && profileUser._id.toString() !== userId) {
-      profileDetail.isFollowing = profileFollow.followers.some(
-        follower => follower.toString() === userId
+      profileDetail.isFollowing = !!profileFollow.followers.find(follower =>
+        follower.equals(userId)
       );
     }
 

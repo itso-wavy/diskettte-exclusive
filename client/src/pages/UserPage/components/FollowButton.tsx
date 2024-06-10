@@ -21,27 +21,51 @@ const FollowButton: React.FC<{
     }
   }, [defaultFollowing]);
 
-  const queryClient = useQueryClient();
   const queryKey = profileKeys.userProfile({
     username,
     isLoggedIn,
   });
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: toggleUserFollow,
-    onMutate: ({ isFollowing }) => {
+    onMutate: async ({ isFollowing }) => {
       setIsFollowing(() => !isFollowing);
+
+      await queryClient.cancelQueries({ queryKey });
+      const prevProfile = queryClient.getQueryData(queryKey);
+
+      if (prevProfile) {
+        queryClient.setQueryData(queryKey, (prev: any) => {
+          const newProfile = { ...prev };
+
+          const profileDetail = newProfile.data.profileDetail;
+
+          profileDetail.isFollowing === !isFollowing;
+          profileDetail.followers = isFollowing
+            ? profileDetail.followers + 1
+            : profileDetail.followers - 1;
+
+          return newProfile;
+        });
+      }
+
+      return { prevProfile };
     },
-    onError: (err, variables, _context) => {
+    onError: (err, variables, context) => {
+      setIsFollowing(() => variables.isFollowing);
+
       console.error(err);
 
       if (isAxiosError(err)) {
         const error = err.response!.data.error;
         console.log(error);
 
-        toast('에러가 발생했습니다.😥', { description: '새로고침 해주세요.' });
+        toast('에러가 발생했습니다.😥', {
+          description: '다음에 다시 시도해주세요.',
+        });
       }
 
-      setIsFollowing(() => variables.isFollowing);
+      queryClient.setQueryData(queryKey, context!.prevProfile);
     },
     onSuccess: ({ data }) => {
       setIsFollowing(() => data.isFollowing);
