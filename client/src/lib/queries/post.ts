@@ -3,7 +3,6 @@ import client from '../services';
 import { ViewT } from '@/pages/Feed';
 
 type FeedP = { view: ViewT; isLoggedIn: boolean };
-// type InteractionP = { username: string; isLoggedIn: boolean };
 type DetailP = {
   username: string;
   isLoggedIn: boolean;

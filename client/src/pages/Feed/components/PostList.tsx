@@ -21,7 +21,7 @@ const PostList: React.FC<{ view: ViewT; isLoggedIn: boolean }> = ({
     queryKey: postKeys.viewfeed({ view, isLoggedIn }),
     queryFn: getViewFeed,
   });
-  const body = response?.data;
+  const { posts } = response?.data || {};
 
   if (error) {
     if (isAxiosError(error)) console.log(error.response?.data);
@@ -34,7 +34,7 @@ const PostList: React.FC<{ view: ViewT; isLoggedIn: boolean }> = ({
       ? Array(2)
           .fill(0)
           .map((_, index) => <PostSkeleton key={'wavy' + index} />)
-      : body.posts?.map((post: Post) => {
+      : posts?.map((post: Post) => {
           if (!post) return;
           return <FeedLinkPost key={post._id} post={post} />;
         });

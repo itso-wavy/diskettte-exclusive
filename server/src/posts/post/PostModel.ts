@@ -7,8 +7,6 @@ export interface IPost extends Document {
     images: string[] | null;
   };
   createdAt: Date;
-  // likes: Types.ObjectId[];
-  // comments: Types.ObjectId[];
 }
 
 export const postSchema: Schema<IPost> = new Schema(
@@ -24,8 +22,6 @@ export const postSchema: Schema<IPost> = new Schema(
       },
       images: [{ type: String }],
     },
-    // likes: [{ type: Schema.Types.ObjectId, ref: 'Like' }],
-    // comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   {
     validateBeforeSave: true,

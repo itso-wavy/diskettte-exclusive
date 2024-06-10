@@ -55,10 +55,10 @@ const PostForm: React.FC<{
           break;
         case PostFormType.EDIT:
           const response = await editPost(post?._id, request);
-          const body = response.data;
+          const { text, images } = response.data || {};
 
-          setValue('text', body.text);
-          setValue('images', body.images);
+          setValue('text', text);
+          setValue('images', images);
           break;
         default:
           break;

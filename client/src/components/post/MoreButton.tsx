@@ -25,6 +25,7 @@ const MoreButton = ({
   username,
   isWriter,
   post,
+  children,
 }: PropsWithChildren<{
   username: string;
   isWriter: boolean;
@@ -37,9 +38,6 @@ const MoreButton = ({
   const navigate = useNavigate();
 
   const { mutate } = useMutation({
-    // mutationFn: async () => {
-    //   await client.delete(`post/${post?._id}/delete`);
-    // },
     mutationFn: () => deletePost(post?._id),
     onMutate: () => toast('삭제 중...'),
     onSuccess: () => {
@@ -62,16 +60,7 @@ const MoreButton = ({
   return (
     <Dialog>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <div>
-            <Post.Button
-              ariaLabel='more'
-              className='ml-auto text-muted-foreground'
-            >
-              <Icon.More viewBox='0 0 24 24' className='h-5 w-5' />
-            </Post.Button>
-          </div>
-        </DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent
           className={cn(
             isDarkmode && 'dark',

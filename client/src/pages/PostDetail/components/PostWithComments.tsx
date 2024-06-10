@@ -24,7 +24,7 @@ const PostWithComments: React.FC<{
     }),
     queryFn: getPostDetail,
   });
-  const body = response?.data;
+  const { post } = response?.data || {};
 
   if (error) {
     let message;
@@ -41,7 +41,7 @@ const PostWithComments: React.FC<{
       />
     );
   } else {
-    return isLoading ? <PostSkeleton /> : <FeedPost post={body.post} />;
+    return isLoading ? <PostSkeleton /> : <FeedPost post={post} />;
   }
 };
 

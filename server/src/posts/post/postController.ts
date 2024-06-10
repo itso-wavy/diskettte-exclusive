@@ -60,9 +60,9 @@ export const getPosts = async (
     }
 
     req.body.posts = otherUserPosts || formattedPosts;
-    next();
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -88,9 +88,9 @@ export const getFollowingPosts = async (
     );
 
     req.body.posts = formattedPosts;
-    next();
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -103,9 +103,12 @@ export const getUserPosts = async (
   const { username } = req.params;
 
   try {
-    const writer = (await User.findOne({ username }))!;
+    const writer = await User.findOne({ username });
     if (!writer) {
-      next({ message: '해당하는 사용자를 찾을 수 없습니다.', status: 404 });
+      return next({
+        message: '해당하는 사용자를 찾을 수 없습니다.',
+        status: 404,
+      });
     }
 
     const posts = await Post.find({ writer: writer._id }).sort({
@@ -117,9 +120,36 @@ export const getUserPosts = async (
     );
 
     req.body.posts = formattedPosts;
-    next();
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
+  }
+};
+
+export const getUserBookmarkPosts = async (
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
+) => {
+  const userId = req.user?._id;
+
+  try {
+    const bookmarks = await Bookmark.find({ user: userId }).sort({
+      createdAt: -1,
+    });
+
+    const formattedPosts = await Promise.all(
+      bookmarks.map(async bookmark => {
+        const post = (await Post.findById(bookmark))!;
+
+        getFormattedPost(post, userId);
+      })
+    );
+
+    req.body.bookmarks = formattedPosts;
+    return next();
+  } catch (err) {
+    return next(err);
   }
 };
 
@@ -132,19 +162,19 @@ export const getPost = async (
   const { username, postId } = req.params;
 
   try {
-    const post = await Post.findById(postId);
+    const post = (await Post.findById(postId))!;
 
-    const writer = (await User.findById(post!.writer))!;
+    const writer = (await User.findById(post.writer))!;
     if (username !== writer.username) {
-      next({ status: 404 });
+      return next({ status: 404 });
     }
 
-    const formattedPost = await getFormattedPost(post!, userId);
+    const formattedPost = await getFormattedPost(post, userId);
 
     req.body.post = formattedPost;
-    next();
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -156,7 +186,7 @@ export const createPost = async (
   try {
     const userId = req.user?._id;
     if (!userId) {
-      next({ status: 404 });
+      return next({ status: 404 });
     }
 
     const { text } = postContentsSchema.parse(req.body);
@@ -185,9 +215,9 @@ export const createPost = async (
     await newComments.save();
 
     req.body.post = savedPost;
-    next();
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -207,22 +237,22 @@ export const editPost = async (
 
     const post = await Post.findById(postId);
     if (!post) {
-      next({ status: 404 });
+      return next({ status: 404 });
     }
 
-    if (post!.writer.toString() !== userId) {
-      next({ status: 403 });
+    if (post.writer.toString() !== userId) {
+      return next({ status: 403 });
     }
 
-    post!.contents = { text, images };
+    post.contents = { text, images };
 
-    const updatedPost = await post!.save();
+    const updatedPost = await post.save();
 
     req.body.text = updatedPost.contents.text;
     req.body.images = updatedPost.contents.images;
-    next();
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -237,24 +267,24 @@ export const deletePost = async (
   try {
     const post = await Post.findById(postId);
     if (!post) {
-      next({ status: 404 });
+      return next({ status: 404 });
     }
 
-    if (post!.writer.toString() !== userId) {
-      next({ status: 403 });
+    if (post.writer.toString() !== userId) {
+      return next({ status: 403 });
     }
 
-    const deletedPost = await Post.findByIdAndDelete(postId);
+    const deletedPost = (await Post.findByIdAndDelete(postId))!;
     if (!deletedPost) {
-      next({ status: 404 });
+      return next({ status: 404 });
     }
 
-    await Likes.findOneAndDelete({ post: deletedPost!._id });
-    await Comment.findOneAndDelete({ post: deletedPost!._id });
+    await Likes.findOneAndDelete({ post: deletedPost._id });
+    await Comment.findOneAndDelete({ post: deletedPost._id });
 
     req.body.post = deletedPost;
-    next();
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };

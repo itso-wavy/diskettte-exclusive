@@ -1,27 +1,24 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { MoreButton, Post } from '.';
+import { Post, MoreButton, LikeButton, BookmarkButton } from '.';
 import Icon from '../icons';
 
-import { cn, getRelativeTime } from '@/lib/utils';
-import { Post as PostT } from '@/lib/types';
 import { RootState } from '@/lib/store';
+import { Post as PostT } from '@/lib/types';
+import { getRelativeTime } from '@/lib/utils';
 
 export const FeedPost: React.FC<{
   post: PostT;
   className?: string;
 }> = ({ post, className }) => {
   const navigate = useNavigate();
-  const { username } = useSelector((state: RootState) => state.auth);
+  const { username, isLoggedIn } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const relativeTime = getRelativeTime(post.createdAt);
   const isWriter = post.writer.username === username;
-
-  const [isLiked, setIsLiked] = useState(post.isLiked);
-  const [isBookmarked, setIsBookmarked] = useState(post.isBookmarked);
-  const [likesCount, setLikesCount] = useState(post.likesCount);
 
   return (
     <Post.Layout
@@ -61,10 +58,17 @@ export const FeedPost: React.FC<{
         contents={post.contents}
       />
       <div className='-mb-1 mt-1.5 flex h-9 items-center gap-4'>
-        <Post.Button
+        <LikeButton
+          postId={post._id}
+          username={username}
+          isLoggedIn={isLoggedIn}
+          defaultLiked={post.isLiked}
+          defaultCount={post.likesCount}
+        />
+        {/* <Post.Button
           ariaLabel='likes'
           onClick={() => {
-            setIsLiked(prev => !prev); // TODO:
+            setIsLiked(prev => !prev); 
             setLikesCount(prev => prev + (isLiked ? -1 : 1));
           }}
           count={likesCount}
@@ -77,12 +81,12 @@ export const FeedPost: React.FC<{
               isLiked && 'svg-fill-theme text-alpha'
             )}
           />
-        </Post.Button>
+        </Post.Button> */}
         <Post.Button
           ariaLabel='comments'
           onClick={() => {
             navigate(`/@${post.writer.username}/${post._id}`);
-          }} // TODO:
+          }}
           count={post.commentsCount}
         >
           <Icon.Comment
@@ -91,7 +95,13 @@ export const FeedPost: React.FC<{
             className='h-[20px] w-[20px]'
           />
         </Post.Button>
-        <Post.Button
+        <BookmarkButton
+          postId={post._id}
+          username={username}
+          isLoggedIn={isLoggedIn}
+          defaultBookmarked={post.isBookmarked}
+        />
+        {/* <Post.Button
           ariaLabel='bookmark'
           onClick={() => console.log('bookmark')}
           className='ml-auto'
@@ -104,7 +114,7 @@ export const FeedPost: React.FC<{
               isBookmarked && 'svg-fill-theme text-alpha'
             )}
           />
-        </Post.Button>
+        </Post.Button> */}
       </div>
     </Post.Layout>
   );

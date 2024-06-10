@@ -21,8 +21,7 @@ const PostListField: React.FC<{ username: string; isLoggedIn: boolean }> = ({
     queryKey: postKeys.userPost({ username, isLoggedIn }),
     queryFn: getUserPosts,
   });
-  // const postList: Post[] = response?.data || [];
-  const body = response?.data;
+  const { posts } = response?.data || {};
 
   if (error) {
     if (isAxiosError(error)) console.log(error.response?.data);
@@ -34,7 +33,7 @@ const PostListField: React.FC<{ username: string; isLoggedIn: boolean }> = ({
     return isLoading ? (
       <Loader className='h-[calc(100vh-419px)]' />
     ) : (
-      body.posts?.map((post: Post) => {
+      posts?.map((post: Post) => {
         if (!post) return;
         return <FeedLinkPost key={post._id} post={post} />;
       })
