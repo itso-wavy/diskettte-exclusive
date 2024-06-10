@@ -1,66 +1,59 @@
-import { Response } from 'express';
+import { Response, NextFunction } from 'express';
 import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
+import { Bookmark } from '@/db';
 
-export const getUserBookmarks = async (
-  _req: ExpandedRequest,
-  _res: Response
-) => {};
+export const addBookmark = async (
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
+) => {
+  const userId = req.user?._id;
+  const { postId } = req.params as any;
 
-export const addBookmark = async (_req: ExpandedRequest, _res: Response) => {};
+  try {
+    const bookmarks = await Bookmark.findOne({ user: userId });
+    if (!bookmarks) {
+      return next({ status: 404 });
+    }
+
+    if (!bookmarks.bookmarks.includes(postId)) {
+      bookmarks.bookmarks.push(postId);
+    } else return next({ message: '이미 북마크 중입니다.', status: 400 });
+
+    await bookmarks.save();
+
+    req.body.isBookmarked = true;
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+};
 
 export const removeBookmark = async (
-  _req: ExpandedRequest,
-  _res: Response
-) => {};
+  req: ExpandedRequest,
+  _res: Response,
+  next: NextFunction
+) => {
+  const userId = req.user?._id;
+  const { postId } = req.params as any;
 
-/* // 좋아요 추가
-router.post('/posts/:postId/like', async (req, res) => {
   try {
-    const { postId } = req.params;
-    const { userId } = req.body;
-
-    // 해당 사용자의 좋아요 정보 찾기
-    let like = await Like.findOne({ user: userId, post: postId });
-
-    if (!like) {
-      // 좋아요가 없다면 새로 생성
-      like = new Like({
-        user: userId,
-        post: postId,
-        isLiked: true
-      });
-      await like.save();
-    } else {
-      // 좋아요가 있다면 상태 변경
-      like.isLiked = true;
-      await like.save();
+    const bookmarks = await Bookmark.findOne({ user: userId });
+    if (!bookmarks) {
+      return next({ status: 404 });
     }
 
-    res.status(200).json(like);
+    if (bookmarks.bookmarks.includes(postId!)) {
+      bookmarks.bookmarks = bookmarks.bookmarks.filter(
+        post => !post.equals(postId)
+      );
+    } else return next({ message: '북마크 중이 아닙니다.', status: 400 });
+
+    await bookmarks.save();
+
+    req.body.isBookmarked = false;
+    return next();
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    return next(err);
   }
-});
-
-// 좋아요 취소
-router.delete('/posts/:postId/like', async (req, res) => {
-  try {
-    const { postId } = req.params;
-    const { userId } = req.body;
-
-    // 해당 사용자의 좋아요 정보 찾기
-    const like = await Like.findOne({ user: userId, post: postId });
-
-    if (!like) {
-      // 좋아요가 없다면 에러 반환
-      return res.status(404).json({ message: 'Like not found' });
-    }
-
-    // 좋아요 정보 삭제
-    await like.delete();
-
-    res.status(200).json({ message: 'Like deleted' });
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-}); */
+};
