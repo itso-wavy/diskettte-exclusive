@@ -8,13 +8,8 @@ import {
   editUserProfile,
   getUserProfileDetail,
 } from '@/users/profile/profileController';
-import {
-  followUser,
-  getUserFollowers,
-  getUserFollows,
-  unfollowUser,
-} from './follow/followController';
-import { getUserBookmarks } from '@/users/bookmark/bookmarkController';
+import { followUser, unfollowUser } from '@/users/follow/followController';
+import { getUserBookmarkPosts } from '@/posts/post/postController';
 
 import { authentication } from '@/middleware/authentication';
 
@@ -35,12 +30,10 @@ router.get(
 router.post('/user/:username/profile/edit', authentication, editUserProfile);
 
 // follow
-router.get('/user/:username/follow', getUserFollows);
-router.get('/user/:username/follower', getUserFollowers);
-router.post('/user/:username/follower', followUser);
-router.delete('/user/:username/follower', unfollowUser);
+router.post('/user/:username/follower', authentication, followUser);
+router.delete('/user/:username/follower', authentication, unfollowUser);
 
 // bookmark
-router.get('/user/:username/bookmark', getUserBookmarks);
+router.get('/user/:username/bookmark', authentication, getUserBookmarkPosts);
 
 export { router as userRouter };

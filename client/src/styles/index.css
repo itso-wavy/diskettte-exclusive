@@ -150,9 +150,5 @@
   --color-beta: 316, 94%, 93%, 0.8;  
   --color-gamma:310, 53%, 52%;
 }
-/* .masonry {
-  display: masonry;
-  masonry-template-tracks: repeat(auto-fill, minmax(14rem, 1fr));
-  gap: 1rem;
-} */
+
 
