@@ -22,6 +22,7 @@ const BookmarkButton: React.FC<{
     postKeys.viewfeed({ view: 'everyone', isLoggedIn }),
     postKeys.viewfeed({ view: 'following', isLoggedIn }),
     postKeys.userPost({ username: writer, isLoggedIn }),
+    postKeys.bookmarkPost({ username: writer }),
     postKeys.postDetail({ postId, username: writer, isLoggedIn }),
   ];
   const queryClient = useQueryClient();

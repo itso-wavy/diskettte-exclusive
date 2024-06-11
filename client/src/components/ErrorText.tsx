@@ -3,10 +3,11 @@ import { Button } from './form';
 import { cn } from '@/lib/utils';
 
 const ErrorText: React.FC<{
-  message?: string;
+  message?: string | JSX.Element;
+  buttonText?: string;
   handleRetry?: () => void;
   className?: string;
-}> = ({ message, handleRetry, className }) => {
+}> = ({ message, buttonText, handleRetry, className }) => {
   return (
     <div className={cn('relative h-[calc(100%-65px)] min-h-[97px]', className)}>
       <div className='absolute bottom-0 left-0 grid h-full w-full place-content-center gap-y-2 text-center text-xs'>
@@ -24,8 +25,7 @@ const ErrorText: React.FC<{
             onClick={handleRetry}
             className='border bg-background text-foreground ring hover:bg-secondary active:bg-border active:ring-0 disabled:bg-border dark:active:bg-muted'
           >
-            {/* focus:ring-0 focus-visible:ring  */}
-            재요청
+            {buttonText ? buttonText : '재요청'}
           </Button>
         )}
       </div>

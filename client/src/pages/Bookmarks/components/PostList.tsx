@@ -5,22 +5,18 @@ import { isAxiosError } from 'axios';
 import { FeedLinkPost, PostSkeleton } from '@/components/post';
 import ErrorText from '@/components/ErrorText';
 
-import { getViewFeed, postKeys } from '@/lib/queries/post';
+import { getUserBookmarks, postKeys } from '@/lib/queries/post';
 import { Post } from '@/lib/types';
-import { ViewT } from '..';
 
-const PostList: React.FC<{ view: ViewT; isLoggedIn: boolean }> = ({
-  view,
-  isLoggedIn,
-}) => {
+const PostList: React.FC<{ username: string }> = ({ username }) => {
   const {
     data: response,
     isLoading,
     error,
     refetch,
   } = useQuery({
-    queryKey: postKeys.viewfeed({ view, isLoggedIn }),
-    queryFn: getViewFeed,
+    queryKey: postKeys.bookmarkPost({ username }),
+    queryFn: getUserBookmarks,
   });
   const { posts } = response?.data || {};
   const navigate = useNavigate();
@@ -42,8 +38,8 @@ const PostList: React.FC<{ view: ViewT; isLoggedIn: boolean }> = ({
               <ErrorText
                 message={
                   <>
-                    <p>팔로우한 유저가 없습니다.</p>
-                    <p>관심 있는 유저를 팔로우해보세요!</p>
+                    <p>북마크한 포스트가 없습니다.</p>
+                    <p>마음에 드는 포스트를 찾아보세요!</p>
                   </>
                 }
                 handleRetry={() => navigate('/search')}
@@ -51,7 +47,6 @@ const PostList: React.FC<{ view: ViewT; isLoggedIn: boolean }> = ({
                 className='h-[calc(100vh-191px)]'
               />
             );
-
           return <FeedLinkPost key={post._id} post={post} />;
         });
   }

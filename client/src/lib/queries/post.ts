@@ -15,8 +15,10 @@ export const postKeys = {
     [...postKeys.posts, { view, isLoggedIn }] as const,
   userPost: ({ username, isLoggedIn }: DetailP) =>
     [...postKeys.posts, { username, isLoggedIn }] as const,
-  postDetail: ({ postId, username, isLoggedIn }: DetailP) =>
-    [...postKeys.posts, { postId, username, isLoggedIn }] as const,
+  postDetail: ({ username, isLoggedIn, postId }: DetailP) =>
+    [...postKeys.posts, { username, isLoggedIn, postId }] as const,
+  bookmarkPost: ({ username }: { username: string }) =>
+    [...postKeys.posts, { username, view: 'bookmark' }] as const,
 };
 
 export const getViewFeed = ({ signal, queryKey }: any) => {
@@ -46,6 +48,12 @@ export const getPostDetail = ({ queryKey }: any) => {
       ? `post/user/${username}/${postId}`
       : `post/user/${username}/${postId}/auth`
   );
+};
+
+export const getUserBookmarks = ({ queryKey }: any) => {
+  const { username } = queryKey[1];
+
+  return client(`user/${username}/bookmark`);
 };
 
 export const createPost = async (request: any) => {

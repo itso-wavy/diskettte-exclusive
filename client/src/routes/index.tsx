@@ -20,7 +20,7 @@ const router: Router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        index: true, // FeedPost 내에서 username이 나인지 확인 필요
+        index: true,
         element: <Feed />,
       },
       {

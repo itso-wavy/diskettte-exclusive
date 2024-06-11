@@ -7,6 +7,7 @@ import { Button } from '@/components/form';
 
 import { profileKeys, toggleUserFollow } from '@/lib/queries/profile';
 import { cn } from '@/lib/utils';
+import { postKeys } from '@/lib/queries/post';
 
 const FollowButton: React.FC<{
   username: string;
@@ -21,10 +22,7 @@ const FollowButton: React.FC<{
     }
   }, [defaultFollowing]);
 
-  const queryKey = profileKeys.userProfile({
-    username,
-    isLoggedIn,
-  });
+  const queryKey = profileKeys.userProfile({ username, isLoggedIn });
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: toggleUserFollow,
@@ -71,7 +69,17 @@ const FollowButton: React.FC<{
       setIsFollowing(() => data.isFollowing);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey });
+      const queryKeys = [
+        profileKeys.userProfile({ username, isLoggedIn }),
+        postKeys.viewfeed({ view: 'following', isLoggedIn }),
+      ];
+
+      queryKeys.forEach(queryKey => {
+        queryClient.invalidateQueries({
+          queryKey,
+          refetchType: 'all',
+        });
+      });
     },
   });
 

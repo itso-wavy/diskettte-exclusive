@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import { NextFunction, Response } from 'express';
 import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
 import { postContentsSchema } from './post-schema';
@@ -53,10 +52,10 @@ export const getPosts = async (
 
     let otherUserPosts;
     if (userId) {
-      const authedUser = await User.findById(userId);
+      const user = await User.findById(userId);
 
       otherUserPosts = formattedPosts.filter(
-        post => post.writer.username !== authedUser?.username
+        post => post.writer.username !== user?.username
       );
     }
 
@@ -75,17 +74,24 @@ export const getFollowingPosts = async (
   const userId = req.user?._id;
 
   try {
-    const followData = await Follow.findOne({ user: userId }).select(
-      'following'
-    );
-    const followingIds = followData?.following || [];
+    const follow = (await Follow.findOne({ user: userId }))!;
 
-    const posts = await Post.find({
-      user: { $in: followingIds },
-    }).sort({ createdAt: -1 });
+    // const posts: any[] = [];
+    // await Promise.all(
+    //   follow.following.map(async userId => {
+    //     const followPosts = await Post.find({ writer: userId });
+    //     posts.push(...followPosts);
+    //   })
+    // );
+
+    // posts.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+
+    const posts = await Post.find({ writer: { $in: follow.following } })
+      .sort({ createdAt: -1 })
+      .lean();
 
     const formattedPosts = await Promise.all(
-      posts.map(async (post: IPost) => getFormattedPost(post, userId))
+      posts.map(post => getFormattedPost(post, userId))
     );
 
     req.body.posts = formattedPosts;
@@ -133,21 +139,25 @@ export const getUserBookmarkPosts = async (
   next: NextFunction
 ) => {
   const userId = req.user?._id;
+  const { username } = req.params;
 
   try {
-    const bookmarks = await Bookmark.find({ user: userId }).sort({
-      createdAt: -1,
-    });
+    const user = (await User.findOne({ username }))!;
+    if (!userId || !user._id.equals(userId)) {
+      return next({ status: 404 });
+    }
+
+    const bookmarks = (await Bookmark.findOne({ user: userId }))!;
 
     const formattedPosts = await Promise.all(
-      bookmarks.map(async bookmark => {
+      bookmarks.bookmarks.map(async bookmark => {
         const post = (await Post.findById(bookmark))!;
 
         getFormattedPost(post, userId);
       })
     );
 
-    req.body.bookmarks = formattedPosts;
+    req.body.posts = formattedPosts;
     return next();
   } catch (err) {
     return next(err);
