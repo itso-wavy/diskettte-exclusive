@@ -84,7 +84,7 @@ const FollowButton: React.FC<{
       }}
       className={cn('w-full bg-gamma hover:ring', isFollowing && 'bg-alpha')}
     >
-      {isFollowing === null ? 'loading' : isFollowing ? 'following' : 'follow'}
+      {isFollowing ? 'following' : 'follow'}
     </Button>
   );
 };

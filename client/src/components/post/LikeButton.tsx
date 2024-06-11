@@ -24,6 +24,7 @@ const LikeButton: React.FC<{
     postKeys.viewfeed({ view: 'everyone', isLoggedIn }),
     postKeys.viewfeed({ view: 'following', isLoggedIn }),
     postKeys.userPost({ username: writer, isLoggedIn }),
+    postKeys.postDetail({ postId, username: writer, isLoggedIn }),
   ];
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -41,14 +42,20 @@ const LikeButton: React.FC<{
           queryClient.setQueryData(queryKey, (prev: any) => {
             const newPost = { ...prev };
 
-            const postIndex = newPost.data.posts.findIndex(
-              (post: any) => post._id === postId
-            );
-            const postInArray = newPost.data.posts[postIndex];
-            postInArray.isLiked = !isLiked;
-            postInArray.likesCount = isLiked
-              ? postInArray.likesCount + 1
-              : postInArray.likesCount - 1;
+            let post;
+            if (index === queryKeys.length - 1) {
+              post = newPost.data.post;
+            } else {
+              const postIndex = newPost.data.posts.findIndex(
+                (post: any) => post._id === postId
+              );
+              post = newPost.data.posts[postIndex];
+            }
+
+            post.isLiked = !isLiked;
+            post.likesCount = isLiked
+              ? post.likesCount - 1
+              : post.likesCount + 1;
 
             return newPost;
           });
