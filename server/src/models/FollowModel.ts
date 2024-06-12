@@ -11,3 +11,5 @@ export const followSchema: Schema<IFollow> = new Schema({
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
+
+followSchema.index({ user: 1 });

@@ -15,7 +15,6 @@ export interface IPost extends Document {
 export const postSchema: Schema<IPost> = new Schema(
   {
     writer: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    createdAt: { type: Date, default: Date.now },
     contents: {
       text: {
         type: String,
@@ -25,6 +24,7 @@ export const postSchema: Schema<IPost> = new Schema(
       },
       images: [{ type: String }],
     },
+    createdAt: { type: Date, default: Date.now },
     likes: { type: Schema.Types.ObjectId, ref: 'Like' },
     comments: { type: Schema.Types.ObjectId, ref: 'Comment' },
     bookmarks: [{ type: Schema.Types.ObjectId, ref: 'User' }],
@@ -33,3 +33,5 @@ export const postSchema: Schema<IPost> = new Schema(
     validateBeforeSave: true,
   }
 );
+
+postSchema.index({ writer: 1 });

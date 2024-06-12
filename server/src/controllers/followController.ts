@@ -21,24 +21,20 @@ export const followUser = async (
 
     let myFollow: IFollow | null = await Follow.findOne({
       user: userId,
-    }).lean();
+    });
     if (!myFollow) {
       const newFollow: IFollow = new Follow({
         user: userId,
-        following: [],
-        followers: [],
       });
       myFollow = await newFollow.save();
     }
 
     let oppositeFollow: IFollow | null = await Follow.findOne({
       user: userToFollow._id,
-    }).lean();
+    });
     if (!oppositeFollow) {
       const newFollow: IFollow = new Follow({
         user: userToFollow._id,
-        following: [],
-        followers: [],
       });
       oppositeFollow = await newFollow.save();
     }
@@ -78,10 +74,13 @@ export const unfollowUser = async (
       });
     }
 
-    const myFollow = (await Follow.findOne({ user: userId }).lean())!;
-    const oppositeFollow = (await Follow.findOne({
+    const myFollow = await Follow.findOne({ user: userId });
+    const oppositeFollow = await Follow.findOne({
       user: userToUnfollow._id,
-    }).lean())!;
+    });
+    if (!myFollow || !oppositeFollow) {
+      return next({ status: 400 });
+    }
 
     const error = { message: '팔로우 중이 아닙니다.', status: 400 };
     if (myFollow.following.includes(userToUnfollow._id)) {

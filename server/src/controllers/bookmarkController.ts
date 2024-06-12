@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { ExpandedRequest } from '@/lib/types';
-import { Bookmark, IBookmark } from '@/models';
+import { Bookmark, IBookmark, Post } from '@/models';
 
 export const addBookmark = async (
   req: ExpandedRequest,
@@ -11,22 +11,30 @@ export const addBookmark = async (
   const { postId } = req.params as any;
 
   try {
-    let bookmarks: IBookmark | null = await Bookmark.findOne({
-      user: userId,
-    }).lean();
+    let bookmarks: IBookmark | null = await Bookmark.findOne({ user: userId });
     if (!bookmarks) {
-      const newFollow: IBookmark = new Bookmark({
+      const newBookmarks: IBookmark = new Bookmark({
         user: userId,
-        comments: [],
+        bookmarks: [],
       });
-      bookmarks = await newFollow.save();
+      bookmarks = await newBookmarks.save();
     }
 
-    if (!bookmarks.bookmarks.includes(postId)) {
-      bookmarks.bookmarks.push(postId);
-    } else return next({ message: '이미 북마크 중입니다.', status: 400 });
+    const post = await Post.findById(postId);
+    if (!post) {
+      return next({ status: 404 });
+    }
+
+    const error = { message: '이미 북마크 중입니다.', status: 400 };
+    if (!bookmarks.bookmarks.includes(post._id)) {
+      bookmarks.bookmarks.push(post._id);
+    } else return next(error);
+    if (!post.bookmarks.includes(userId)) {
+      post.bookmarks.push(userId);
+    } else return next(error);
 
     await bookmarks.save();
+    await post.save();
 
     req.body.isBookmarked = true;
     return next();
@@ -44,18 +52,24 @@ export const removeBookmark = async (
   const { postId } = req.params as any;
 
   try {
-    const bookmarks = await Bookmark.findOne({ user: userId }).lean();
-    if (!bookmarks) {
+    const bookmarks = await Bookmark.findOne({ user: userId });
+    const post = await Post.findById(postId);
+    if (!bookmarks || !post) {
       return next({ status: 404 });
     }
 
-    if (bookmarks.bookmarks.includes(postId!)) {
+    const error = { message: '북마크 중이 아닙니다.', status: 400 };
+    if (bookmarks.bookmarks.includes(post._id)) {
       bookmarks.bookmarks = bookmarks.bookmarks.filter(
-        post => !post.equals(postId)
+        post => !post.equals(post._id)
       );
-    } else return next({ message: '북마크 중이 아닙니다.', status: 400 });
+    } else return next(error);
+    if (post.bookmarks.includes(userId)) {
+      post.bookmarks = post.bookmarks.filter(user => !user.equals(userId));
+    } else return next(error);
 
     await bookmarks.save();
+    await post.save();
 
     req.body.isBookmarked = false;
     return next();

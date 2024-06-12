@@ -9,3 +9,5 @@ export const bookmarkSchema: Schema<IBookmark> = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   bookmarks: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
 });
+
+bookmarkSchema.index({ user: 1 });

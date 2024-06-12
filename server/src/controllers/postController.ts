@@ -43,11 +43,6 @@ const getPopulatedPosts = async (query: FilterQuery<IPost>) => {
     .lean();
 };
 
-// 42.49s
-// lean 39.8
-// 2.16s
-// 수정 후 931.34ms
-// 최종 게시물 9개 5.7s
 export const getPosts = async (
   req: ExpandedRequest,
   _res: Response,
@@ -135,8 +130,8 @@ export const getUserBookmarkPosts = async (
   const { username } = req.params;
 
   try {
-    const user = (await User.findOne({ username }).lean())!;
-    if (!userId || !user._id.equals(userId)) {
+    const user = await User.findOne({ username }).lean();
+    if (!userId || !user || !user._id.equals(userId)) {
       return next({ status: 404 });
     }
 
@@ -295,8 +290,8 @@ export const deletePost = async (
       return next({ status: 404 });
     }
 
-    await Likes.findOneAndDelete({ post: deletedPost._id });
-    await Comment.findOneAndDelete({ post: deletedPost._id });
+    await Likes.findOneAndDelete({ _id: deletedPost.likes });
+    await Comment.findOneAndDelete({ _id: deletedPost.comments });
 
     req.body.post = deletedPost;
     return next();

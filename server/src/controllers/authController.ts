@@ -21,14 +21,14 @@ export const registerHandler = async (
 
     const user = await User.findOne({ username }).lean();
     if (user) {
-      next({
+      return next({
         message: { username: '중복되는 아이디가 있습니다.' },
         status: 400,
       });
     }
 
     if (password !== confirmPassword) {
-      next({
+      return next({
         message: { confirmPassword: '비밀번호가 일치하지 않습니다.' },
         status: 400,
       });
@@ -60,12 +60,10 @@ export const registerHandler = async (
     });
     await newBookmark.save();
 
-    // savedPost.bookmarks = savedBookmark._id;
-
     req.body = { message: 'register seccess!' };
-    next();
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -78,41 +76,40 @@ export const loginHandler = async (
     const { username, password } = loginSchema.parse(req.body);
 
     const user = await User.findOne({ username }).lean();
-
     if (!user) {
-      next({
+      return next({
         message: { username: '해당하는 아이디가 없습니다.' },
         status: 400,
       });
     }
 
-    const validPassword = await argon2.verify(user!.password, password); // hash, string
-
-    if (validPassword) {
-      const accessToken = generateAccessToken(user!._id);
-      const refreshToken = generateRefreshToken(user!._id);
-
-      res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        // secure: true,
-        sameSite: 'strict', // CSRF 공격 방지
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30일
-      });
-
-      req.body = {
-        username: user!.username,
-        accessToken,
-        profile: user!.profile,
-      };
-    } else {
-      next({
+    const validPassword = await argon2.verify(user.password, password); // hash, string
+    if (!validPassword) {
+      return next({
         message: { password: '비밀번호가 일치하지 않습니다.' },
         status: 400,
       });
     }
-    next();
+
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      // secure: true, // 🧹
+      sameSite: 'strict', // CSRF 공격 방지
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30일
+    });
+
+    req.body = {
+      username: user.username,
+      accessToken,
+      profile: user.profile,
+    };
+
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -123,7 +120,7 @@ export const refreshTokenHandler = async (
 ) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
-    next({
+    return next({
       message: 'no token',
       status: 401,
     });
@@ -131,7 +128,7 @@ export const refreshTokenHandler = async (
 
   const decoded = verifyRefreshToken(refreshToken);
   if (!decoded) {
-    next({
+    return next({
       message: 'invalid token',
       status: 403,
     });
@@ -148,5 +145,5 @@ export const refreshTokenHandler = async (
   });
 
   req.body = { accessToken };
-  next();
+  return next();
 };

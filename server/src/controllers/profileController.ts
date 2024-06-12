@@ -13,22 +13,21 @@ export const getUserProfileDetail = async (
 
   try {
     const profileUser = await User.findOne({ username }).lean();
-    if (!profileUser) {
+    const profileFollow = await Follow.findOne({
+      user: profileUser?._id,
+    }).lean();
+    if (!profileUser || !profileFollow) {
       return next({
         message: '해당하는 사용자가 없습니다.',
         status: 404,
       });
     }
 
-    const profileFollow = (await Follow.findOne({
-      user: profileUser._id,
-    }).lean())!;
-
     let profileDetail: any = {
       username: profileUser.username,
       profile: profileUser.profile,
-      following: profileFollow?.following.length,
-      followers: profileFollow?.followers.length,
+      following: profileFollow.following.length,
+      followers: profileFollow.followers.length,
     };
 
     if (userId && profileUser._id.toString() !== userId) {
@@ -68,11 +67,15 @@ export const editUserProfile = async (
       description,
     };
 
-    const updatedUser = (await User.findByIdAndUpdate(
-      userId,
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: userId },
       { $set: { profile: updatedProfile } },
-      { new: true } // 반환 값은 업데이트 후의 문서
-    ))!;
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return next({ status: 500 });
+    }
 
     req.body.profile = updatedUser.profile;
     return next();

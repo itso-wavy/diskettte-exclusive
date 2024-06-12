@@ -25,3 +25,5 @@ export const userSchema: Schema<IUser> = new Schema({
   follow: { type: Schema.Types.ObjectId, ref: 'Follow' },
   bookmarks: { type: Schema.Types.ObjectId, ref: 'Bookmark' },
 });
+
+userSchema.index({ username: 1 });

@@ -19,3 +19,5 @@ export const commentSchema: Schema<IComment> = new Schema({
     },
   ],
 });
+
+commentSchema.index({ post: 1 });
