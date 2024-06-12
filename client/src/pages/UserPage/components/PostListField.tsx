@@ -22,6 +22,7 @@ const PostListField: React.FC<{ username: string; isLoggedIn: boolean }> = ({
     queryFn: getUserPosts,
   });
   const { posts } = response?.data || {};
+  console.log('posts: ', posts);
 
   if (error) {
     if (isAxiosError(error)) console.log(error.response?.data);
@@ -29,14 +30,23 @@ const PostListField: React.FC<{ username: string; isLoggedIn: boolean }> = ({
     return (
       <ErrorText handleRetry={refetch} className='h-[calc(100vh-419px)]' />
     );
+  }
+
+  if (isLoading) {
+    return <Loader className='h-[calc(100vh-419px)]' />;
   } else {
-    return isLoading ? (
-      <Loader className='h-[calc(100vh-419px)]' />
+    return !posts.length ? (
+      <ErrorText
+        message={
+          <>
+            <p>작성한 포스트가 없습니다.</p>
+            <p>마음에 드는 포스트를 찾아보세요!</p>
+          </>
+        }
+        className='h-[calc(100vh-191px)]'
+      />
     ) : (
-      posts?.map((post: Post) => {
-        if (!post) return;
-        return <FeedLinkPost key={post._id} post={post} />;
-      })
+      posts?.map((post: Post) => <FeedLinkPost key={post._id} post={post} />)
     );
   }
 };

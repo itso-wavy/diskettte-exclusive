@@ -27,28 +27,28 @@ const PostList: React.FC<{ username: string }> = ({ username }) => {
     return (
       <ErrorText handleRetry={refetch} className='h-[calc(100vh-191px)]' />
     );
+  }
+
+  if (isLoading) {
+    return Array(2)
+      .fill(0)
+      .map((_, index) => <PostSkeleton key={'wavy' + index} />);
   } else {
-    return isLoading
-      ? Array(2)
-          .fill(0)
-          .map((_, index) => <PostSkeleton key={'wavy' + index} />)
-      : posts?.map((post: Post) => {
-          if (!post)
-            return (
-              <ErrorText
-                message={
-                  <>
-                    <p>북마크한 포스트가 없습니다.</p>
-                    <p>마음에 드는 포스트를 찾아보세요!</p>
-                  </>
-                }
-                handleRetry={() => navigate('/search')}
-                buttonText='검색'
-                className='h-[calc(100vh-191px)]'
-              />
-            );
-          return <FeedLinkPost key={post._id} post={post} />;
-        });
+    return !posts.length ? (
+      <ErrorText
+        message={
+          <>
+            <p>북마크한 포스트가 없습니다.</p>
+            <p>마음에 드는 포스트를 찾아보세요!</p>
+          </>
+        }
+        handleRetry={() => navigate('/search')}
+        buttonText='검색'
+        className='h-[calc(100vh-191px)]'
+      />
+    ) : (
+      posts?.map((post: Post) => <FeedLinkPost key={post._id} post={post} />)
+    );
   }
 };
 

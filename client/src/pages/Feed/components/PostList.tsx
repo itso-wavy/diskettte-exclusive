@@ -31,29 +31,28 @@ const PostList: React.FC<{ view: ViewT; isLoggedIn: boolean }> = ({
     return (
       <ErrorText handleRetry={refetch} className='h-[calc(100vh-191px)]' />
     );
-  } else {
-    return isLoading
-      ? Array(2)
-          .fill(0)
-          .map((_, index) => <PostSkeleton key={'wavy' + index} />)
-      : posts?.map((post: Post) => {
-          if (!post)
-            return (
-              <ErrorText
-                message={
-                  <>
-                    <p>팔로우한 유저가 없습니다.</p>
-                    <p>관심 있는 유저를 팔로우해보세요!</p>
-                  </>
-                }
-                handleRetry={() => navigate('/search')}
-                buttonText='검색'
-                className='h-[calc(100vh-191px)]'
-              />
-            );
+  }
 
-          return <FeedLinkPost key={post._id} post={post} />;
-        });
+  if (isLoading) {
+    return Array(2)
+      .fill(0)
+      .map((_, index) => <PostSkeleton key={'wavy' + index} />);
+  } else {
+    return !posts.length ? (
+      <ErrorText
+        message={
+          <>
+            <p>팔로우한 유저가 없습니다.</p>
+            <p>관심 있는 유저를 팔로우해보세요!</p>
+          </>
+        }
+        handleRetry={() => navigate('/search')}
+        buttonText='검색'
+        className='h-[calc(100vh-191px)]'
+      />
+    ) : (
+      posts?.map((post: Post) => <FeedLinkPost key={post._id} post={post} />)
+    );
   }
 };
 

@@ -12,9 +12,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { Post } from '.';
 import { PostForm, PostFormType } from '@/components/dialog';
-import Icon from '@/components/icons';
 
 import { RootState } from '@/lib/store';
 import { postKeys, deletePost } from '@/lib/queries/post';
