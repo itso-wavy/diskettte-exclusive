@@ -7,19 +7,16 @@ import {
   createPost,
   editPost,
   deletePost,
-} from '@/posts/post/postController';
+} from '@/controllers/postController';
 import {
   addComment,
   getPostComments,
   removeComment,
-} from '@/posts/comment/commentController';
-import { addLike, removeLike } from '@/posts/likes/likeController';
-import {
-  addBookmark,
-  removeBookmark,
-} from '@/users/bookmark/bookmarkController';
+} from '@/controllers/commentController';
+import { addLike, removeLike } from '@/controllers/likeController';
+import { addBookmark, removeBookmark } from '@/controllers/bookmarkController';
 
-import { authentication } from '@/middleware/authentication';
+import { authentication } from '@/middlewares/authentication';
 
 const router: Router = Router();
 

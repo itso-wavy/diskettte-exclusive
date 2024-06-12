@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
-import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
-import { Bookmark } from '@/db';
+import { ExpandedRequest } from '@/lib/types';
+import { Bookmark, IBookmark } from '@/models';
 
 export const addBookmark = async (
   req: ExpandedRequest,
@@ -11,9 +11,15 @@ export const addBookmark = async (
   const { postId } = req.params as any;
 
   try {
-    const bookmarks = await Bookmark.findOne({ user: userId });
+    let bookmarks: IBookmark | null = await Bookmark.findOne({
+      user: userId,
+    }).lean();
     if (!bookmarks) {
-      return next({ status: 404 });
+      const newFollow: IBookmark = new Bookmark({
+        user: userId,
+        comments: [],
+      });
+      bookmarks = await newFollow.save();
     }
 
     if (!bookmarks.bookmarks.includes(postId)) {
@@ -38,7 +44,7 @@ export const removeBookmark = async (
   const { postId } = req.params as any;
 
   try {
-    const bookmarks = await Bookmark.findOne({ user: userId });
+    const bookmarks = await Bookmark.findOne({ user: userId }).lean();
     if (!bookmarks) {
       return next({ status: 404 });
     }

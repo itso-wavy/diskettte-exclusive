@@ -1,41 +1,53 @@
 import { NextFunction, Response } from 'express';
-import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
-import { postContentsSchema } from './post-schema';
+import { FilterQuery } from 'mongoose';
+import { ExpandedRequest } from '@/lib/types';
 import {
+  User,
   Post,
   IPost,
-  User,
-  Follow,
   Likes,
   ILike,
   Comment,
   IComment,
+  Follow,
   Bookmark,
-} from '@/db';
+} from '@/models';
+import { postContentsSchema } from '@/schmas/post-schema';
 
-const getFormattedPost = async (post: IPost, userId: string | undefined) => {
-  const writer = (await User.findById(post.writer))!;
-  const likes = await Likes.findOne({ post: post._id });
-  const comments = await Comment.findOne({ post: post._id });
-  const bookmarks = userId ? await Bookmark.findOne({ user: userId }) : null;
-
+const getFormattedPost = (post: any, userId: string | undefined) => {
   return {
-    _id: post.id,
+    _id: post._id,
     writer: {
-      username: writer.username,
-      profile: writer.profile,
+      username: post.writer.username,
+      profile: post.writer.profile,
     },
-    contents: post.contents,
     createdAt: post.createdAt,
-    isLiked: userId ? !!likes?.likes.find(user => user.equals(userId)) : false,
-    likesCount: likes?.likes.length,
-    commentsCount: comments?.comments.length,
-    isBookmarked: !!bookmarks?.bookmarks.find(bookmark =>
-      bookmark.equals(post._id)
-    ),
+    contents: post.contents,
+    isLiked: userId
+      ? post.likes.likes.some((user: any) => user.equals(userId))
+      : false,
+    likesCount: post.likes.likes.length,
+    commentsCount: post.comments.length,
+    isBookmarked: userId
+      ? post.bookmarks.some((user: any) => user.equals(userId))
+      : false,
   };
 };
 
+const getPopulatedPosts = async (query: FilterQuery<IPost>) => {
+  return await Post.find(query)
+    .sort({ createdAt: -1 })
+    .populate('writer', 'username profile')
+    .populate('likes', 'likes')
+    .populate('comments', 'comments')
+    .lean();
+};
+
+// 42.49s
+// lean 39.8
+// 2.16s
+// 수정 후 931.34ms
+// 최종 게시물 9개 5.7s
 export const getPosts = async (
   req: ExpandedRequest,
   _res: Response,
@@ -44,22 +56,14 @@ export const getPosts = async (
   const userId = req.user?._id;
 
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    const query = userId ? { writer: { $ne: userId } } : {};
 
-    const formattedPosts = await Promise.all(
-      posts.map((post: IPost) => getFormattedPost(post, userId))
+    const posts = await getPopulatedPosts(query);
+    const formattedPosts = posts.map((post: IPost) =>
+      getFormattedPost(post, userId)
     );
 
-    let otherUserPosts;
-    if (userId) {
-      const user = await User.findById(userId);
-
-      otherUserPosts = formattedPosts.filter(
-        post => post.writer.username !== user?.username
-      );
-    }
-
-    req.body.posts = otherUserPosts || formattedPosts;
+    req.body.posts = formattedPosts;
     return next();
   } catch (err) {
     return next(err);
@@ -74,24 +78,14 @@ export const getFollowingPosts = async (
   const userId = req.user?._id;
 
   try {
-    const follow = (await Follow.findOne({ user: userId }))!;
+    const follow = (await Follow.findOne({ user: userId })
+      .populate('following')
+      .lean())!;
+    const query = { writer: { $in: follow.following } };
 
-    // const posts: any[] = [];
-    // await Promise.all(
-    //   follow.following.map(async userId => {
-    //     const followPosts = await Post.find({ writer: userId });
-    //     posts.push(...followPosts);
-    //   })
-    // );
-
-    // posts.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-
-    const posts = await Post.find({ writer: { $in: follow.following } })
-      .sort({ createdAt: -1 })
-      .lean();
-
-    const formattedPosts = await Promise.all(
-      posts.map(post => getFormattedPost(post, userId))
+    const posts = await getPopulatedPosts(query);
+    const formattedPosts = posts.map((post: IPost) =>
+      getFormattedPost(post, userId)
     );
 
     req.body.posts = formattedPosts;
@@ -110,7 +104,7 @@ export const getUserPosts = async (
   const { username } = req.params;
 
   try {
-    const writer = await User.findOne({ username });
+    const writer = await User.findOne({ username }).lean();
     if (!writer) {
       return next({
         message: '해당하는 사용자를 찾을 수 없습니다.',
@@ -118,12 +112,11 @@ export const getUserPosts = async (
       });
     }
 
-    const posts = await Post.find({ writer: writer._id }).sort({
-      createdAt: -1,
-    });
+    const query = { writer: writer._id };
 
-    const formattedPosts = await Promise.all(
-      posts.map(async (post: IPost) => getFormattedPost(post, userId))
+    const posts = await getPopulatedPosts(query);
+    const formattedPosts = posts.map((post: IPost) =>
+      getFormattedPost(post, userId)
     );
 
     req.body.posts = formattedPosts;
@@ -142,19 +135,18 @@ export const getUserBookmarkPosts = async (
   const { username } = req.params;
 
   try {
-    const user = (await User.findOne({ username }))!;
+    const user = (await User.findOne({ username }).lean())!;
     if (!userId || !user._id.equals(userId)) {
       return next({ status: 404 });
     }
 
-    const bookmarks = (await Bookmark.findOne({ user: userId }))!;
+    const bookmarks = (await Bookmark.findOne({ user: userId }).lean())!;
+    const postIds = bookmarks.bookmarks;
+    const query = { _id: { $in: postIds } };
 
-    const formattedPosts = await Promise.all(
-      bookmarks.bookmarks.map(async bookmark => {
-        const post = (await Post.findById(bookmark))!;
-
-        getFormattedPost(post, userId);
-      })
+    const posts = await getPopulatedPosts(query);
+    const formattedPosts = posts.map((post: IPost) =>
+      getFormattedPost(post, userId)
     );
 
     req.body.posts = formattedPosts;
@@ -173,14 +165,23 @@ export const getPost = async (
   const { username, postId } = req.params;
 
   try {
-    const post = (await Post.findById(postId))!;
+    const post = (await Post.findById(postId)
+      .populate('writer', 'username profile')
+      .populate('likes', 'likes')
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'comments.user',
+          select: 'username profile',
+        },
+      })
+      .lean())!;
 
-    const writer = (await User.findById(post.writer))!;
-    if (username !== writer.username) {
+    if (username !== (post.writer as any).username) {
       return next({ status: 404 });
     }
 
-    const formattedPost = await getFormattedPost(post, userId);
+    const formattedPost = getFormattedPost(post, userId);
 
     req.body.post = formattedPost;
     return next();
@@ -217,13 +218,17 @@ export const createPost = async (
       post: savedPost._id,
       likes: [],
     });
-    await newLikes.save();
+    const savedLikes = await newLikes.save();
 
     const newComments: IComment = new Comment({
       post: savedPost._id,
       comments: [],
     });
-    await newComments.save();
+    const savedComments = await newComments.save();
+
+    savedPost.likes = savedLikes._id;
+    savedPost.comments = savedComments._id;
+    await savedPost.save();
 
     req.body.post = savedPost;
     return next();

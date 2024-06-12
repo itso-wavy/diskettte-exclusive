@@ -3,15 +3,15 @@ import {
   registerHandler,
   loginHandler,
   refreshTokenHandler,
-} from '@/users/auth/authController';
+} from '@/controllers/authController';
 import {
   editUserProfile,
   getUserProfileDetail,
-} from '@/users/profile/profileController';
-import { followUser, unfollowUser } from '@/users/follow/followController';
-import { getUserBookmarkPosts } from '@/posts/post/postController';
+} from '@/controllers/profileController';
+import { followUser, unfollowUser } from '@/controllers/followController';
+import { getUserBookmarkPosts } from '@/controllers/postController';
 
-import { authentication } from '@/middleware/authentication';
+import { authentication } from '@/middlewares/authentication';
 
 const router: Router = Router();
 

@@ -1,12 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { userRouter } from '@/users/userRoutes';
-import { postRouter } from '@/posts/postRoutes';
-import { responseHandler, errorHandler } from '@/middleware/response-handler';
+import { connectToDB } from './db';
+import { userRouter, postRouter } from '@/routers';
+import { responseHandler, errorHandler } from '@/middlewares/response-handler';
 
 const app = express();
 const PORT = 3000;
+
+connectToDB();
 
 app.use(
   cors({

@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
-import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
-import { Likes } from '@/db';
+import { ExpandedRequest } from '@/lib/types';
+import { Likes, ILike } from '@/models';
 
 export const addLike = async (
   req: ExpandedRequest,
@@ -11,9 +11,13 @@ export const addLike = async (
   const { postId } = req.params;
 
   try {
-    const likes = await Likes.findOne({ post: postId });
+    let likes: ILike | null = await Likes.findOne({ post: postId }).lean();
     if (!likes) {
-      return next({ status: 404 });
+      const newLikes: ILike = new Likes({
+        post: postId,
+        likes: [],
+      });
+      likes = await newLikes.save();
     }
 
     if (!likes.likes.includes(userId)) {
@@ -39,7 +43,7 @@ export const removeLike = async (
   const { postId } = req.params;
 
   try {
-    const likes = await Likes.findOne({ post: postId });
+    const likes = await Likes.findOne({ post: postId }).lean();
     if (!likes) {
       return next({ status: 404 });
     }

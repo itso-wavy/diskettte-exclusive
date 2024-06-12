@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { ExpandedRequest } from './ExpandedRequestType';
+import { ExpandedRequest } from '@/lib/types';
 import jwt from 'jsonwebtoken';
 
 export const authentication = (

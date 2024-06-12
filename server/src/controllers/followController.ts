@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
-import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
-import { User, Follow } from '@/db';
+import { ExpandedRequest } from '@/lib/types';
+import { User, Follow, IFollow } from '@/models';
 
 export const followUser = async (
   req: ExpandedRequest,
@@ -11,7 +11,7 @@ export const followUser = async (
   const { username } = req.params;
 
   try {
-    const userToFollow = await User.findOne({ username });
+    const userToFollow = await User.findOne({ username }).lean();
     if (!userToFollow) {
       return next({
         message: '해당하는 사용자가 없습니다.',
@@ -19,8 +19,29 @@ export const followUser = async (
       });
     }
 
-    const myFollow = (await Follow.findOne({ user: userId }))!;
-    const oppositeFollow = (await Follow.findOne({ user: userToFollow._id }))!;
+    let myFollow: IFollow | null = await Follow.findOne({
+      user: userId,
+    }).lean();
+    if (!myFollow) {
+      const newFollow: IFollow = new Follow({
+        user: userId,
+        following: [],
+        followers: [],
+      });
+      myFollow = await newFollow.save();
+    }
+
+    let oppositeFollow: IFollow | null = await Follow.findOne({
+      user: userToFollow._id,
+    }).lean();
+    if (!oppositeFollow) {
+      const newFollow: IFollow = new Follow({
+        user: userToFollow._id,
+        following: [],
+        followers: [],
+      });
+      oppositeFollow = await newFollow.save();
+    }
 
     const error = { message: '이미 팔로우 중입니다.', status: 400 };
     if (!myFollow.following.includes(userToFollow._id)) {
@@ -49,7 +70,7 @@ export const unfollowUser = async (
   const { username } = req.params;
 
   try {
-    const userToUnfollow = await User.findOne({ username });
+    const userToUnfollow = await User.findOne({ username }).lean();
     if (!userToUnfollow) {
       return next({
         message: '해당하는 사용자가 없습니다.',
@@ -57,10 +78,10 @@ export const unfollowUser = async (
       });
     }
 
-    const myFollow = (await Follow.findOne({ user: userId }))!;
+    const myFollow = (await Follow.findOne({ user: userId }).lean())!;
     const oppositeFollow = (await Follow.findOne({
       user: userToUnfollow._id,
-    }))!;
+    }).lean())!;
 
     const error = { message: '팔로우 중이 아닙니다.', status: 400 };
     if (myFollow.following.includes(userToUnfollow._id)) {

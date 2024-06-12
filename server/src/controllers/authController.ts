@@ -1,13 +1,13 @@
 import { Response, NextFunction } from 'express';
 import argon2 from 'argon2';
-import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
-import { User, IUser, Follow, IFollow, Bookmark, IBookmark } from '@/db';
-import { loginSchema, registerSchema } from './auth-schema';
+import { ExpandedRequest } from '@/lib/types';
+import { User, IUser, Follow, IFollow, Bookmark, IBookmark } from '@/models';
+import { loginSchema, registerSchema } from '@/schmas/auth-schema';
 import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from './token-utils';
+} from '@/lib/utils/token-utils';
 
 export const registerHandler = async (
   req: ExpandedRequest,
@@ -19,7 +19,7 @@ export const registerHandler = async (
       req.body
     );
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).lean();
     if (user) {
       next({
         message: { username: '중복되는 아이디가 있습니다.' },
@@ -60,6 +60,8 @@ export const registerHandler = async (
     });
     await newBookmark.save();
 
+    // savedPost.bookmarks = savedBookmark._id;
+
     req.body = { message: 'register seccess!' };
     next();
   } catch (err) {
@@ -75,7 +77,7 @@ export const loginHandler = async (
   try {
     const { username, password } = loginSchema.parse(req.body);
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).lean();
 
     if (!user) {
       next({

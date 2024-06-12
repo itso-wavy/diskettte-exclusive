@@ -1,4 +1,4 @@
-import { Document, Schema } from 'mongoose';
+import { Document, Schema, Types } from 'mongoose';
 
 export interface IUser extends Document {
   username: string;
@@ -9,6 +9,8 @@ export interface IUser extends Document {
     description: string | null;
   };
   createdAt: Date;
+  follow: Types.ObjectId;
+  bookmarks: Types.ObjectId;
 }
 
 export const userSchema: Schema<IUser> = new Schema({
@@ -20,4 +22,6 @@ export const userSchema: Schema<IUser> = new Schema({
     description: { type: String, default: null },
   },
   createdAt: { type: Date, default: Date.now },
+  follow: { type: Schema.Types.ObjectId, ref: 'Follow' },
+  bookmarks: { type: Schema.Types.ObjectId, ref: 'Bookmark' },
 });

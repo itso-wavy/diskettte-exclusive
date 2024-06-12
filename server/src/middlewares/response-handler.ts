@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express';
-import { ExpandedRequest } from './ExpandedRequestType';
+import { ExpandedRequest } from '@/lib/types';
 import { z } from 'zod';
 
 export const responseHandler = (
@@ -20,7 +20,7 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.log('💙ERROR-HANDLER');
+  console.log('💥', err);
 
   let status, message;
 

@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
-import { ExpandedRequest } from '@/middleware/ExpandedRequestType';
-import { IUser, User, Follow } from '@/db';
-import { profileSchema } from './profile-schema';
+import { ExpandedRequest } from '@/lib/types';
+import { User, IUser, Follow } from '@/models';
+import { profileSchema } from '@/schmas/profile-schema';
 
 export const getUserProfileDetail = async (
   req: ExpandedRequest,
@@ -12,7 +12,7 @@ export const getUserProfileDetail = async (
   const { username } = req.params;
 
   try {
-    const profileUser = await User.findOne({ username });
+    const profileUser = await User.findOne({ username }).lean();
     if (!profileUser) {
       return next({
         message: '해당하는 사용자가 없습니다.',
@@ -20,7 +20,9 @@ export const getUserProfileDetail = async (
       });
     }
 
-    const profileFollow = (await Follow.findOne({ user: profileUser._id }))!;
+    const profileFollow = (await Follow.findOne({
+      user: profileUser._id,
+    }).lean())!;
 
     let profileDetail: any = {
       username: profileUser.username,
@@ -30,8 +32,8 @@ export const getUserProfileDetail = async (
     };
 
     if (userId && profileUser._id.toString() !== userId) {
-      profileDetail.isFollowing = !!profileFollow.followers.find(follower =>
-        follower.equals(userId)
+      profileDetail.isFollowing = !!profileFollow.followers.find(
+        (follower: any) => follower.equals(userId)
       );
     }
 
@@ -50,7 +52,7 @@ export const editUserProfile = async (
   try {
     const userId = req.user?._id;
 
-    const user = await User.findById(userId).select('profile');
+    const user = await User.findById(userId);
     if (!user) {
       return next({
         message: '해당하는 사용자가 없습니다.',
