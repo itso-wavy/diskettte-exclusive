@@ -1,44 +1,45 @@
-# boilerplate
+# diskettte-exclusive
 
-## stack
+<!-- //TODO:
+  // 🍒 포스트 폼 생성, 수정, 삭제시 낙관적 업데이트
+  // 검색 페이지,
+  // 포스트에 이미지 넣기 => createPost, 댓글 기능
+  // 무한 스크롤!
+ -->
 
-### 1. Common
+## 1. stack
 
-- **typescript + eslint + prettier**: https://prettier.io/docs/en/install
+### 1) Common
 
-### 2. Client
+- typescript
+- eslint
+- prettier
 
-- **vite + react**
+### 2) Client
 
-- **tailwindcss**: https://tailwindcss.com/docs/installation
+- react
+- vite
+- tailwind css
+- feather icons
 
-```bash
-pnpm i -D tailwindcss postcss autoprefixer prettier-plugin-tailwindcss
-pnpx tailwindcss init -p
-```
+### 3) Server
 
-- **feather icons**: https://feathericons.com/
+- node + nodemon + ts-node + tsconfig-paths
 
-### 2. Server
+- express + cookie-parser + cors
+  - CORS: 다른 도메인, 포트, 프로토콜을 가진 리소스에서 API를 호출할 때 발생
+- argon2 + jsonwebtoken + dotenv
+- mongoose(mongoDB)
 
-- **node + nodemon + ts-node + tsconfig-paths**
+## 2. 코드 특징
 
-- **express + cookie-parser + cors**
-  - CORS: 다른 도메인, 포트, 프로토콜을 가진 리소스에서 API를 호출할 때 발생.
-- **argon2 + jsonwebtoken + dotenv**
-  - JWT: 상태를 유지하지 않는 RESTful. 인증 토큰과 리프레시 토큰.
-- **mongoose(mongoDB)**
+### 1) 인증시 JWT을 액세스 토큰과 리프레시 토큰으로 나눠 관리
 
-  <!-- // "bcryptjs": "^2.4.3",
-  // "multer": "^1.4.5-lts.1",
-  // "react-router-dom": "^6.6.1"
-  -->
+### 2) 서버 컨트롤러 함수를 미들웨어 처리하고 응답 반환시 공통 에러 처리 로직
 
-## login
+### 3) svg 최적화 + svg 동적 스타일링으로 파일 개수 축소
 
-### auth: JWT 액세스 토큰과 리프레시 토큰 사용
-
-### profile image
+### 4) profile image
 
 1.  프로필 없을 때(!profile.image)
 
@@ -52,82 +53,19 @@ pnpx tailwindcss init -p
     2. 프로필 건드렸다 취소(isTouch) => X
     3. 프로필 건드리고 바꿈(isTouch) => O(selectedImage)
 
-    <!--
+### 5) 개인 테마화
 
-User 컬렉션/테이블
+- light
+- dark
 
-User {
-\_id: ObjectId,
-username: String,
-email: String,
-password: String,
-profileImage: String, // 프로필 이미지 URL
-createdAt: Date,
-updatedAt: Date
-}
+- strawberry
+- mango
+- lemon
+- melon
+- grape
+- dragonfruit
 
-Task 컬렉션/테이블
+## 3. 트러블슈팅
 
-Task {
-\_id: ObjectId,
-userId: ObjectId (ref: User), // 작성자 참조
-title: String,
-description: String, // 할 일 세부 설명
-category: String, // 'important-urgent', 'important-not-urgent', 'not-important-urgent', 'not-important-not-urgent'
-dueDate: Date, // 마감 기한
-estimatedTime: Number, // 예상 소요 시간 (분 단위)
-completedTime: Number, // 실제 소요 시간 (분 단위)
-completed: Boolean,
-createdAt: Date,
-updatedAt: Date
-}
-
-Timer 컬렉션/테이블
-
-Timer {
-\_id: ObjectId,
-userId: ObjectId (ref: User), // 사용자 참조
-taskId: ObjectId (ref: Task), // 작업 참조
-startTime: Date, // 타이머 시작 시간
-endTime: Date, // 타이머 종료 시간
-duration: Number, // 타이머 지속 시간 (분 단위)
-interruptions: [
-{
-startTime: Date, // 중단 시작 시간
-endTime: Date, // 중단 종료 시간
-duration: Number // 중단 지속 시간 (분 단위)
-}
-],
-createdAt: Date,
-updatedAt: Date
-}
-
-Routine 컬렉션/테이블 (예: 수면, 운동, 독서 등)
-
-Routine {
-\_id: ObjectId,
-userId: ObjectId (ref: User), // 사용자 참조
-name: String, // 루틴 이름 (예: 수면, 운동, 독서)
-unit: String, // 단위 (예: 시간, 페이지 수)
-records: [
-{
-date: Date,
-value: Number // 기록값 (예: 8 (시간), 50 (페이지 수))
-}
-],
-createdAt: Date,
-updatedAt: Date
-}
-
-Draft 컬렉션/테이블 (메모, 일기 등)
-
-Draft {
-\_id: ObjectId,
-userId: ObjectId (ref: User), // 작성자 참조
-title: String,
-content: String,
-createdAt: Date,
-updatedAt: Date
-}
-
--->
+- 서버 데이터 응답 속도 축소
+- ui 낙관적 업데이트 로직

@@ -1,11 +1,11 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
 
 import { Button, CircularButton } from '@/components/form';
-import { ProfileSkeleton, FollowButton } from '.';
-import ProfileAvatar from '@/components/ProfileAvatar';
+import { ProfileSkeleton, ProfileCard, FollowButton } from '.';
 import Icon from '@/components/icons';
 
 import { profileKeys, getUserProfile } from '@/lib/queries/profile';
@@ -26,6 +26,14 @@ const ProfileField: React.FC<{
     queryFn: getUserProfile,
   });
   const { profileDetail } = response?.data || {};
+  const [followersCount, setFollowersCount] = useState<number | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    if (profileDetail?.followers !== undefined)
+      setFollowersCount(profileDetail.followers);
+  }, [profileDetail?.followers]);
 
   if (error) {
     if (isAxiosError(error)) console.log(error.response?.data);
@@ -33,38 +41,17 @@ const ProfileField: React.FC<{
     throw new Error();
   }
 
-  const profileSection = isLoading ? (
-    <ProfileSkeleton />
-  ) : (
-    <div className='flex flex-col gap-x-5 gap-y-2 sm:flex-row'>
-      <ProfileAvatar
-        image={profileDetail.profile.image}
-        nickname={username || ''}
-        className='h-20 w-20 rounded-full hover:opacity-100 max-sm:ml-auto'
-      />
-      <div className='*:select break-words text-[15px] leading-tight'>
-        <p className='text-xl font-medium'>{profileDetail.profile.nickname}</p>
-        <p className='text-sm text-muted-foreground'>
-          @{profileDetail.username}
-        </p>
-        <p className='mt-1 leading-[1.15rem]'>
-          {profileDetail.profile.description}
-        </p>
-        <div className='mt-3 flex gap-4 text-sm leading-[21px] text-muted-foreground underline-offset-[3px]'>
-          <p className='cursor-pointer hover:underline'>
-            following {profileDetail.following}
-          </p>
-          <p className='cursor-pointer hover:underline'>
-            followers {profileDetail.followers}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <>
-      {profileSection}
+      {isLoading ? (
+        <ProfileSkeleton />
+      ) : (
+        <ProfileCard
+          username={username}
+          profileDetail={profileDetail}
+          followersCount={followersCount}
+        />
+      )}
       <div className='my-3 flex items-center justify-between gap-x-3'>
         {isUserMatch ? (
           <>
@@ -86,7 +73,9 @@ const ProfileField: React.FC<{
               <FollowButton
                 username={username}
                 isLoggedIn={isLoggedIn}
-                defaultFollowing={profileDetail?.isFollowing}
+                defaultIsFollowing={profileDetail?.isFollowing}
+                defaultFollowersCount={followersCount}
+                setFollowersCount={setFollowersCount}
               />
             </div>
             <CircularButton

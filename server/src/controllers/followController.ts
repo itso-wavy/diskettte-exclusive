@@ -51,6 +51,7 @@ export const followUser = async (
     await oppositeFollow.save();
 
     req.body.isFollowing = true;
+    req.body.followersCount = oppositeFollow.followers.length;
     return next();
   } catch (err) {
     return next(err);
@@ -98,6 +99,7 @@ export const unfollowUser = async (
     await oppositeFollow.save();
 
     req.body.isFollowing = false;
+    req.body.followersCount = oppositeFollow.followers.length;
     return next();
   } catch (err) {
     return next(err);

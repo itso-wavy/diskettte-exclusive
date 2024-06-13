@@ -12,22 +12,31 @@ import { postKeys } from '@/lib/queries/post';
 const FollowButton: React.FC<{
   username: string;
   isLoggedIn: boolean;
-  defaultFollowing: boolean | undefined;
-}> = ({ username, isLoggedIn, defaultFollowing }) => {
+  defaultIsFollowing: boolean | undefined;
+  defaultFollowersCount: number | undefined;
+  setFollowersCount: React.Dispatch<React.SetStateAction<number | undefined>>;
+}> = ({
+  username,
+  isLoggedIn,
+  defaultIsFollowing,
+  defaultFollowersCount,
+  setFollowersCount,
+}) => {
   const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (defaultFollowing !== undefined) {
-      setIsFollowing(defaultFollowing);
+    if (defaultIsFollowing !== undefined) {
+      setIsFollowing(defaultIsFollowing);
     }
-  }, [defaultFollowing]);
+  }, [defaultIsFollowing]);
 
   const queryKey = profileKeys.userProfile({ username, isLoggedIn });
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: toggleUserFollow,
-    onMutate: async ({ isFollowing }) => {
+    onMutate: async ({ isFollowing, followersCount }) => {
       setIsFollowing(() => !isFollowing);
+      setFollowersCount(() => followersCount + (!isFollowing ? 1 : -1));
 
       await queryClient.cancelQueries({ queryKey });
       const prevProfile = queryClient.getQueryData(queryKey);
@@ -39,7 +48,7 @@ const FollowButton: React.FC<{
           const profileDetail = newProfile.data.profileDetail;
 
           profileDetail.isFollowing === !isFollowing;
-          profileDetail.followers = isFollowing
+          profileDetail.followers = !isFollowing
             ? profileDetail.followers + 1
             : profileDetail.followers - 1;
 
@@ -51,6 +60,7 @@ const FollowButton: React.FC<{
     },
     onError: (err, variables, context) => {
       setIsFollowing(() => variables.isFollowing);
+      setFollowersCount(() => variables.followersCount);
 
       console.error(err);
 
@@ -65,9 +75,10 @@ const FollowButton: React.FC<{
 
       queryClient.setQueryData(queryKey, context!.prevProfile);
     },
-    onSuccess: ({ data }) => {
-      setIsFollowing(() => data.isFollowing);
-    },
+    // onSuccess: ({ data }) => {
+    // setIsFollowing(() => data.isFollowing);
+    // setFollowersCount(() => data.followersCount);
+    // },
     onSettled: () => {
       const queryKeys = [
         profileKeys.userProfile({ username, isLoggedIn }),
@@ -88,7 +99,11 @@ const FollowButton: React.FC<{
       onClick={() => {
         !isLoggedIn
           ? toast('로그인이 필요합니다.')
-          : mutate({ isFollowing, username });
+          : mutate({
+              isFollowing,
+              username,
+              followersCount: defaultFollowersCount,
+            });
       }}
       className={cn('w-full bg-gamma hover:ring', isFollowing && 'bg-alpha')}
     >
