@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react';
+import { useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -12,29 +12,28 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { PostForm, PostFormType } from '@/components/dialog';
+import { PostForm, FormType } from '@/components/dialog';
+import { MoreButton } from '../form';
 
 import { RootState } from '@/lib/store';
 import { postKeys, deletePost } from '@/lib/queries/post';
-import { cn } from '@/lib/utils';
 import { Post as PostT } from '@/lib/types';
+import { cn } from '@/lib/utils';
+import { PostContext, PostContextProps } from '@/context/postContext';
 
-const MoreButton = ({
-  username,
-  isWriter,
-  post,
-  children,
-}: PropsWithChildren<{
+const PostMoreButton: React.FC<{
   username: string;
   isWriter: boolean;
   post: PostT;
-}>) => {
-  const [postFormType, setPostFormType] = useState<PostFormType | null>(null);
+}> = ({ username, isWriter, post }) => {
+  const { formType, setFormType } = useContext<PostContextProps | null>(
+    PostContext
+  )!;
   const { isDarkmode } = useSelector((state: RootState) => state.theme);
-  const queryClient = useQueryClient();
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: () => deletePost(post?._id),
     onMutate: () => toast('삭제 중...'),
@@ -58,7 +57,11 @@ const MoreButton = ({
   return (
     <Dialog>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
+          <div>
+            <MoreButton className='ml-auto text-muted-foreground' />
+          </div>
+        </DropdownMenuTrigger>
         <DropdownMenuContent
           className={cn(
             isDarkmode && 'dark',
@@ -94,7 +97,7 @@ const MoreButton = ({
               <DialogTrigger asChild>
                 <DropdownMenuItem
                   onClick={e => {
-                    setPostFormType(PostFormType.EDIT);
+                    setFormType(FormType.EDIT);
                     e.stopPropagation();
                   }}
                 >
@@ -114,11 +117,9 @@ const MoreButton = ({
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      {postFormType && (
-        <PostForm type={postFormType} username={username} post={post} />
-      )}
+      {formType && <PostForm type={formType} username={username} post={post} />}
     </Dialog>
   );
 };
 
-export default MoreButton;
+export default PostMoreButton;

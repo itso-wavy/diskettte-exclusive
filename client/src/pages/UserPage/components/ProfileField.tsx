@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -8,6 +7,7 @@ import { Button, CircularButton } from '@/components/form';
 import { ProfileSkeleton, ProfileCard, FollowButton } from '.';
 import Icon from '@/components/icons';
 
+import FollowProvider from '@/context/followContext';
 import { profileKeys, getUserProfile } from '@/lib/queries/profile';
 
 const ProfileField: React.FC<{
@@ -26,14 +26,6 @@ const ProfileField: React.FC<{
     queryFn: getUserProfile,
   });
   const { profileDetail } = response?.data || {};
-  const [followersCount, setFollowersCount] = useState<number | undefined>(
-    undefined
-  );
-
-  useEffect(() => {
-    if (profileDetail?.followers !== undefined)
-      setFollowersCount(profileDetail.followers);
-  }, [profileDetail?.followers]);
 
   if (error) {
     if (isAxiosError(error)) console.log(error.response?.data);
@@ -42,16 +34,8 @@ const ProfileField: React.FC<{
   }
 
   return (
-    <>
-      {isLoading ? (
-        <ProfileSkeleton />
-      ) : (
-        <ProfileCard
-          username={username}
-          profileDetail={profileDetail}
-          followersCount={followersCount}
-        />
-      )}
+    <FollowProvider profileDetail={profileDetail}>
+      {isLoading ? <ProfileSkeleton /> : <ProfileCard username={username} />}
       <div className='my-3 flex items-center justify-between gap-x-3'>
         {isUserMatch ? (
           <>
@@ -74,8 +58,8 @@ const ProfileField: React.FC<{
                 username={username}
                 isLoggedIn={isLoggedIn}
                 defaultIsFollowing={profileDetail?.isFollowing}
-                defaultFollowersCount={followersCount}
-                setFollowersCount={setFollowersCount}
+                // defaultFollowersCount={followersCount}
+                // setFollowersCount={setFollowersCount}
               />
             </div>
             <CircularButton
@@ -90,7 +74,7 @@ const ProfileField: React.FC<{
           </>
         )}
       </div>
-    </>
+    </FollowProvider>
   );
 };
 

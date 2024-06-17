@@ -34,10 +34,14 @@ export const Button = ({
 
 export const StopPropagationButton = ({
   className,
+  stopPropagation = true,
   children,
-}: PropsWithChildren<{ className?: string }>) => {
+}: PropsWithChildren<{ stopPropagation?: boolean; className?: string }>) => {
   return (
-    <div onClick={e => e.stopPropagation()} className={className}>
+    <div
+      onClick={e => (stopPropagation ? e.stopPropagation() : {})}
+      className={className}
+    >
       {children}
     </div>
   );
@@ -70,5 +74,45 @@ export const CircularButton = forwardRef<
     </button>
   );
 });
+
+interface CountButtonProps {
+  ariaLabel: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  count?: number;
+  stopPropagation?: boolean;
+  className?: string;
+}
+
+export const ButtonWithCount = forwardRef<
+  HTMLButtonElement,
+  PropsWithChildren<CountButtonProps>
+>(
+  (
+    { ariaLabel, onClick, count, stopPropagation = true, className, children },
+    ref
+  ) => {
+    return (
+      <StopPropagationButton
+        stopPropagation={stopPropagation}
+        className={className}
+      >
+        {!count ? (
+          <CircularButton ref={ref} ariaLabel={ariaLabel} onClick={onClick}>
+            {children}
+          </CircularButton>
+        ) : (
+          <div className='flex items-center'>
+            <CircularButton ariaLabel={ariaLabel} onClick={onClick}>
+              {children}
+              {Number(count) > 0 && (
+                <span className='select ml-1.5 text-sm'>{count}</span>
+              )}
+            </CircularButton>
+          </div>
+        )}
+      </StopPropagationButton>
+    );
+  }
+);
 
 export default Button;

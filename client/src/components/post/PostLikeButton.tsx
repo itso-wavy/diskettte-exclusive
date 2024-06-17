@@ -1,22 +1,20 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
 
-import { Post } from '.';
-import Icon from '../icons';
+import { HeartButton } from '../form';
 
+import { PostContext } from '@/context/postContext';
 import { postKeys } from '@/lib/queries/post';
 import { toggleLike } from '@/lib/queries/post-interaction';
-import { cn } from '@/lib/utils';
 
-const LikeButton: React.FC<{
-  postId: string;
-  writer: string;
-  isLoggedIn: boolean;
+const PostLikeButton: React.FC<{
   defaultLiked: boolean;
   defaultCount: number;
-}> = ({ postId, writer, isLoggedIn, defaultLiked, defaultCount }) => {
+}> = ({ defaultLiked, defaultCount }) => {
+  const { post, writer, isLoggedIn } = useContext(PostContext)!;
+
   const [isLiked, setIsLiked] = useState<boolean>(defaultLiked);
   const [likesCount, setLikesCount] = useState<number>(defaultCount);
 
@@ -24,14 +22,14 @@ const LikeButton: React.FC<{
     postKeys.viewfeed({ view: 'everyone', isLoggedIn }),
     postKeys.viewfeed({ view: 'following', isLoggedIn }),
     postKeys.userPost({ username: writer, isLoggedIn }),
-    postKeys.postDetail({ postId, username: writer, isLoggedIn }),
+    postKeys.postDetail({ postId: post._id, username: writer, isLoggedIn }),
   ];
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: toggleLike,
     onMutate: ({ isLiked, likesCount }) => {
       setIsLiked(() => !isLiked);
-      setLikesCount(() => likesCount + (isLiked ? -1 : 1));
+      setLikesCount(() => likesCount + (!isLiked ? 1 : -1));
 
       const prevPosts: any[] = [];
       queryKeys.forEach(async (queryKey, index) => {
@@ -47,15 +45,15 @@ const LikeButton: React.FC<{
               post = newPost.data.post;
             } else {
               const postIndex = newPost.data.posts.findIndex(
-                (post: any) => post._id === postId
+                (post: any) => post._id === post._id
               );
               post = newPost.data.posts[postIndex];
             }
 
             post.isLiked = !isLiked;
-            post.likesCount = isLiked
-              ? post.likesCount - 1
-              : post.likesCount + 1;
+            post.likesCount = !isLiked
+              ? post.likesCount + 1
+              : post.likesCount - 1;
 
             return newPost;
           });
@@ -83,10 +81,6 @@ const LikeButton: React.FC<{
         queryClient.setQueryData(queryKeys[index]!, prevPost);
       });
     },
-    onSuccess: ({ data }) => {
-      setIsLiked(() => data.isLiked);
-      setLikesCount(() => data.likesCount);
-    },
     onSettled: () => {
       queryKeys.forEach(queryKey => {
         queryClient.invalidateQueries({
@@ -98,27 +92,16 @@ const LikeButton: React.FC<{
   });
 
   return (
-    <div>
-      <Post.Button
-        ariaLabel='likes'
-        onClick={() => {
-          !isLoggedIn
-            ? toast('로그인이 필요합니다.')
-            : mutate({ postId, isLiked, likesCount });
-        }}
-        count={likesCount}
-      >
-        <Icon.Heart
-          viewBox='0 0 24 24'
-          strokeWidth={1}
-          className={cn(
-            'h-[20px] w-[20px]',
-            isLiked && 'svg-fill-theme text-alpha'
-          )}
-        />
-      </Post.Button>
-    </div>
+    <HeartButton
+      handleClick={() => {
+        !isLoggedIn
+          ? toast('로그인이 필요합니다.')
+          : mutate({ postId: post._id, isLiked, likesCount });
+      }}
+      isLiked={isLiked}
+      likesCount={likesCount}
+    />
   );
 };
 
-export default LikeButton;
+export default PostLikeButton;

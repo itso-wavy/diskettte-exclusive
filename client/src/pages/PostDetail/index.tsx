@@ -7,7 +7,8 @@ import { UserLayoutContext } from '../UserLayout';
 
 const PostDetail: React.FC = () => {
   const { postId } = useParams();
-  const { usernameParam, isLoggedIn } = useOutletContext<UserLayoutContext>();
+  const { usernameParam, isLoggedIn, username } =
+    useOutletContext<UserLayoutContext>();
 
   return (
     <PageWrapper>
@@ -16,6 +17,7 @@ const PostDetail: React.FC = () => {
           postId={postId!}
           usernameParam={usernameParam}
           isLoggedIn={isLoggedIn}
+          username={username}
         />
       </WidthWrapper>
     </PageWrapper>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
@@ -8,27 +8,15 @@ import { Button } from '@/components/form';
 import { profileKeys, toggleUserFollow } from '@/lib/queries/profile';
 import { cn } from '@/lib/utils';
 import { postKeys } from '@/lib/queries/post';
+import { FollowContext, FollowContextProps } from '@/context/followContext';
 
 const FollowButton: React.FC<{
   username: string;
   isLoggedIn: boolean;
   defaultIsFollowing: boolean | undefined;
-  defaultFollowersCount: number | undefined;
-  setFollowersCount: React.Dispatch<React.SetStateAction<number | undefined>>;
-}> = ({
-  username,
-  isLoggedIn,
-  defaultIsFollowing,
-  defaultFollowersCount,
-  setFollowersCount,
-}) => {
-  const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    if (defaultIsFollowing !== undefined) {
-      setIsFollowing(defaultIsFollowing);
-    }
-  }, [defaultIsFollowing]);
+}> = ({ username, isLoggedIn, defaultIsFollowing }) => {
+  const { isFollowing, setIsFollowing, followersCount, setFollowersCount } =
+    useContext<FollowContextProps | null>(FollowContext)!;
 
   const queryKey = profileKeys.userProfile({ username, isLoggedIn });
   const queryClient = useQueryClient();
@@ -75,10 +63,6 @@ const FollowButton: React.FC<{
 
       queryClient.setQueryData(queryKey, context!.prevProfile);
     },
-    // onSuccess: ({ data }) => {
-    // setIsFollowing(() => data.isFollowing);
-    // setFollowersCount(() => data.followersCount);
-    // },
     onSettled: () => {
       const queryKeys = [
         profileKeys.userProfile({ username, isLoggedIn }),
@@ -102,9 +86,10 @@ const FollowButton: React.FC<{
           : mutate({
               isFollowing,
               username,
-              followersCount: defaultFollowersCount,
+              followersCount: followersCount,
             });
       }}
+      disabled={defaultIsFollowing === undefined}
       className={cn('w-full bg-gamma hover:ring', isFollowing && 'bg-alpha')}
     >
       {isFollowing ? 'following' : 'follow'}
