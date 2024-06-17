@@ -5,7 +5,7 @@ import ProfileAvatar from '../ProfileAvatar';
 import { StopPropagationButton } from '@/components/form';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
-import { cn } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 
 export const Layout = ({
   avatarPart,
@@ -79,9 +79,8 @@ export const Date: React.FC<{ date: string }> = ({ date }) => {
 
 export const Content: React.FC<{
   nickname?: string;
-  createdAt?: string;
   contents: { text?: string; images?: string[] };
-}> = ({ nickname, createdAt, contents }) => {
+}> = ({ nickname, contents }) => {
   const { text, images } = contents;
 
   return (
@@ -105,7 +104,7 @@ export const Content: React.FC<{
               <img
                 key={index}
                 src={i}
-                alt={`Photo by ${nickname} on ${createdAt}`}
+                alt={`Photo by ${nickname} ${formatDate(new window.Date())}`}
                 draggable='false'
                 className='mt-2 h-[245px] max-w-[245px] rounded-lg border object-cover'
               />

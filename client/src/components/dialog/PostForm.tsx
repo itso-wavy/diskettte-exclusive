@@ -69,6 +69,8 @@ const PostForm: React.FC<{
       toast('게시 중...');
 
       reset();
+      setSelectedImages([]);
+
       document.getElementById('dialog-close')?.click();
     },
     onSuccess: () => {

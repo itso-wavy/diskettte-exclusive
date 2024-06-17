@@ -122,7 +122,6 @@ export const CommentFormPost: React.FC<{
     >
       <Post.Content
         nickname={post.writer.profile.nickname}
-        createdAt={relativeTime}
         contents={post.contents}
       />
     </Post.Layout>
