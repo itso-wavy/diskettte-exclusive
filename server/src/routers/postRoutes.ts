@@ -9,9 +9,10 @@ import {
   deletePost,
 } from '@/controllers/postController';
 import {
-  addComment,
   getPostComments,
-  removeComment,
+  createComment,
+  editComment,
+  deleteComment,
 } from '@/controllers/commentController';
 import { addLike, removeLike } from '@/controllers/likeController';
 import { addBookmark, removeBookmark } from '@/controllers/bookmarkController';
@@ -39,8 +40,18 @@ router.patch('/post/:postId/edit', authentication, editPost);
 router.delete('/post/:postId/delete', authentication, deletePost);
 
 // comments crud
-router.post('/post/:postId/comment', authentication, addComment);
-router.delete('/post/:postId/comment', authentication, removeComment);
+router.get('/post/:postId/comment', getPostComments);
+router.post('/post/:postId/comment/create', authentication, createComment);
+router.patch(
+  '/post/:postId/comment/:commentId/edit',
+  authentication,
+  editComment
+);
+router.delete(
+  '/post/:postId/comment/:commentId/delete',
+  authentication,
+  deleteComment
+);
 
 // likes
 router.post('/post/:postId/like', authentication, addLike);

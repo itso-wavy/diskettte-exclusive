@@ -24,7 +24,7 @@ const DialogLayout = ({
     <DialogContent
       className={cn(
         `theme-${theme}`,
-        'min-w-[300px] text-primary max-sm:rounded-none sm:w-[350px] sm:max-w-[90vw]',
+        'min-w-[300px] text-primary selection:bg-beta selection:text-foreground max-sm:rounded-none sm:w-[350px] sm:max-w-[90vw]',
         isDarkmode && 'dark',
         className
       )}

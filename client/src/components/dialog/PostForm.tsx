@@ -18,10 +18,10 @@ import { postSchema, imageFileValidation } from '@/lib/schemas';
 import { convertToBase64 } from '@/lib/utils';
 import { postKeys, createPost, editPost } from '@/lib/queries/post';
 import { Post as PostT } from '@/lib/types';
-import { PostFormType } from '.';
+import { FormType } from '.';
 
 const PostForm: React.FC<{
-  type?: PostFormType;
+  type?: FormType;
   username: string;
   post?: PostT;
 }> = ({ type = 'create', username, post }) => {
@@ -50,10 +50,10 @@ const PostForm: React.FC<{
   const { mutate, error, isPending, isError } = useMutation({
     mutationFn: async (request: any) => {
       switch (type) {
-        case PostFormType.CREATE:
+        case FormType.CREATE:
           createPost(request);
           break;
-        case PostFormType.EDIT:
+        case FormType.EDIT:
           const response = await editPost(post?._id, request);
           const { text, images } = response.data || {};
 
@@ -72,6 +72,7 @@ const PostForm: React.FC<{
     },
     onSuccess: () => {
       toast('게시되었습니다.');
+      clearErrors();
 
       queryClient.invalidateQueries({
         queryKey: postKeys.posts,

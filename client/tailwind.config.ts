@@ -14,13 +14,9 @@ const config: Config = {
     },
     screens: {
       ...defaultTheme.screens,
-      // xs: '350px',
       sm: '438px',
     },
     extend: {
-      // backgroundSize: {
-      //   '60%': '60%',
-      // },
       borderRadius: {
         '4xl': '30px',
       },

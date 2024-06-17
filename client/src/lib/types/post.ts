@@ -1,3 +1,5 @@
+import { ProfileDetail } from './user';
+
 export interface Post {
   _id: string;
   writer: {
@@ -20,7 +22,8 @@ export interface Post {
 }
 
 export interface Comment {
-  user: string;
-  contents: string;
+  _id: string;
+  writer: Pick<ProfileDetail, 'username' | 'profile'>;
+  content: string;
   createdAt: Date;
 }

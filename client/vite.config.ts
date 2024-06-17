@@ -29,5 +29,3 @@ export default defineConfig({
     open: true,
   },
 });
-
-// /// <reference types="vite-plugin-svgr/client" />

@@ -3,10 +3,15 @@ import client from '../services';
 import { ViewT } from '@/pages/Feed';
 
 type FeedP = { view: ViewT; isLoggedIn: boolean };
+type postIdP = { postId: string };
 type DetailP = {
   username: string;
   isLoggedIn: boolean;
-  postId?: string | undefined;
+  postId?: postIdP['postId'];
+};
+type CommentP = {
+  postId: string;
+  commentId?: string;
 };
 
 export const postKeys = {
@@ -19,6 +24,8 @@ export const postKeys = {
     [...postKeys.posts, { username, isLoggedIn, postId }] as const,
   bookmarkPost: ({ username }: { username: string }) =>
     [...postKeys.posts, { username, view: 'bookmark' }] as const,
+  postComment: ({ postId, commentId }: CommentP) =>
+    [...postKeys.posts, { postId, commentId }, 'comments'] as const,
 };
 
 export const getViewFeed = ({ signal, queryKey }: any) => {
@@ -40,6 +47,12 @@ export const getUserPosts = ({ queryKey }: any) => {
   );
 };
 
+export const getUserBookmarks = ({ queryKey }: any) => {
+  const { username } = queryKey[1];
+
+  return client(`user/${username}/bookmark`);
+};
+
 export const getPostDetail = ({ queryKey }: any) => {
   const { postId, username, isLoggedIn } = queryKey[1];
 
@@ -50,10 +63,10 @@ export const getPostDetail = ({ queryKey }: any) => {
   );
 };
 
-export const getUserBookmarks = ({ queryKey }: any) => {
-  const { username } = queryKey[1];
+export const getPostComments = async ({ queryKey }: any) => {
+  const { postId } = queryKey[1];
 
-  return client(`user/${username}/bookmark`);
+  await client(`post/${postId}/comment`);
 };
 
 export const createPost = async (request: any) => {
@@ -66,4 +79,23 @@ export const editPost = async (postId: string | undefined, request: any) => {
 
 export const deletePost = async (postId: string) => {
   await client.delete(`post/${postId}/delete`);
+};
+
+export const createComment = async (postId: string, request: any) => {
+  await client.post(`post/${postId}/comment/create`, request);
+};
+
+export const editComment = async (
+  postId: string,
+  commentId: string,
+  request: any
+) => {
+  return await client.patch(
+    `post/${postId}/comment/${commentId}/edit`,
+    request
+  );
+};
+
+export const deleteComment = async (postId: string, commentId: string) => {
+  await client.delete(`post/${postId}/comment/${commentId}/delete`);
 };

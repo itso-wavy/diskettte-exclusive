@@ -160,19 +160,9 @@ export const getPost = async (
   const { username, postId } = req.params;
 
   try {
-    const post = (await Post.findById(postId)
-      .populate('writer', 'username profile')
-      .populate('likes', 'likes')
-      .populate({
-        path: 'comments',
-        populate: {
-          path: 'comments.user',
-          select: 'username profile',
-        },
-      })
-      .lean())!;
-
-    if (username !== (post.writer as any).username) {
+    const query = { _id: postId };
+    const [post] = await getPopulatedPosts(query);
+    if (!post || username !== (post.writer as any).username) {
       return next({ status: 404 });
     }
 
@@ -190,12 +180,9 @@ export const createPost = async (
   _res: Response,
   next: NextFunction
 ) => {
-  try {
-    const userId = req.user?._id;
-    if (!userId) {
-      return next({ status: 404 });
-    }
+  const userId = req.user?._id;
 
+  try {
     const { text } = postContentsSchema.parse(req.body);
     // const { text, images } = postContentsSchema.parse(req.body);
     // const images = req.body.images;

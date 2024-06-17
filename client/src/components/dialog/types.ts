@@ -4,7 +4,12 @@ export enum DialogMode {
   POST = 'post',
 }
 
-export enum PostFormType {
+export enum FormType {
   CREATE = 'create',
   EDIT = 'edit',
+}
+
+export enum PostUIType {
+  FEED = 'feed',
+  DETAIL = 'detail',
 }

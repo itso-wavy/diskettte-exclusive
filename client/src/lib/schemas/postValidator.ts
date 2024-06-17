@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const postContentsSchema = z.object({
-  text: z.string().trim().min(0).max(2000, '내용은 2000자 이하여야 합니다.'),
+export const postSchema = z.object({
+  text: z.string().trim().min(0).max(2000),
 });
 
 export const commentSchema = z.object({

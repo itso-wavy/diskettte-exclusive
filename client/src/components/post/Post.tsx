@@ -1,8 +1,8 @@
-import { PropsWithChildren, forwardRef } from 'react';
+import { PropsWithChildren } from 'react';
 import { Link } from 'react-router-dom';
 
 import ProfileAvatar from '../ProfileAvatar';
-import { StopPropagationButton, CircularButton } from '@/components/form';
+import { StopPropagationButton } from '@/components/form';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 import { cn } from '@/lib/utils';
@@ -116,34 +116,3 @@ export const Content: React.FC<{
     </div>
   );
 };
-
-interface PostButtonProps {
-  ariaLabel: string;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  count?: number;
-  className?: string;
-}
-
-export const Button = forwardRef<
-  HTMLButtonElement,
-  PropsWithChildren<PostButtonProps>
->(({ ariaLabel, onClick, count, className, children }, ref) => {
-  return (
-    <StopPropagationButton className={className}>
-      {!count ? (
-        <CircularButton ref={ref} ariaLabel={ariaLabel} onClick={onClick}>
-          {children}
-        </CircularButton>
-      ) : (
-        <div className='flex items-center'>
-          <CircularButton ariaLabel={ariaLabel} onClick={onClick}>
-            {children}
-            {Number(count) > 0 && (
-              <span className='select ml-1.5 text-sm'>{count}</span>
-            )}
-          </CircularButton>
-        </div>
-      )}
-    </StopPropagationButton>
-  );
-});
