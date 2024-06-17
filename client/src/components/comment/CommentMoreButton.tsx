@@ -21,9 +21,8 @@ import { postKeys, deleteComment } from '@/lib/queries/post';
 import { cn } from '@/lib/utils';
 
 const CommentMoreButton: React.FC<{
-  username: string;
   isWriter: boolean;
-}> = ({ username, isWriter }) => {
+}> = ({ isWriter }) => {
   const { post, comment } = useContext<CommentContextProps | null>(
     CommentContext
   )!;
@@ -41,10 +40,6 @@ const CommentMoreButton: React.FC<{
       queryClient.invalidateQueries({
         queryKey: postKeys.posts,
       });
-
-      // const pathParts = pathname.split('/');
-      // if (pathParts.length === 3 && pathParts[1]!.startsWith('@'))
-      //   navigate('..');
     },
     onError: err => {
       console.log(err);

@@ -22,9 +22,10 @@ const PostListField: React.FC<{ username: string; isLoggedIn: boolean }> = ({
     queryFn: getUserPosts,
   });
   const { posts } = response?.data || {};
-  console.log('posts: ', posts);
 
   if (error) {
+    console.log(error);
+
     if (isAxiosError(error)) console.log(error.response?.data);
 
     return (
@@ -40,10 +41,10 @@ const PostListField: React.FC<{ username: string; isLoggedIn: boolean }> = ({
         message={
           <>
             <p>작성한 포스트가 없습니다.</p>
-            <p>마음에 드는 포스트를 찾아보세요!</p>
+            <p>새로운 아이디어를 기록해보세요!</p>
           </>
         }
-        className='h-[calc(100vh-191px)]'
+        className='h-[calc(100vh-419px-38px)]'
       />
     ) : (
       posts?.map((post: Post) => <FeedLinkPost key={post._id} post={post} />)

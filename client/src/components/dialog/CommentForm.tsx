@@ -34,8 +34,7 @@ const CommentForm: React.FC<{
   });
 
   const queryClient = useQueryClient();
-
-  const { mutate, error, isPending, isError } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: async (request: any) => {
       switch (type) {
         case FormType.CREATE:
@@ -62,10 +61,7 @@ const CommentForm: React.FC<{
       clearErrors();
 
       queryClient.invalidateQueries({
-        queryKey: postKeys.postComment({
-          postId: post._id,
-          commentId: comment?._id,
-        }),
+        queryKey: postKeys.posts,
       });
     },
     onError: err => {
@@ -87,7 +83,7 @@ const CommentForm: React.FC<{
     <>
       <CommentFormPost
         post={post}
-        className='relative border-0 before:absolute before:left-[calc(24px+18px-1px)] before:top-[calc(12px+40.25px+5px)] before:block before:h-[calc(100%-36px-10px)] before:w-0.5 before:bg-gamma before:opacity-50'
+        className='relative border-0 before:absolute before:left-[calc(24px+18px-1px)] before:top-[calc(12px+40.25px+8px)] before:block before:h-[calc(100%-36px-16px)] before:w-0.5 before:bg-gamma before:opacity-60'
       />
       <Post.Layout
         className='border-0'

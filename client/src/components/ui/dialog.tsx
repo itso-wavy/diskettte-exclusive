@@ -4,8 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 import { cn } from '@/lib/utils/cn';
 
-import { CircularButton } from '../form';
-import Icon from '@/components/icons';
+import { XButton } from '../form';
 
 const Dialog = DialogPrimitive.Root;
 
@@ -56,14 +55,10 @@ const DialogContent = React.forwardRef<
           <Icon.X />
           <span className='sr-only'>Close</span>
         </DialogPrimitive.Close> */}
-        <CircularButton
-          ariaLabel='close'
-          onClick={() => document.getElementById('dialog-close')?.click()}
+        <XButton
+          handleClick={() => document.getElementById('dialog-close')?.click()}
           className='absolute right-4 top-4 h-7 w-7'
-        >
-          <Icon.X />
-          <span className='sr-only'>Close</span>
-        </CircularButton>
+        />
       </div>
     </DialogPrimitive.Content>
   </DialogPortal>

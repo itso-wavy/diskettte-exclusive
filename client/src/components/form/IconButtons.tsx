@@ -1,7 +1,22 @@
-import { ButtonWithCount } from '.';
+import { ButtonWithCount, CircularButton } from '.';
 import Icon from '../icons';
 
 import { cn } from '@/lib/utils';
+
+export const XButton: React.FC<{
+  handleClick: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+}> = ({ handleClick, className }) => {
+  return (
+    <CircularButton
+      ariaLabel='close'
+      onClick={handleClick}
+      className={className}
+    >
+      <Icon.X />
+    </CircularButton>
+  );
+};
 
 export const HeartButton: React.FC<{
   isLiked: boolean;
@@ -97,6 +112,21 @@ export const MoreButton: React.FC<{
       className={className}
     >
       <Icon.More viewBox='0 0 24 24' className='h-5 w-5' />
+    </ButtonWithCount>
+  );
+};
+
+export const PictureButton: React.FC<{
+  handleClick: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+}> = ({ handleClick, className }) => {
+  return (
+    <ButtonWithCount
+      ariaLabel='image'
+      onClick={handleClick}
+      className={className}
+    >
+      <Icon.Picture viewBox='0 0 24 24' strokeWidth={1} className='h-5 w-5' />
     </ButtonWithCount>
   );
 };

@@ -21,8 +21,8 @@ export const Button = ({
         onClick={onClick}
         disabled={disabled}
         className={cn(
-          'm-1 rounded-md px-4 py-2 text-white focus:outline-none focus:ring active:ring  disabled:active:ring-0',
-          'bg-alpha ring-beta hover:bg-gamma disabled:bg-alpha disabled:opacity-70',
+          'm-1 rounded-md px-4 py-2 text-white focus:outline-none focus-visible:ring active:ring disabled:active:ring-0',
+          'bg-alpha ring-beta disabled:border disabled:border-alpha disabled:bg-alpha disabled:text-beta disabled:opacity-30',
           className
         )}
       >
@@ -61,6 +61,7 @@ export const CircularButton = forwardRef<
   return (
     <button
       ref={ref}
+      type='button'
       onClick={onClick}
       aria-label={ariaLabel}
       className={cn(

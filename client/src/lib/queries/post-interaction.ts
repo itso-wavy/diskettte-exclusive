@@ -1,13 +1,5 @@
 import client from '../services';
 
-// type InteractionP = { username: string; isLoggedIn: boolean };
-
-export const interactionKeys = {
-  userComments: () => {
-    // 💓
-  },
-};
-
 export const toggleLike = ({ postId, isLiked }: any) => {
   return !isLiked
     ? client.post(`post/${postId}/like`)

@@ -9,6 +9,6 @@ export const profileSchema = z.object({
   description: z
     .string()
     .trim()
-    .max(50, '소개글은 50자 이하여야 합니다.')
+    .max(200, '소개글은 200자 이하여야 합니다.')
     .nullish(),
 });

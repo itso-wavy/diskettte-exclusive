@@ -110,15 +110,13 @@ export const CommentFormPost: React.FC<{
         />
       }
       topLinePart={
-        <>
-          <div className='flex gap-1.5'>
-            <Post.UsernameLink
-              to={`/@${post.writer.username}`}
-              username={post.writer.profile.nickname}
-            />
-            <Post.Date date={relativeTime} />
-          </div>
-        </>
+        <div className='flex gap-1.5'>
+          <Post.UsernameLink
+            to={`/@${post.writer.username}`}
+            username={post.writer.profile.nickname}
+          />
+          <Post.Date date={relativeTime} />
+        </div>
       }
       className={className}
     >

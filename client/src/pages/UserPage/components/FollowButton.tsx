@@ -14,7 +14,8 @@ const FollowButton: React.FC<{
   username: string;
   isLoggedIn: boolean;
   defaultIsFollowing: boolean | undefined;
-}> = ({ username, isLoggedIn, defaultIsFollowing }) => {
+  className?: string;
+}> = ({ username, isLoggedIn, defaultIsFollowing, className }) => {
   const { isFollowing, setIsFollowing, followersCount, setFollowersCount } =
     useContext<FollowContextProps | null>(FollowContext)!;
 
@@ -90,7 +91,11 @@ const FollowButton: React.FC<{
             });
       }}
       disabled={defaultIsFollowing === undefined}
-      className={cn('w-full bg-gamma hover:ring', isFollowing && 'bg-alpha')}
+      className={cn(
+        'w-full bg-gamma hover:ring',
+        !isFollowing && 'bg-alpha opacity-75 hover:opacity-100',
+        className
+      )}
     >
       {isFollowing ? 'following' : 'follow'}
     </Button>

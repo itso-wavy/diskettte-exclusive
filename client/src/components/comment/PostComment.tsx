@@ -33,7 +33,7 @@ const PostComment: React.FC<{
               />
               <Post.Date date={relativeTime} />
             </div>
-            <CommentMoreButton username={username} isWriter={isWriter} />
+            <CommentMoreButton isWriter={isWriter} />
           </>
         }
       >

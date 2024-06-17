@@ -38,7 +38,7 @@ const PostList: React.FC<{ view: ViewT; isLoggedIn: boolean }> = ({
       .fill(0)
       .map((_, index) => <PostSkeleton key={'wavy' + index} />);
   } else {
-    return !posts.length ? (
+    return !posts.length && view === 'following' ? (
       <ErrorText
         message={
           <>

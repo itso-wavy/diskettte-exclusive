@@ -31,6 +31,7 @@ const ProfileForm: React.FC<{
     },
     resolver: zodResolver(profileSchema),
   });
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<string | null>(
     profile.image
@@ -39,19 +40,23 @@ const ProfileForm: React.FC<{
 
   const onSubmit = async (request: FieldValues) => {
     try {
+      setLoading(true);
+
       const {
         data: { profile },
       } = await client.post(`user/${username}/profile/edit`, {
         ...request,
         image: selectedImage,
       });
-      
+
       store.dispatch(setProfile({ profile }));
 
       setSuccess('변경 완료되었습니다.');
+
       setTimeout(() => {
-        navigate('/');
         setSuccess('');
+        setLoading(false);
+        navigate('/');
       }, 1000);
     } catch (err) {
       console.log(err);
@@ -158,7 +163,10 @@ const ProfileForm: React.FC<{
           {...register('description')}
         />
       </div>
-      <Form.SubmitButton text='Edit' />
+      <Form.SubmitButton
+        text={!isLoading ? 'Edit' : 'Loading...'}
+        disabled={isLoading}
+      />
     </Form.Layout>
   );
 };
