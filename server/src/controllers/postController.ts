@@ -27,7 +27,7 @@ const getFormattedPost = (post: any, userId: string | undefined) => {
       ? post.likes.likes.some((user: any) => user.equals(userId))
       : false,
     likesCount: post.likes.likes.length,
-    commentsCount: post.comments.length,
+    commentsCount: post.comments.comments.length,
     isBookmarked: userId
       ? post.bookmarks.some((user: any) => user.equals(userId))
       : false,
@@ -183,15 +183,13 @@ export const createPost = async (
   const userId = req.user?._id;
 
   try {
-    const { text } = postContentsSchema.parse(req.body);
-    // const { text, images } = postContentsSchema.parse(req.body);
-    // const images = req.body.images;
+    const { text, images } = postContentsSchema.parse(req.body);
 
     const newPost: IPost = new Post({
       writer: userId,
       contents: {
         text,
-        images: [],
+        images,
       },
     });
     const savedPost = await newPost.save();
@@ -228,10 +226,7 @@ export const editPost = async (
   const { postId } = req.params;
 
   try {
-    const { text } = postContentsSchema.parse(req.body);
-    const images: string[] = [];
-    // const { title, intro, content } = postSchema.parse(req.body);
-    // const cover = req.body.cover;
+    const { text, images } = postContentsSchema.parse(req.body);
 
     const post = await Post.findById(postId);
     if (!post) {

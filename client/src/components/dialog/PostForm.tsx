@@ -6,12 +6,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
 
-import { Form } from '../form';
+import { Form, PictureButton, XButton } from '../form';
 import { DialogLayout } from '../layout';
 import { Post } from '../post';
 import ProfileAvatar from '../ProfileAvatar';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
-import Icon from '../icons';
 
 import { RootState } from '@/lib/store';
 import { postSchema, imageFileValidation } from '@/lib/schemas';
@@ -28,7 +27,7 @@ const PostForm: React.FC<{
   const {
     handleSubmit,
     register,
-    formState: { errors, isDirty },
+    formState: { errors, dirtyFields },
     setError,
     clearErrors,
     setValue,
@@ -43,11 +42,13 @@ const PostForm: React.FC<{
     resolver: zodResolver(postSchema),
   });
 
-  const [selectedImage, setSelectedImage] = useState<string[]>([]);
+  const [selectedImages, setSelectedImages] = useState<string[]>(
+    post?.contents.images || []
+  );
   const { profile } = useSelector((state: RootState) => state.user);
-  const queryClient = useQueryClient();
 
-  const { mutate, error, isPending, isError } = useMutation({
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
     mutationFn: async (request: any) => {
       switch (type) {
         case FormType.CREATE:
@@ -101,86 +102,76 @@ const PostForm: React.FC<{
   });
 
   const onSubmit = (request: FieldValues) => {
+    if (!request.text && selectedImages.length < 1) {
+      setError('text', { message: '내용을 입력해주세요.' });
+      return;
+    }
+
     mutate({
       ...request,
-      images: selectedImage,
+      images: selectedImages,
     });
+
+    reset();
   };
 
-  // const ImageInput = ({
-  //   index,
-  //   onChange,
-  //   selectedImage,
-  //   setSelectedImage,
-  //   register,
-  // }: any) => {
-  //   const handleImageChange = async (
-  //     e: React.ChangeEvent<HTMLInputElement>
-  //   ) => {
-  //     // const index = e.target.dataset.imageIndex;
-  //     const file = e.target.files?.[0];
-  //     if (!file) {
-  //       return;
-  //     }
+  const ImageInput = ({ index }: { index: number }) => {
+    const handleImageChange = async (
+      e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      // const index = e.target.dataset.imageIndex;
+      const file = e.target.files?.[0];
+      if (!file) {
+        return;
+      }
 
-  //     const result = imageFileValidation.safeParse(file);
-  //     if (result.success) {
-  //       const file = result.data!;
-  //       const base64 = await convertToBase64(file);
-  //       // setSelectedImage(base64);
-  //       setSelectedImage((prev: string[]) => [...prev, base64]);
+      const result = imageFileValidation.safeParse(file);
 
-  //       clearErrors('images');
-  //     } else {
-  //       const errorMessage = result.error.issues[0]?.message;
-  //       setError('images', { message: errorMessage });
-  //       // setSelectedImage('');
-  //     }
+      if (result.success) {
+        const file = result.data!;
+        const base64 = await convertToBase64(file);
+        setSelectedImages(prev => [...prev, base64]);
+        clearErrors('images');
+      } else {
+        const errorMessage = result.error.issues[0]?.message;
+        setError('images', { message: errorMessage });
+        // setSelectedImages(prev => [...prev]);
+      }
+    };
 
-  //     console.log(selectedImage);
-  //   };
-
-  //   return (
-  //     <>
-  //       <input
-  //         type='file'
-  //         id={`image${index}`}
-  //         // data-image-index={index}
-  //         accept='image/*'
-  //         className='hidden'
-  //         onClick={() =>
-  //           setSelectedImage((prev: string[]) => {
-  //             prev.splice(index, 1);
-  //             return prev;
-  //           })
-  //         }
-  //         {...register(`image${index}`, {
-  //           onChange: handleImageChange,
-  //         })}
-  //       />
-  //       <label htmlFor={`image${index}`}>
-  //         {!selectedImage[index] && (
-  //           <PostButton
-  //             ariaLabel='add-image'
-  //             onClick={() => {
-  //               document.getElementById(`image${index}`)?.click();
-  //             }}
-  //           >
-  //             <Icon.Picture
-  //               viewBox='0 0 24 24'
-  //               strokeWidth={1}
-  //               className='h-[20px] w-[20px]'
-  //             />
-  //           </PostButton>
-  //         )}
-  //       </label>
-  //     </>
-  //   );
-  // };
+    return (
+      <>
+        <input
+          type='file'
+          id={`images${index}`}
+          accept='image/*'
+          className='sr-only'
+          // onClick={() =>
+          //   setSelectedImages((prev: string[]) => {
+          //     prev.splice(index, 1);
+          //     return prev;
+          //   })
+          // }
+          {...register(`images.${index}`, {
+            onChange: handleImageChange,
+          })}
+        />
+        <label htmlFor={`images${index}`}>
+          {!selectedImages[index] && (
+            <PictureButton
+              handleClick={() =>
+                document.getElementById(`images${index}`)?.click()
+              }
+            />
+          )}
+        </label>
+      </>
+    );
+  };
 
   return (
     <DialogLayout
-      title='New Post'
+      title={type === 'create' ? 'New Post' : 'Edit Post'}
       className='w-full max-[580px]:px-3 sm:w-[580px] sm:max-w-full'
     >
       <Post.Layout
@@ -208,53 +199,44 @@ const PostForm: React.FC<{
             }
             {...register('text')}
           />
-          {/* <div className='-mb-1 -ml-[3px] flex items-center *:space-y-1'> */}
-          {/* <ScrollArea onClick={e => e.stopPropagation()}>
-            <div className='flex w-max space-x-1.5 overflow-x-auto pb-3'>
-              {selectedImage?.length &&
-                selectedImage.map((i, index) => (
-                  <img
-                    key={index}
-                    src={i}
-                    alt={`Image ${index}`}
-                    draggable='false'
-                    className='mt-2 h-[245px] max-w-[245px] rounded-lg border object-cover'
-                  />
+          <ScrollArea onClick={e => e.stopPropagation()}>
+            {selectedImages?.length ? (
+              <div className='flex w-max space-x-1.5 pb-3 '>
+                {selectedImages.map((image, index) => (
+                  <div key={index} className='relative'>
+                    <img
+                      src={image}
+                      alt={`Image ${index}`}
+                      draggable='false'
+                      className='h-[245px] max-w-[245px] rounded-lg border object-cover'
+                    />
+                    <XButton
+                      handleClick={() =>
+                        setSelectedImages(prev =>
+                          prev.filter((_, i) => i !== index)
+                        )
+                      }
+                      className='absolute right-1.5 top-1.5 h-7 w-7 bg-gray-950/40 text-white before:content-none'
+                    />
+                  </div>
                 ))}
-            </div>
+              </div>
+            ) : null}
             <ScrollBar orientation='horizontal' />
           </ScrollArea>
-          <ImageInput
-            index={0}
-            register={register}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-          />
-          {selectedImage[0] && (
-            <ImageInput
-              index={1}
-              register={register}
-              selectedImage={selectedImage}
-              setSelectedImage={setSelectedImage}
-            />
+          {errors.images && (
+            <Form.Feedback type='error' className='mb-1'>
+              {errors.images?.message || ''}
+            </Form.Feedback>
           )}
-          {selectedImage[1] && (
-            <ImageInput
-              index={2}
-              register={register}
-              selectedImage={selectedImage}
-              setSelectedImage={setSelectedImage}
-            />
-          )} */}
-          {/* </div> */}
-          {/* {errors.image && (
-        <Form.Feedback type='error' className='mb-2 text-center'>
-          {errors.image?.message || ''}
-        </Form.Feedback>
-      )} */}
+          <div className='-mb-1 -ml-[3px] flex items-center *:space-y-1'>
+            <ImageInput index={0} />
+            {selectedImages[0] && <ImageInput index={1} />}
+            {selectedImages[1] && <ImageInput index={2} />}
+          </div>
           <Form.SubmitButton
             text={type === 'create' ? 'Register' : type}
-            disabled={!isDirty}
+            disabled={!dirtyFields.text && selectedImages.length < 1}
             className='first-letter:uppercase'
           />
         </Form.Layout>
@@ -264,40 +246,3 @@ const PostForm: React.FC<{
 };
 
 export default PostForm;
-
-//     <div>
-//       <label
-//         htmlFor='profile-image'
-//         className='border border-teal-100 hover:opacity-80'
-//         // className='mx-auto mb-4 block aspect-square w-44 cursor-pointer overflow-hidden rounded-4xl bg-input shadow-inner hover:bg-blue-50/50 hover:shadow-gray-200 dark:bg-blue-100/5
-//         //   dark:shadow-gray-300/20 dark:hover:bg-blue-100/15'
-//       >
-//         {selectedImage[index] && (
-//           <img
-//             alt={`image${index}`}
-//             src={selectedImage[index]}
-//             className='h-full w-full object-cover'
-//           />
-//         )}
-//         {!selectedImage[index] && index === 0 && (
-//           <PostButton ariaLabel='likes'>
-//             <Icon.Picture
-//               viewBox='0 0 24 24'
-//               strokeWidth={1}
-//               className='h-[20px] w-[20px]'
-//             />
-//           </PostButton>
-//         )}
-//         {!selectedImage[index] && index !== 0 && selectedImage[index - 1] && (
-//           <PostButton ariaLabel='likes'>
-//             <Icon.Picture
-//               viewBox='0 0 24 24'
-//               strokeWidth={1}
-//               className='h-[20px] w-[20px]'
-//             />
-//           </PostButton>
-//         )}
-//       </label>
-//     </div>
-//   );
-// };
