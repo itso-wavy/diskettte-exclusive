@@ -10,6 +10,7 @@ import {
 } from '@/controllers/profileController';
 import { followUser, unfollowUser } from '@/controllers/followController';
 import { getUserBookmarkPosts } from '@/controllers/postController';
+import { searchUsers } from '@/controllers/searchController';
 
 import { authentication } from '@/middlewares/authentication';
 
@@ -35,5 +36,9 @@ router.delete('/user/:username/follower', authentication, unfollowUser);
 
 // bookmark
 router.get('/user/:username/bookmark', authentication, getUserBookmarkPosts);
+
+// search
+router.get('/search', searchUsers);
+router.get('/search/auth', authentication, searchUsers);
 
 export { router as userRouter };
