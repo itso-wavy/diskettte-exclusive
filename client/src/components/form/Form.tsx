@@ -97,8 +97,6 @@ export const Input = forwardRef<
 
         {error && <Feedback type='error'>{error}</Feedback>}
         <Feedback type='success'>{success}</Feedback>
-        {/* <p className='ml-1 mt-1 text-xs text-red-500'>{error}</p>
-        <p className='ml-1 mt-1 text-xs text-blue-500'>{success}</p> */}
       </div>
     );
   }

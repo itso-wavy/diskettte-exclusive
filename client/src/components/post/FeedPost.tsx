@@ -51,18 +51,13 @@ export const FeedPost: React.FC<{
               />
               <Post.Date date={relativeTime} />
             </div>
-            <PostMoreButton
-              username={username}
-              isWriter={isWriter}
-              post={post}
-            />
+            <PostMoreButton isWriter={isWriter} post={post} />
           </>
         }
         className={className}
       >
         <Post.Content
           nickname={post.writer.profile.nickname}
-          createdAt={relativeTime}
           contents={post.contents}
         />
         <div className='-mb-1 mt-1.5 flex h-9 items-center gap-4'>

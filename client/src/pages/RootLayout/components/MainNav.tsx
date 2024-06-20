@@ -62,7 +62,7 @@ const MainNav: React.FC = () => {
           <NavMenuBlock />
         </ul>
       </nav>
-      {dialogMode === DialogMode.POST && <PostForm username={username} />}
+      {dialogMode === DialogMode.POST && <PostForm />}
     </Dialog>
   );
 };

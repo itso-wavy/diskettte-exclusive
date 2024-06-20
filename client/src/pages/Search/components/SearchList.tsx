@@ -20,7 +20,6 @@ const SearchList: React.FC<{
                   to={`/@${userProfile.username}`}
                   image={userProfile.profile.image}
                   nickname={userProfile.profile.nickname}
-                  // className='h-9 w-9 overflow-hidden rounded-full'
                 />
               }
               topLinePart={

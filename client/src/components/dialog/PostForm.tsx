@@ -21,9 +21,8 @@ import { FormType } from '.';
 
 const PostForm: React.FC<{
   type?: FormType;
-  username: string;
   post?: PostT;
-}> = ({ type = 'create', username, post }) => {
+}> = ({ type = 'create', post }) => {
   const {
     handleSubmit,
     register,
@@ -121,7 +120,6 @@ const PostForm: React.FC<{
     const handleImageChange = async (
       e: React.ChangeEvent<HTMLInputElement>
     ) => {
-      // const index = e.target.dataset.imageIndex;
       const file = e.target.files?.[0];
       if (!file) {
         return;
@@ -137,7 +135,6 @@ const PostForm: React.FC<{
       } else {
         const errorMessage = result.error.issues[0]?.message;
         setError('images', { message: errorMessage });
-        // setSelectedImages(prev => [...prev]);
       }
     };
 
@@ -148,12 +145,6 @@ const PostForm: React.FC<{
           id={`images${index}`}
           accept='image/*'
           className='sr-only'
-          // onClick={() =>
-          //   setSelectedImages((prev: string[]) => {
-          //     prev.splice(index, 1);
-          //     return prev;
-          //   })
-          // }
           {...register(`images.${index}`, {
             onChange: handleImageChange,
           })}
@@ -193,7 +184,6 @@ const PostForm: React.FC<{
             label='new-post'
             labelHidden={true}
             placeholder='내용을 입력하세요...'
-            // rows={1}
             rows={3}
             className='mt-2'
             error={

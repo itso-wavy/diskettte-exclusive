@@ -58,8 +58,6 @@ const ProfileField: React.FC<{
                 username={username}
                 isLoggedIn={isLoggedIn}
                 defaultIsFollowing={profileDetail?.isFollowing}
-                // defaultFollowersCount={followersCount}
-                // setFollowersCount={setFollowersCount}
               />
             </div>
             <CircularButton

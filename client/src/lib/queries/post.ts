@@ -9,10 +9,6 @@ type DetailP = {
   isLoggedIn: boolean;
   postId?: postIdP['postId'];
 };
-// type CommentP = {
-//   postId: string;
-//   commentId?: string;
-// };
 
 export const postKeys = {
   posts: ['posts'] as const,
@@ -24,8 +20,6 @@ export const postKeys = {
     [...postKeys.posts, { username, isLoggedIn, postId }] as const,
   bookmarkPost: ({ username }: { username: string }) =>
     [...postKeys.posts, { username, view: 'bookmark' }] as const,
-  // postComment: ({ postId, commentId }: CommentP) =>
-  //   [...postKeys.posts, { postId, commentId }, 'comments'] as const,
 };
 
 export const getViewFeed = ({ signal, queryKey }: any) => {

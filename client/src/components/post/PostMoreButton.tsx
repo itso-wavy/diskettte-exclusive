@@ -22,10 +22,9 @@ import { cn } from '@/lib/utils';
 import { PostContext, PostContextProps } from '@/context/postContext';
 
 const PostMoreButton: React.FC<{
-  username: string;
   isWriter: boolean;
   post: PostT;
-}> = ({ username, isWriter, post }) => {
+}> = ({ isWriter, post }) => {
   const { formType, setFormType } = useContext<PostContextProps | null>(
     PostContext
   )!;
@@ -117,7 +116,7 @@ const PostMoreButton: React.FC<{
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      {formType && <PostForm type={formType} username={username} post={post} />}
+      {formType && <PostForm type={formType} post={post} />}
     </Dialog>
   );
 };

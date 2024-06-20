@@ -27,8 +27,6 @@ export const authentication = (
 
     return next();
   } catch (err) {
-    console.log('💜auth', err);
-
     return next({ message: '인증에 실패했습니다.', status: 403 });
   }
 };

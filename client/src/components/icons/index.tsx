@@ -1,6 +1,3 @@
-import Settings from './settings.svg?react';
-import ArrowLeft from './arrow-left.svg?react';
-
 import Home from './home.svg?react';
 import Search from './search.svg?react';
 import Post from './post.svg?react';
