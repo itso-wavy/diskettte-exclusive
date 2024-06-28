@@ -3,6 +3,7 @@
     /* Base */
     "target": "ESNEXT",
     "outDir": "./server/dist",
+    "rootDir": "./server/src",
     "baseUrl": "./server",
     "paths": {
       "@/*": ["src/*"]
