@@ -45,6 +45,7 @@ const ProfileField: React.FC<{
               </Button>
             </div>
             <CircularButton
+              ariaLabel='view bookmarks'
               onClick={() => navigate('bookmark')}
               className='h-10 w-10 border p-2'
             >
@@ -61,6 +62,7 @@ const ProfileField: React.FC<{
               />
             </div>
             <CircularButton
+              ariaLabel='send a DM'
               onClick={() => toast('DM!💌')}
               className='h-10 w-10 border p-2'
             >

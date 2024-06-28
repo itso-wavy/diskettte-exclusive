@@ -40,7 +40,9 @@ const NavMenuBlock: React.FC = () => {
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className='absolute bottom-0 w-[40px] rounded-full outline-offset-4 ring-[3px] ring-alpha ring-offset-1 ring-offset-background *:rounded-full'>
+          <button 
+            aria-label='open settings menu'
+            className='absolute bottom-0 w-[40px] rounded-full outline-offset-4 ring-[3px] ring-alpha ring-offset-1 ring-offset-background *:rounded-full'>
             <ProfileAvatar nickname={profile.nickname} image={profile.image} />
           </button>
         </DropdownMenuTrigger>

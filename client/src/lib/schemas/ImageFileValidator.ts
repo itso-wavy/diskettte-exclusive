@@ -13,4 +13,4 @@ export const imageFileValidation = z
     message: '파일 크기는 5MB 이하여야 합니다.',
   });
 
-const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'jfif', 'webp'];
+const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'jfif', 'webp', 'avif'];
