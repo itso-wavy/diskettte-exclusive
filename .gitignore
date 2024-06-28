@@ -1,4 +1,6 @@
 *.env
+tsconfig.tsbuildinfo
+
 
 # Logs
 logs

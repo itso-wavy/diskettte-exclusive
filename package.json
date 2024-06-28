@@ -4,10 +4,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node server/dist/index.js",
     "dev": "nodemon --config nodemon.json",
-    "cl": "cd client && npm run dev",
-    "build": "tsc"
+    "cl": "cd client && pnpm run dev",
+    "build": "tsc",
+    "serve": "pnpm run build && node -r tsconfig-paths/register ./server/dist/index.js"
+  },
+  "_moduleAliases": {
+    "@": "server/dist"
   },
   "dependencies": {
     "argon2": "^0.40.1",
@@ -16,6 +19,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
     "mongoose": "^8.3.3",
     "zod": "^3.23.6"
   },
