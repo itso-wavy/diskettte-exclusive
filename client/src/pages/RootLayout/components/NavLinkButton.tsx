@@ -20,12 +20,13 @@ const NavLinkButton = forwardRef<
   PropsWithChildren<NavLinkButtonProps>
 >(({ tooltip, onClick, className, children }, ref) => {
   return (
-    <li className={cn('relative', className)}>
+    <div className={cn('relative', className)}>
       <TooltipProvider>
         <Tooltip delayDuration={200}>
           <TooltipTrigger asChild>
             <button
               ref={ref}
+              aria-label={tooltip}
               onClick={onClick}
               className='grid aspect-square w-full place-content-center overflow-hidden rounded-lg border hover:bg-gray-500/10'
             >
@@ -40,7 +41,7 @@ const NavLinkButton = forwardRef<
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-    </li>
+    </div>
   );
 });
 

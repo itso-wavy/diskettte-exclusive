@@ -20,7 +20,7 @@ const PostCommentButton: React.FC<{
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div>
+        <div role='button'>
           <CommentButton
             hasCommented={false}
             handleClick={

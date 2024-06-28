@@ -57,7 +57,7 @@ const PostMoreButton: React.FC<{
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div>
+          <div role='button'>
             <MoreButton className='ml-auto text-muted-foreground' />
           </div>
         </DropdownMenuTrigger>
