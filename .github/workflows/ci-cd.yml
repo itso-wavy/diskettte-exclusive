@@ -16,6 +16,10 @@ jobs:
         with:
           node-version: '20.15.0'
 
+      - name: Install pnpm # pnpm 설치
+        run: |
+          npm install -g pnpm
+
       - name: Install server dependencies
         run: |
           pnpm install
