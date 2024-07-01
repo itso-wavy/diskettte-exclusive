@@ -45,8 +45,8 @@ jobs:
           USER_NAME: ${{ secrets.EC2_USER_NAME }}
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          scp -i private_key -o StrictHostKeyChecking=no -r ./server/dist/* ${USER_NAME}@${HOST_NAME}:/home/${USER_NAME}/diskettte-exclusive/server
-          scp -i private_key -o StrictHostKeyChecking=no -r ./client/dist/* ${USER_NAME}@${HOST_NAME}:/home/${USER_NAME}/diskettte-exclusive/client
+          scp -i private_key -o StrictHostKeyChecking=no -r ./server/dist/* ${USER_NAME}@${HOST_NAME}:/home/${USER_NAME}/diskettte-exclusive/server/dist/
+          scp -i private_key -o StrictHostKeyChecking=no -r ./client/dist/* ${USER_NAME}@${HOST_NAME}:/home/${USER_NAME}/diskettte-exclusive/client/dist/
           ssh -i private_key -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} '
             sudo systemctl restart myapp.service
             sudo systemctl restart nginx
