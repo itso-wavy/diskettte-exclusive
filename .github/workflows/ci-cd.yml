@@ -1,0 +1,50 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # GitHub Actions에서 제공하는 가상의 실행 환경, 최신 버전의 ubuntu
+
+    steps:
+      - uses: actions/checkout@v2 # 저장소 코드를 실행 환경으로 복사
+
+      - name: Setup Node.js # node 버전 설정
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.15.0'
+
+      - name: Install server dependencies
+        run: |
+          pnpm install
+
+      - name: Install client dependencies
+        run: |
+          cd client
+          pnpm install
+
+      - name: Build server
+        run: |
+          pnpm run build
+
+      - name: Build client
+        run: |
+          cd client
+          pnpm run build
+
+      - name: Deploy to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+          HOST_NAME: ${{ secrets.EC2_HOST_NAME }}
+          USER_NAME: ${{ secrets.EC2_USER_NAME }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          scp -i private_key -o StrictHostKeyChecking=no -r ./server/dist/* ${USER_NAME}@${HOST_NAME}:/home/${USER_NAME}/diskettte-exclusive/server
+          scp -i private_key -o StrictHostKeyChecking=no -r ./client/dist/* ${USER_NAME}@${HOST_NAME}:/home/${USER_NAME}/diskettte-exclusive/client
+          ssh -i private_key -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} '
+            cd /home/${USER_NAME}/diskettte-exclusive/server &&
+            pnpm install --production &&
+            pm2 restart server || pm2 start dist/index.js --name server
+          '

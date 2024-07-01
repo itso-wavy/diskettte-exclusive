@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "start": "node -r module-alias/register ./server/dist/index.js",
     "dev": "nodemon --config nodemon.json",
     "cl": "cd client && pnpm run dev",
     "build": "tsc",
-    "serve": "pnpm run build && node -r tsconfig-paths/register ./server/dist/index.js"
+    "serve": "pnpm run build && pnpm start"
   },
   "_moduleAliases": {
     "@": "server/dist"

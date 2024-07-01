@@ -1,5 +1,3 @@
-import 'module-alias/register';
-
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -28,4 +26,5 @@ app.use(postRouter);
 app.use(responseHandler);
 app.use(errorHandler);
 
-app.listen(PORT);
+app.listen(PORT, () => console.log('server connected ฅ^•ﻌ•^ฅ'));
+

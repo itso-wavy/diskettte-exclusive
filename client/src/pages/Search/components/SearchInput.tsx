@@ -36,7 +36,7 @@ const SearchInput: React.FC = () => {
       console.log(error.response?.data);
     }
     return (
-      <ErrorText handleRetry={refetch} className='h-[calc(100vh-191px)]' />
+      <ErrorText handleRetry={refetch} className='h-[calc(100vh-231px)]' />
     );
   } else {
     return (
