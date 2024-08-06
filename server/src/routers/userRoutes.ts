@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   registerHandler,
   loginHandler,
+  logoutHandler,
   refreshTokenHandler,
 } from '@/controllers/authController';
 import {
@@ -19,6 +20,7 @@ const router: Router = Router();
 // auth
 router.post('/register', registerHandler);
 router.post('/login', loginHandler);
+router.post('/logout', logoutHandler);
 router.post('/token-refresh', refreshTokenHandler);
 
 // profile

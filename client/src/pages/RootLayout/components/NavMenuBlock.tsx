@@ -22,6 +22,7 @@ import ProfileAvatar from '@/components/ProfileAvatar';
 import { LoginForm, RegisterForm, DialogMode } from '@/components/dialog';
 import Icon from '@/components/icons';
 
+import client from '@/lib/services';
 import { RootState, setDarkmode, setLogout, setTheme } from '@/lib/store';
 import { themes } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -40,9 +41,10 @@ const NavMenuBlock: React.FC = () => {
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button 
+          <button
             aria-label='open settings menu'
-            className='absolute bottom-0 w-[40px] rounded-full outline-offset-4 ring-[3px] ring-alpha ring-offset-1 ring-offset-background *:rounded-full'>
+            className='absolute bottom-0 w-[40px] rounded-full outline-offset-4 ring-[3px] ring-alpha ring-offset-1 ring-offset-background *:rounded-full'
+          >
             <ProfileAvatar nickname={profile.nickname} image={profile.image} />
           </button>
         </DropdownMenuTrigger>
@@ -137,10 +139,19 @@ const NavMenuBlock: React.FC = () => {
                   Change Profile
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => {
-                    dispatch(setLogout());
+                  onClick={async () => {
+                    try {
+                      await client.post('logout');
+                      dispatch(setLogout());
 
-                    toast('다음에 또 만나요. 안녕👋');
+                      toast('다음에 또 만나요. 안녕👋');
+                    } catch (err) {
+                      console.log(err);
+
+                      toast('에러가 발생했습니다.😥', {
+                        description: '다음에 다시 시도해주세요.',
+                      });
+                    }
                   }}
                 >
                   <Icon.LogOut viewBox='0 0 24 24' className='mr-2 h-4 w-4' />

@@ -2,7 +2,7 @@ import { NextFunction, Response } from 'express';
 import { Types } from 'mongoose';
 import { ExpandedRequest } from '@/lib/types';
 import { Comment } from '@/models';
-import { commentSchema } from '@/schmas/post-schema';
+import { commentSchema } from '@/schemas/post-schema';
 
 export const getPostComments = async (
   req: ExpandedRequest,

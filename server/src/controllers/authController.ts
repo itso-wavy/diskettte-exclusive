@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 import argon2 from 'argon2';
 import { ExpandedRequest } from '@/lib/types';
 import { User, IUser, Follow, IFollow, Bookmark, IBookmark } from '@/models';
-import { loginSchema, registerSchema } from '@/schmas/auth-schema';
+import { loginSchema, registerSchema } from '@/schemas/auth-schema';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -106,6 +106,24 @@ export const loginHandler = async (
       accessToken,
       profile: user.profile,
     };
+
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const logoutHandler = async (
+  _req: ExpandedRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/',
+    });
 
     return next();
   } catch (err) {

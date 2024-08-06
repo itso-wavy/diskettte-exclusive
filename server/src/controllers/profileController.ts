@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { ExpandedRequest } from '@/lib/types';
 import { User, IUser, Follow } from '@/models';
-import { profileSchema } from '@/schmas/profile-schema';
+import { profileSchema } from '@/schemas/profile-schema';
 
 export const getUserProfileDetail = async (
   req: ExpandedRequest,

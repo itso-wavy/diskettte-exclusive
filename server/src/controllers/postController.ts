@@ -12,7 +12,7 @@ import {
   Follow,
   Bookmark,
 } from '@/models';
-import { postContentsSchema } from '@/schmas/post-schema';
+import { postContentsSchema } from '@/schemas/post-schema';
 
 const getFormattedPost = (post: any, userId: string | undefined) => {
   return {
