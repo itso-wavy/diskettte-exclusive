@@ -56,52 +56,50 @@ TypeScript+MERN 스택 기반으로 모던 웹 기술을 적용하여 사용자 
 
 ## 3. 특징
 
-1. **TypeScript 기반 풀스택 아키텍처**
+1.  **TypeScript 기반 풀스택 아키텍처**
+    <img width="550" alt="Achitecture" src="https://github.com/user-attachments/assets/b84bcfb3-2b85-42d4-903b-d43560fdaaf1">
 
-   - 서버와 클라이언트 모두에 TypeScript를 사용하여 정적 타입 검사를 통한 코드 안정성 확보
-   - ESLint, Prettier와 코딩 컨벤션으로 코드 품질과 가독성 유지
+    - 서버와 클라이언트 모두에 TypeScript를 사용하여 정적 타입 검사를 통한 코드 안정성 확보
+    - ESLint, Prettier와 코딩 컨벤션으로 코드 품질과 가독성 유지
 
-2. **모던 프론트엔드 기술 사용**
+2.  **모던 프론트엔드 기술 사용**
 
-   - React와 React Router를 이용한 SPA 구현, CSR 적용
-   - Redux Toolkit과 Redux Persist를 통한 중앙 집중식 상태 관리 및 지속성 보장
-   - TanStack Query를 활용해 효율적인 서버 상태 관리 및 캐싱과 낙관적 UI 업데이트 구현
+    - React와 React Router를 이용한 SPA 구현, CSR 적용
+    - Redux Toolkit과 Redux Persist를 통한 중앙 집중식 상태 관리 및 지속성 보장
+    - TanStack Query를 활용해 효율적인 서버 상태 관리 및 캐싱과 낙관적 UI 업데이트 구현
 
-3. **보안 및 인증 시스템**
+3.  **보안 및 인증 시스템**
 
-   - JWT 기반의 접근 토큰 및 갱신 토큰 인증 메커니즘 적용
-   - CORS 설정을 통한 리소스 접근 제어
-   - HttpOnly, SameSite 쿠키 설정으로 XSS 및 CSRF 공격 방지
-   - Argon2 암호화 알고리즘으로 비밀번호 해싱
+    - JWT 기반의 접근 토큰 및 갱신 토큰 인증 메커니즘 적용
+    - CORS 설정을 통한 리소스 접근 제어
+    - HttpOnly, SameSite 쿠키 설정으로 XSS 및 CSRF 공격 방지
+    - Argon2 암호화 알고리즘으로 비밀번호 해싱
 
-4. **UX 중심의 스타일링 및 테마 시스템**
+4.  **UX 중심의 스타일링 및 테마 시스템**
 
-   - Tailwind CSS와 shadcn/ui로 일관성, 확장성 및 접근성을 충족하는 디자인 시스템 구축
-   - 라이트/다크 모드와 6가지 컬러 테마를 포함한 개인 테마 설정 기능
-   - SVG 동적 스타일링으로 인터랙티브한 UX 구현 및 에셋 최적화
+    - Tailwind CSS와 shadcn/ui로 일관성, 확장성 및 접근성을 충족하는 디자인 시스템 구축
+    - 라이트/다크 모드와 6가지 컬러 테마를 포함한 개인 테마 설정 기능
+    - SVG 동적 스타일링으로 인터랙티브한 UX 구현 및 에셋 최적화
 
-5. **폼 핸들링 및 유효성 검사 강화**:
+5.  **폼 핸들링 및 유효성 검사 강화**:
 
-   - React Hook Form으로 선언적 폼 상태 관리 및 UI 렌더링
-   - Zod 스키마 기반의 정교한 유효성 검사와 에러 메시지 피드백
+    - React Hook Form으로 선언적 폼 상태 관리 및 UI 렌더링
+    - Zod 스키마 기반의 정교한 유효성 검사와 에러 메시지 피드백
 
-6. **체계적인 아키텍처 설계**
+6.  **체계적인 아키텍처 설계**
 
-   - 기능별 폴더 구조와 단일 책임 원칙에 기반한 컴포넌트 모듈화로 코드 유지보수성 및 확장성 향상
-   - form, post, comment 등 복합적 UI에 Compound Components 패턴 사용(클라이언트)
-   - 라우트별 컨트롤러를 미들웨어 체이닝으로 구현해 유연한 요청 처리(서버)
-   - 중앙화된 응답/에러 핸들링 미들웨어로 일관된 API 응답/에러 처리(서버)
+    - 기능별 폴더 구조와 단일 책임 원칙에 기반한 컴포넌트 모듈화로 코드 유지보수성 및 확장성 향상
+    - form, post, comment 등 복합적 UI에 Compound Components 패턴 사용(클라이언트)
+    - 라우트별 컨트롤러를 미들웨어 체이닝으로 구현해 유연한 요청 처리(서버)
+    - 중앙화된 응답/에러 핸들링 미들웨어로 일관된 API 응답/에러 처리(서버)
 
-7. **성능 최적화 및 사용자 경험 향상**
-   - 메모이제이션 기법(useMemo, useCallback)을 활용한 리렌더링 방지
-   - 낙관적 업데이트를 통한 빠른 반응성 구현
-   <!-- - 이미지 최적화 및 Webpack 설정 튜닝으로 번들 크기 최소화
-   - Lighthouse, Chrome DevTools를 활용한 정기적인 성능 분석
-   - Web Vitals 지표 개선을 통한 사용자 경험 향상 -->
-
-🐬🦈🐬
+7.  **성능 최적화 및 사용자 경험 향상**
+    - 메모이제이션 기법(useMemo, useCallback)을 활용한 리렌더링 방지
+    - 낙관적 업데이트를 통한 빠른 반응성 구현
 
 ## 4. 주요 기능
+
+<!-- 🐬🦈🐬 영상 추가 예정 -->
 
 1.  **유저 인증 및 권한 부여**:
 
@@ -198,7 +196,7 @@ TypeScript+MERN 스택 기반으로 모던 웹 기술을 적용하여 사용자 
 │     │      postRoutes.ts
 │     │      userRoutes.ts
 │     │
-│     └─🎫schmas
+│     └─🎫schemas
 │            auth-schema.ts
 │            imageFileValidator.ts
 │            post-schema.ts
@@ -388,46 +386,107 @@ TypeScript+MERN 스택 기반으로 모던 웹 기술을 적용하여 사용자 
          index.css
 ```
 
-## 6. 프로젝트 특징
+## 6. 트러블슈팅
 
-### 1) 인증시 JWT을 액세스 토큰과 리프레시 토큰으로 나눠 관리
+### (1) JWT 기반 이중 토큰 인증 메커니즘 적용
 
-### 2) 서버 컨트롤러 함수를 미들웨어 처리하고 응답 반환시 공통 에러 처리 로직
+```mermaid
+sequenceDiagram
+  participant Client
+  participant Cookie
+  participant ReduxStore
+  participant LocalStorage
+  participant Server
 
-### 3) svg 최적화 + svg 동적 스타일링으로 파일 개수 축소
+  alt 로그인
+    Client->>Server: POST /login
+    Server-->>Client: 200 (accessToken, 🍪refreshToken)
+    Client->>Cookie: refreshToken 저장
+    Client->>ReduxStore: dispatch(setLogin)
+    ReduxStore-->>LocalStorage: 상태 저장
+    Client-->>Client: 리렌더링 트리거
+  end
 
-### 4) profile image
+  alt 토큰 갱신
+    Client->>Server: GET /protected-route (w/accessToken)
+    Server-->>Client: 403 (Forbidden)
+    Client->>Server: POST /token-refresh (w/refreshToken)
+    Server-->>Client: 200 (newAccessToken, 🍪newRefreshToken)
+    Client->>Cookie: newRefreshToken 저장
+    Client->>ReduxStore: dispatch(setLogin)
+    ReduxStore-->>LocalStorage: 상태 저장
+    Client->>Server: GET /protected-route (w/newAccessToken)
+    Server-->>Client: 200 (w/data)
+  end
 
-1.  프로필 없을 때(!profile.image)
+  alt 로그아웃
+    Client->>Server: POST /logout
+    Server-->>Client: 200
+    Client->>Cookie: refreshToken 삭제
+    Client->>ReduxStore: dispatch(setLogout)
+    ReduxStore-->>LocalStorage: 상태 지우기
+    Client-->>Client: 리렌더링 트리거
+  end
+```
 
-    1. 프로필 안 건드림(!isTouch) => X
-    2. 프로필 건드렸다 취소(isTouch) => X
-    3. 프로필 건드리고 바꿈(isTouch) => O(selectedImage)
+### (2) 󠀠TanStack Query 쿼리 무효화와 쿼리 직접 수정을 통한 낙관적 UI 업데이트 구현
 
-2.  프로필 있을 때(profile.image)
+- **문제**: React state로만 서버 상태 처리시,
+  1. 서버 데이터와 UI 업데이트 간 동기화 지연
+  2. 여러 데이터 요청(쿼리)에 동일 데이터가 포함되어 있을 때 데이터 간 불일치
+  3. 2번 문제의 해결책으로 단일 쿼리가 아닌 전체 데이터 리페치시 성능 저하 발생
+- **해결**: 󠀠TanStack Query의 데이터 캐싱 기능으로,
+  1. 사용자 인터랙션 시 낙관적 업데이트 로직을 통해 서버 응답을 기다리지 않고 즉시 UI 업데이트
+  2. 데이터 요청 성공 시 응답값으로 캐싱 데이터 업데이트, 실패 시 이전 상태로 롤백하여 안정적인 에러 처리
+  3. QueryClient 로 특정 쿼리키만 수동으로 업데이트/쿼리 무효화/백그라운드 캐시 갱신. 필요한 데이터만 리페치하여 성능 최적화
+- **결과**
+  1. 서버 데이터 응답과 리렌더링 대기 없이 즉각적인 UI 반응으로 UX 향상
+  2. 동기화된 데이터로 여러 페이지 간 일관된 UI 제공
+  3. 불필요한 서버 요청 감소로 성능 향상
 
-    1. 프로필 안 건드림(!isTouch) => O
-    2. 프로필 건드렸다 취소(isTouch) => X
-    3. 프로필 건드리고 바꿈(isTouch) => O(selectedImage)
+```mermaid
+sequenceDiagram
+  participant User
+  participant State/UI
+  participant TanStack Query
+  participant Server
 
-## 3. 트러블슈팅
+  User->>State/UI: 사용자 인터랙트 발생
+  State/UI->>Server: 서버 요청 (mutationFn)
+  State/UI-->>State/UI: 낙관적 업데이트(like, count state 업데이트)
+  State/UI->>TanStack Query: cancelQueries
+  TanStack Query->>TanStack Query: getQueryData
+  TanStack Query-->>TanStack Query: setQueryData(직접 데이터 가공)
+  TanStack Query-->>State/UI: 리렌더링 트리거
+  Server-->>TanStack Query: 서버 응답
+  alt 성공
+      State/UI->>TanStack Query: 쿼리 데이터 업데이트
+  else 실패
+      State/UI->>TanStack Query: 쿼리 데이터 롤백
+  end
 
-- 서버 데이터 응답 속도 축소
-- ui 낙관적 업데이트 로직
+  State/UI->>TanStack Query: invalidateQueries
+  TanStack Query->>Server: 리페칭
+  Server-->>TanStack Query: 서버 응답
+  TanStack Query-->>State/UI: 리렌더링 트리거
+```
 
-10. **상태 관리**:
+### (3) 󠀠󠀠Vite 개발 환경에서 SVG 동적 스타일링과 플러그인으로 SVG 최적화(77.8% 용량 감소)
 
-Redux를 사용한 것으로 보임 (store 폴더 구조 기반)
+- **문제**: SVG 아이콘이 다양한 모드(라이트/다크)와 테마(6색 컬러)로 인해 배리에이션이 많아져 최적화가 필요함
+- **해결**: SVG를 Vite 플러그인으로 React 컴포넌트화하고, CSS 변수와 조건부 렌더링으로 동적 스타일링
+  1.  vite-plugin-svgr 플러그인으로 SVG 파일을 React 컴포넌트화, @svgr/plugin-svgo , @svgr/plugin-jsx 플러그인으로 최적화 및 JSX 문법 지원
+  2.  SVG 파일 내 색상을 특정 문자열로 표기하고, vite-plugin-svgr 플러그인으로 문자열 > CSS 변수 치환
+  3.  테마 색상을 CSS 변수로 정의하고, 이를 다시 --svg-fill 등의 변수에 담아 조건부 렌더링으로 SVG 컴포넌트 클래스에 동적 적용
+  4.  Tailwind CSS의 JIT 기능으로 CSS 변수들이 빌드 시 제외되지 않도록 config 파일에 변수 등록
+- **결과**: 에셋 파일 수를 72개 → 19개로 줄이고, 파일 크기를 77.8%(41.1KB → 9.13KB) 최적화함 󠀠
 
-10. **클라이언트 사이드 라우팅**:
+### (4) 서버 코드 최적화로 데이터 요청 성능 향상(92.7% 단축)
 
-다양한 기능을 위한 여러 페이지 (피드, 프로필, 게시물 상세 등)
-
-10. **파일 처리**:
-
-이미지 업로드 및 유효성 검사 (게시물 및 사용자 아바타용)
-
-10. **오류 처리 및 로딩 상태**:
-
-- 다양한 UI 컴포넌트 (버튼, 폼, 아이콘, 다이얼로그 등)를 통한 사용자 경험 개선
-- 상태 관리와 렌더링 최적화를 위한 컨텍스트 및 상태 관리 구현
+- **문제**: 데이터 모수가 늘어날수록 요청 처리에 긴 시간이 소요됨(최후 측정 42.49s, 최대 1.5m)
+- **해결**
+  1.  `find()` 후 `lean()` 메서드로 MongoDB 객체를 가벼운 JavaScript 객체로 변환(42.49s → 39.8s)
+  2.  자주 상호작용하는 2개의 DB를 통합해 성능 향상(39.8s → 2.16s)
+  3.  비동기 작업 대신 `populate` 사용으로 컬렉션 탐색 최적화(2.16s → 931.34ms)
+  4.  주요 필드에 인덱스 추가로 쿼리 성능 향상(최종 테스트 환경에서 3.11s)
+- **결과**: 데이터 요청 처리 시간을 42.5초에서 3.11초로 92.7%(42.5s → 3.11s) 단축함 󠀠
