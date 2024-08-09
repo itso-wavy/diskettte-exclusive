@@ -3,7 +3,7 @@ import { refreshAccessToken } from './auth';
 import { store } from '../store';
 
 const client = axios.create({
-  baseURL: 'http://diskettte-exclusive.my.to/',
+  baseURL: 'http://diskettte-exclusive.my.to:3000/',
   withCredentials: true,
 });
 
