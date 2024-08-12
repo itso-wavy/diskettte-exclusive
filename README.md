@@ -50,14 +50,15 @@ TypeScript+MERN 스택 기반으로 모던 웹 기술을 적용하여 사용자 
 
 ### (4) Deployment
 
-- 클라우드 인스턴스: [Amazon EC2](https://aws.amazon.com/ko/ec2/?gclid=CjwKCAjw-O6zBhASEiwAOHeGxVUD__lm6qh_odGit5oDKibJ-eElc2X-tMEDhH-7TahietD5Wx5AcRoCeZIQAvD_BwE&trk=bc3c5de1-7376-43c7-ad4f-f0f3f8248023&sc_channel=ps&ef_id=CjwKCAjw-O6zBhASEiwAOHeGxVUD__lm6qh_odGit5oDKibJ-eElc2X-tMEDhH-7TahietD5Wx5AcRoCeZIQAvD_BwE:G:s&s_kwcid=AL!4422!3!588924203019!e!!g!!aws%20ec2!16390049454!133992834459)
+- 클라우드 서버: [Amazon EC2](https://aws.amazon.com/ko/ec2/?gclid=CjwKCAjw-O6zBhASEiwAOHeGxVUD__lm6qh_odGit5oDKibJ-eElc2X-tMEDhH-7TahietD5Wx5AcRoCeZIQAvD_BwE&trk=bc3c5de1-7376-43c7-ad4f-f0f3f8248023&sc_channel=ps&ef_id=CjwKCAjw-O6zBhASEiwAOHeGxVUD__lm6qh_odGit5oDKibJ-eElc2X-tMEDhH-7TahietD5Wx5AcRoCeZIQAvD_BwE:G:s&s_kwcid=AL!4422!3!588924203019!e!!g!!aws%20ec2!16390049454!133992834459)
 - 프론트엔드용 웹 서버: [nginx](https://nginx.org/)
 - 데이터베이스 호스팅: [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
 
 ## 3. 특징
 
 1.  **TypeScript 기반 풀스택 아키텍처**
-    <img width="550" alt="Achitecture" src="https://github.com/user-attachments/assets/b84bcfb3-2b85-42d4-903b-d43560fdaaf1">
+
+    <img width="600" alt="Achitecture" src="https://github.com/user-attachments/assets/b84bcfb3-2b85-42d4-903b-d43560fdaaf1">
 
     - 서버와 클라이언트 모두에 TypeScript를 사용하여 정적 타입 검사를 통한 코드 안정성 확보
     - ESLint, Prettier와 코딩 컨벤션으로 코드 품질과 가독성 유지
@@ -99,7 +100,19 @@ TypeScript+MERN 스택 기반으로 모던 웹 기술을 적용하여 사용자 
 
 ## 4. 주요 기능
 
-<!-- 🐬🦈🐬 영상 추가 예정 -->
+|                                    **회원가입 및 로그인**                                     |                                **홈 피드, 검색, 팔로우 기능**                                 |
+| :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: |
+| <video src="https://github.com/user-attachments/assets/5b2c6541-0f35-43c7-8183-e192142f5d66"> | <video src="https://github.com/user-attachments/assets/0a6aa507-c8a0-4bb0-a600-08ecbd8392b0"> |
+|                                      **개인 테마 설정**                                       |                                        **프로필 편집**                                        |
+| <video src="https://github.com/user-attachments/assets/f642855b-6215-4964-8414-bc026af22219"> | <video src="https://github.com/user-attachments/assets/2c15cad6-643a-4244-994c-a9f4d5a1415a"> |
+|                                        **포스트 관리**                                        |                                         **댓글 관리**                                         |
+| <video src="https://github.com/user-attachments/assets/18167a56-424b-4609-855e-5693b28af133"> | <video src="https://github.com/user-attachments/assets/b25f7815-7385-419b-84f8-b29736e18c0b"> |
+|                                   **좋아요 및 북마크 기능**                                   |                               **라우트 보호 및 조건부 렌더링**                                |
+| <video src="https://github.com/user-attachments/assets/566d9c0a-c020-47d9-a8ba-b6089f2b529c"> | <video src="https://github.com/user-attachments/assets/1131bc0d-01f1-4c31-8d47-f543bac7f154"> |
+
+|                                    **로딩 및 에러 페이지**                                    |                                       **반응형 디자인**                                       |
+| :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: |
+| <video src="https://github.com/user-attachments/assets/eb1b8e5b-73bb-4497-9963-0f22da24ba18"> | <video src="https://github.com/user-attachments/assets/ed4e43b5-1916-4e50-adf4-100f0ba3d8e3"> |
 
 1.  **유저 인증 및 권한 부여**:
 
@@ -108,15 +121,15 @@ TypeScript+MERN 스택 기반으로 모던 웹 기술을 적용하여 사용자 
     - 인증/인가 상태에 따른 라우트 보호와 조건부 렌더링
     - 비밀번호 암호화 저장
 
-1.  **유저 프로필**:
+2.  **유저 프로필**:
 
     - 유저 프로필 조회, 수정
 
-1.  **개인 테마화**:
+3.  **개인 테마화**:
 
     - 라이트/다크 모드, 6색 컬러 개인 테마화
 
-1.  **포스트 관리**:
+4.  **포스트 관리**:
 
     - 포스트 작성, 조회, 수정, 삭제
     - 포스트당 최대 3개의 이미지 업로드 지원
@@ -124,29 +137,29 @@ TypeScript+MERN 스택 기반으로 모던 웹 기술을 적용하여 사용자 
     - 특정 유저 포스트 모아보기
     - 단일 포스트 상세 보기
 
-1.  **댓글 시스템**:
+5.  **댓글 시스템**:
 
     - 포스트 댓글 작성, 조회, 수정, 삭제
 
-1.  **좋아요 시스템**:
+6.  **좋아요 시스템**:
 
     - 포스트 좋아요 추가/제거
 
-1.  **북마크 시스템**:
+7.  **북마크 시스템**:
 
     - 포스트 북마크 추가/제거
     - 북마크한 포스트 모아보기
 
-1.  **팔로우 시스템**:
+8.  **팔로우 시스템**:
 
     - 다른 유저 팔로우/언팔로우
     - 팔로우한 유저 포스트 모아보기
 
-1.  **검색 기능**:
+9.  **검색 기능**:
 
     - 유저 아이디, 닉네임 검색
 
-1.  **기타**:
+10. **기타**:
 
     - 에러 페이지와 리페치 컴포넌트
     - 로딩 스켈레톤 및 인디케이터
@@ -473,7 +486,7 @@ sequenceDiagram
 
 ### (3) 󠀠󠀠Vite 개발 환경에서 SVG 동적 스타일링과 플러그인으로 SVG 최적화(77.8% 용량 감소)
 
-- **문제**: SVG 아이콘이 다양한 모드(라이트/다크)와 테마(6색 컬러)로 인해 배리에이션이 많아져 최적화가 필요함
+- **문제**: 다양한 모드(라이트/다크)와 테마(6색 컬러)로 인해 SVG 아이콘의 배리에이션이 많아져 최적화가 필요함
 - **해결**: SVG를 Vite 플러그인으로 React 컴포넌트화하고, CSS 변수와 조건부 렌더링으로 동적 스타일링
   1.  vite-plugin-svgr 플러그인으로 SVG 파일을 React 컴포넌트화, @svgr/plugin-svgo , @svgr/plugin-jsx 플러그인으로 최적화 및 JSX 문법 지원
   2.  SVG 파일 내 색상을 특정 문자열로 표기하고, vite-plugin-svgr 플러그인으로 문자열 > CSS 변수 치환
@@ -490,3 +503,22 @@ sequenceDiagram
   3.  비동기 작업 대신 `populate` 사용으로 컬렉션 탐색 최적화(2.16s → 931.34ms)
   4.  주요 필드에 인덱스 추가로 쿼리 성능 향상(최종 테스트 환경에서 3.11s)
 - **결과**: 데이터 요청 처리 시간을 42.5초에서 3.11초로 92.7%(42.5s → 3.11s) 단축함 󠀠
+
+### (5) EC2 배포 과정에서의 트러블 슈팅 및 해결
+
+- **문제 1**: 클라이언트 연결 실패
+
+  EC2 인스턴스 위에서 클라이언트 정적 파일이 브라우저로 서빙되지 않음. nginx 권한 문제로 파일 접근이 불가능해 에러 발생
+
+- **해결**:
+  1. 동일한 파일을 로컬에서 실행 시 정상 작동됨. nginx의 문제로 추측하고 에러 로그를 확인해 "Permission denied" 메시지에서 권한 문제임을 인식함
+  2. nginx의 기본 권한이 www-data임을 확인, 배포 폴더 내 모든 파일의 권한을 www-data로 변경했으나 해결되지 않음
+  3. 프로젝트 상위 폴더의 권한을 모두 확인해 해당 인스턴스의 기본 설정이 ubuntu임을 짐작함. nginx와 배포 폴더의 권한을 ubuntu에 맞춰 재설정하니 클라이언트 파일이 정상 서빙됨
+- **문제 2**: 백엔드 연결 실패
+
+  로컬에서 개발 당시 프론트엔드에서 `http://localhost:3000`로 요청을 보내도록 하드 코딩되어 있었음. 배포 후에도 로컬 머신으로 요청이 가서 에러 발생
+
+- **해결**:
+  1. nginx를 사용해 프론트엔드 요청을 리버스 프록시하여 백엔드 서버로 전달함
+  2. 도메인 네임을 연결한 뒤엔 프론트엔드의 Axios baseURL을 백엔드 서버의 도메인 주소로 변경
+  3. EC2 보안 그룹에 3000번 포트를 추가하여 백엔드 서버에 접근할 수 있도록 설정. 이제 프론트엔드가 백엔드 도메인으로 직접 요청을 보내도록 변경하여 연결 성공

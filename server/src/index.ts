@@ -27,4 +27,3 @@ app.use(responseHandler);
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log('server connected ฅ^•ﻌ•^ฅ'));
-
